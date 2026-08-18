@@ -643,17 +643,20 @@ function renderHome() {
         <h2 style="font-size:1.1rem;font-weight:900;">📚 Materias y Cursos</h2>
         <button class="btn btn-ghost btn-sm" onclick="CleoRouter.navigate('materias')" style="color:var(--c-primary);font-weight:700;">Ver todas →</button>
       </div>
-      <div class="no-scrollbar" style="display:flex;overflow-x:auto;gap:12px;padding:4px 16px 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;width:100%;box-sizing:border-box;">
-        ${CLEDUCA_DATA.subjects.map(s => `
-          <div class="card animate-fadeInUp" style="flex:0 0 140px;scroll-snap-align:start;padding:14px;cursor:pointer;background:var(--c-surface);border:2px solid var(--c-border);border-radius:20px;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;"
-               onclick="${s.isSpecial ? `CleoRouter.navigate('idiomas')` : `CleoRouter.navigate('subject',{subject:'${s.id}'})`}">
-            <div>
-              <div style="font-size:2.2rem;margin-bottom:6px;">${s.emoji}</div>
-              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.9rem;color:var(--c-text);">${s.name}</div>
+      
+      <div style="padding:0 16px 4px;">
+        <div class="home-materias-scroll">
+          ${CLEDUCA_DATA.subjects.map(s => `
+            <div class="home-materia-card animate-fadeInUp"
+                 onclick="${s.isSpecial ? `CleoRouter.navigate('idiomas')` : `CleoRouter.navigate('subject',{subject:'${s.id}'})`}">
+              <div>
+                <div style="font-size:2.2rem;margin-bottom:6px;">${s.emoji}</div>
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.9rem;color:var(--c-text);">${s.name}</div>
+              </div>
+              <div style="font-size:0.75rem;color:var(--c-primary);font-weight:700;margin-top:8px;">Explorar →</div>
             </div>
-            <div style="font-size:0.75rem;color:var(--c-primary);font-weight:700;margin-top:8px;">Explorar →</div>
-          </div>
-        `).join('')}
+          `).join('')}
+        </div>
       </div>
 
       <!-- Premium Banner (if not premium) -->
