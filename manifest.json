@@ -1,0 +1,18 @@
+{
+  "name": "Cleduca",
+  "short_name": "Cleduca",
+  "description": "App educativa interactiva para niños colombianos. Aprende jugando con Cleo.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#58CC02",
+  "theme_color": "#58CC02",
+  "lang": "es-CO",
+  "categories": ["education", "kids"],
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}

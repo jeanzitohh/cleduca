@@ -1,0 +1,352 @@
+/* ===========================
+   CLEDUCA — Sistema de Temas
+   =========================== */
+
+/* ── 1. SELVA VERDE (default) ── */
+[data-theme="selva"], :root {
+  --c-primary:        #58CC02;
+  --c-primary-dark:   #3E9700;
+  --c-primary-light:  #89E219;
+  --c-secondary:      #FFC800;
+  --c-secondary-dark: #E6B000;
+  --c-accent:         #FF6B35;
+  --c-tertiary:       #1CB0F6;
+
+  --c-bg:             #F9FAFB;
+  --c-bg-card:        #FFFFFF;
+  --c-bg-nav:         #FFFFFF;
+  --c-bg-input:       #F0F4FF;
+  --c-surface:        #EDFFD5;
+  --c-surface2:       #E8F5E9;
+
+  --c-text:           #1A1D1E;
+  --c-text-muted:     #6B7280;
+  --c-text-light:     #9CA3AF;
+  --c-text-on-primary:#FFFFFF;
+
+  --c-border:         #E5E7EB;
+  --c-shadow:         rgba(88,204,2,0.15);
+  --c-shadow-card:    rgba(0,0,0,0.08);
+
+  --c-xp:             #FFC800;
+  --c-lives:          #FF4B4B;
+  --c-streak:         #FF9600;
+  --c-gems:           #1CB0F6;
+
+  --grad-hero:        linear-gradient(135deg, #58CC02 0%, #89E219 100%);
+  --grad-card:        linear-gradient(135deg, #EDFFD5 0%, #D4F5A5 100%);
+  --grad-btn:         linear-gradient(135deg, #58CC02, #3E9700);
+  --grad-bg:          linear-gradient(180deg, #E8F5E9 0%, #F9FAFB 40%);
+
+  --cleo-primary:     #58CC02;
+  --cleo-secondary:   #89E219;
+  --cleo-eye:         #1A1D1E;
+}
+
+/* ── 2. OCÉANO AZUL ── */
+[data-theme="oceano"] {
+  --c-primary:        #1CB0F6;
+  --c-primary-dark:   #0E8EC4;
+  --c-primary-light:  #5ECFFF;
+  --c-secondary:      #00D9A8;
+  --c-secondary-dark: #00B589;
+  --c-accent:         #FF6B9D;
+  --c-tertiary:       #5C6BC0;
+
+  --c-bg:             #F0FBFF;
+  --c-bg-card:        #FFFFFF;
+  --c-bg-nav:         #FFFFFF;
+  --c-bg-input:       #E8F7FF;
+  --c-surface:        #D4F3FF;
+  --c-surface2:       #E0F7FA;
+
+  --c-text:           #0D1B2A;
+  --c-text-muted:     #4A6FA5;
+  --c-text-light:     #90A4AE;
+  --c-text-on-primary:#FFFFFF;
+
+  --c-border:         #B2EBF2;
+  --c-shadow:         rgba(28,176,246,0.15);
+  --c-shadow-card:    rgba(0,0,0,0.08);
+
+  --c-xp:             #00D9A8;
+  --c-lives:          #FF6B9D;
+  --c-streak:         #FF9600;
+  --c-gems:           #5C6BC0;
+
+  --grad-hero:        linear-gradient(135deg, #1CB0F6 0%, #5ECFFF 100%);
+  --grad-card:        linear-gradient(135deg, #D4F3FF 0%, #B2EBF2 100%);
+  --grad-btn:         linear-gradient(135deg, #1CB0F6, #0E8EC4);
+  --grad-bg:          linear-gradient(180deg, #E0F7FA 0%, #F0FBFF 40%);
+
+  --cleo-primary:     #1CB0F6;
+  --cleo-secondary:   #5ECFFF;
+  --cleo-eye:         #0D1B2A;
+}
+
+/* ── 3. JARDÍN ROSA ── */
+[data-theme="jardin"] {
+  --c-primary:        #FF6B9D;
+  --c-primary-dark:   #E0457A;
+  --c-primary-light:  #FF9DC0;
+  --c-secondary:      #A855F7;
+  --c-secondary-dark: #8B2FC9;
+  --c-accent:         #FF9800;
+  --c-tertiary:       #EC4899;
+
+  --c-bg:             #FFF0F6;
+  --c-bg-card:        #FFFFFF;
+  --c-bg-nav:         #FFFFFF;
+  --c-bg-input:       #FFE4EE;
+  --c-surface:        #FFD6E8;
+  --c-surface2:       #F3E8FF;
+
+  --c-text:           #1A0A12;
+  --c-text-muted:     #7C3F5E;
+  --c-text-light:     #B08098;
+  --c-text-on-primary:#FFFFFF;
+
+  --c-border:         #FECDD3;
+  --c-shadow:         rgba(255,107,157,0.15);
+  --c-shadow-card:    rgba(0,0,0,0.08);
+
+  --c-xp:             #A855F7;
+  --c-lives:          #FF4B4B;
+  --c-streak:         #FF9800;
+  --c-gems:           #EC4899;
+
+  --grad-hero:        linear-gradient(135deg, #FF6B9D 0%, #FF9DC0 100%);
+  --grad-card:        linear-gradient(135deg, #FFD6E8 0%, #F3E8FF 100%);
+  --grad-btn:         linear-gradient(135deg, #FF6B9D, #E0457A);
+  --grad-bg:          linear-gradient(180deg, #F3E8FF 0%, #FFF0F6 40%);
+
+  --cleo-primary:     #FF6B9D;
+  --cleo-secondary:   #FF9DC0;
+  --cleo-eye:         #1A0A12;
+}
+
+/* ── 4. VOLCÁN ROJO ── */
+[data-theme="volcan"] {
+  --c-primary:        #FF4500;
+  --c-primary-dark:   #CC3700;
+  --c-primary-light:  #FF7043;
+  --c-secondary:      #FF9800;
+  --c-secondary-dark: #E68900;
+  --c-accent:         #FFEB3B;
+  --c-tertiary:       #F44336;
+
+  --c-bg:             #FFF8F5;
+  --c-bg-card:        #FFFFFF;
+  --c-bg-nav:         #FFFFFF;
+  --c-bg-input:       #FFE8E0;
+  --c-surface:        #FFD0C0;
+  --c-surface2:       #FFE0B2;
+
+  --c-text:           #1A0800;
+  --c-text-muted:     #7C3000;
+  --c-text-light:     #B07060;
+  --c-text-on-primary:#FFFFFF;
+
+  --c-border:         #FFCCBC;
+  --c-shadow:         rgba(255,69,0,0.15);
+  --c-shadow-card:    rgba(0,0,0,0.08);
+
+  --c-xp:             #FF9800;
+  --c-lives:          #FF4B4B;
+  --c-streak:         #FF6D00;
+  --c-gems:           #F44336;
+
+  --grad-hero:        linear-gradient(135deg, #FF4500 0%, #FF7043 100%);
+  --grad-card:        linear-gradient(135deg, #FFD0C0 0%, #FFE0B2 100%);
+  --grad-btn:         linear-gradient(135deg, #FF4500, #CC3700);
+  --grad-bg:          linear-gradient(180deg, #FFE0B2 0%, #FFF8F5 40%);
+
+  --cleo-primary:     #FF4500;
+  --cleo-secondary:   #FF7043;
+  --cleo-eye:         #1A0800;
+}
+
+/* ── 5. NOCHE MÁGICA (dark) ── */
+[data-theme="noche"] {
+  --c-primary:        #7C3AED;
+  --c-primary-dark:   #5B21B6;
+  --c-primary-light:  #A78BFA;
+  --c-secondary:      #EC4899;
+  --c-secondary-dark: #BE185D;
+  --c-accent:         #06D6A0;
+  --c-tertiary:       #F59E0B;
+
+  --c-bg:             #0F0A1A;
+  --c-bg-card:        #1E1433;
+  --c-bg-nav:         #1A1029;
+  --c-bg-input:       #2D1F4A;
+  --c-surface:        #2D1F4A;
+  --c-surface2:       #3D2D5C;
+
+  --c-text:           #F5F0FF;
+  --c-text-muted:     #A78BFA;
+  --c-text-light:     #7C6FA0;
+  --c-text-on-primary:#FFFFFF;
+
+  --c-border:         #3D2D5C;
+  --c-shadow:         rgba(124,58,237,0.3);
+  --c-shadow-card:    rgba(0,0,0,0.4);
+
+  --c-xp:             #F59E0B;
+  --c-lives:          #EF4444;
+  --c-streak:         #F59E0B;
+  --c-gems:           #06D6A0;
+
+  --grad-hero:        linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+  --grad-card:        linear-gradient(135deg, #2D1F4A 0%, #3D2D5C 100%);
+  --grad-btn:         linear-gradient(135deg, #7C3AED, #5B21B6);
+  --grad-bg:          linear-gradient(180deg, #1A1029 0%, #0F0A1A 100%);
+
+  --cleo-primary:     #7C3AED;
+  --cleo-secondary:   #A78BFA;
+  --cleo-eye:         #F5F0FF;
+}
+
+/* ── 6. GALAXIA ── */
+[data-theme="galaxia"] {
+  --c-primary:        #6366F1;
+  --c-primary-dark:   #4338CA;
+  --c-primary-light:  #818CF8;
+  --c-secondary:      #F59E0B;
+  --c-secondary-dark: #D97706;
+  --c-accent:         #10B981;
+  --c-tertiary:       #EC4899;
+
+  --c-bg:             #0B0C1A;
+  --c-bg-card:        #161728;
+  --c-bg-nav:         #12132A;
+  --c-bg-input:       #1E1F38;
+  --c-surface:        #1E1F38;
+  --c-surface2:       #252648;
+
+  --c-text:           #E8E9FF;
+  --c-text-muted:     #818CF8;
+  --c-text-light:     #6366F1;
+  --c-text-on-primary:#FFFFFF;
+
+  --c-border:         #252648;
+  --c-shadow:         rgba(99,102,241,0.3);
+  --c-shadow-card:    rgba(0,0,0,0.5);
+
+  --c-xp:             #F59E0B;
+  --c-lives:          #EF4444;
+  --c-streak:         #F59E0B;
+  --c-gems:           #10B981;
+
+  --grad-hero:        linear-gradient(135deg, #6366F1 0%, #EC4899 100%);
+  --grad-card:        linear-gradient(135deg, #1E1F38 0%, #252648 100%);
+  --grad-btn:         linear-gradient(135deg, #6366F1, #4338CA);
+  --grad-bg:          linear-gradient(180deg, #12132A 0%, #0B0C1A 100%);
+
+  --cleo-primary:     #6366F1;
+  --cleo-secondary:   #818CF8;
+  --cleo-eye:         #E8E9FF;
+}
+
+/* ── 7. DESIERTO ── */
+[data-theme="desierto"] {
+  --c-primary:        #D97706;
+  --c-primary-dark:   #B45309;
+  --c-primary-light:  #F59E0B;
+  --c-secondary:      #EF4444;
+  --c-secondary-dark: #DC2626;
+  --c-accent:         #84CC16;
+  --c-tertiary:       #F97316;
+
+  --c-bg:             #FFFBF0;
+  --c-bg-card:        #FFFFFF;
+  --c-bg-nav:         #FFFFFF;
+  --c-bg-input:       #FEF3C7;
+  --c-surface:        #FDE68A;
+  --c-surface2:       #FEF3C7;
+
+  --c-text:           #1C0A00;
+  --c-text-muted:     #78350F;
+  --c-text-light:     #A16207;
+  --c-text-on-primary:#FFFFFF;
+
+  --c-border:         #FDE68A;
+  --c-shadow:         rgba(217,119,6,0.15);
+  --c-shadow-card:    rgba(0,0,0,0.08);
+
+  --c-xp:             #F59E0B;
+  --c-lives:          #EF4444;
+  --c-streak:         #F97316;
+  --c-gems:           #84CC16;
+
+  --grad-hero:        linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+  --grad-card:        linear-gradient(135deg, #FDE68A 0%, #FEF3C7 100%);
+  --grad-btn:         linear-gradient(135deg, #D97706, #B45309);
+  --grad-bg:          linear-gradient(180deg, #FEF3C7 0%, #FFFBF0 40%);
+
+  --cleo-primary:     #D97706;
+  --cleo-secondary:   #F59E0B;
+  --cleo-eye:         #1C0A00;
+}
+
+/* ── 8. ÁRTICO ── */
+[data-theme="artico"] {
+  --c-primary:        #0EA5E9;
+  --c-primary-dark:   #0284C7;
+  --c-primary-light:  #38BDF8;
+  --c-secondary:      #06B6D4;
+  --c-secondary-dark: #0891B2;
+  --c-accent:         #8B5CF6;
+  --c-tertiary:       #64748B;
+
+  --c-bg:             #F0F9FF;
+  --c-bg-card:        #FFFFFF;
+  --c-bg-nav:         #FFFFFF;
+  --c-bg-input:       #E0F2FE;
+  --c-surface:        #BAE6FD;
+  --c-surface2:       #E0F2FE;
+
+  --c-text:           #0C1A24;
+  --c-text-muted:     #475569;
+  --c-text-light:     #94A3B8;
+  --c-text-on-primary:#FFFFFF;
+
+  --c-border:         #BAE6FD;
+  --c-shadow:         rgba(14,165,233,0.15);
+  --c-shadow-card:    rgba(0,0,0,0.08);
+
+  --c-xp:             #06B6D4;
+  --c-lives:          #EF4444;
+  --c-streak:         #F59E0B;
+  --c-gems:           #8B5CF6;
+
+  --grad-hero:        linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%);
+  --grad-card:        linear-gradient(135deg, #BAE6FD 0%, #E0F2FE 100%);
+  --grad-btn:         linear-gradient(135deg, #0EA5E9, #0284C7);
+  --grad-bg:          linear-gradient(180deg, #E0F2FE 0%, #F0F9FF 40%);
+
+  --cleo-primary:     #0EA5E9;
+  --cleo-secondary:   #38BDF8;
+  --cleo-eye:         #0C1A24;
+}
+
+/* ── MODO OSCURO (overlay sobre cualquier tema) ── */
+[data-dark="true"]:not([data-theme="noche"]):not([data-theme="galaxia"]) {
+  --c-bg:             #111827;
+  --c-bg-card:        #1F2937;
+  --c-bg-nav:         #1F2937;
+  --c-bg-input:       #374151;
+  --c-surface:        #374151;
+  --c-surface2:       #4B5563;
+  --c-text:           #F9FAFB;
+  --c-text-muted:     #D1D5DB;
+  --c-text-light:     #9CA3AF;
+  --c-border:         #374151;
+  --c-shadow-card:    rgba(0,0,0,0.4);
+  --grad-bg:          linear-gradient(180deg, #111827 0%, #1F2937 100%);
+}
+
+/* ── Transición suave entre temas ── */
+*, *::before, *::after {
+  transition: background-color 0.3s ease, color 0.2s ease, border-color 0.2s ease;
+}
