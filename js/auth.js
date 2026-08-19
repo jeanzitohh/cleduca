@@ -228,6 +228,17 @@ window.CleoGame = (function() {
   }
 
   // ── Lives ──
+  function regenerateLives(p) {
+    if (!p || p.lives >= LIVES_MAX) return;
+    const now = Date.now();
+    const lastRegen = p.livesLastRegen || now;
+    const elapsed = now - lastRegen;
+    const livesToAdd = Math.floor(elapsed / LIVES_REGEN_MS);
+    if (livesToAdd > 0) {
+      const newLives = Math.min((p.lives || 0) + livesToAdd, LIVES_MAX);
+      saveProfile({ lives: newLives, livesLastRegen: lastRegen + livesToAdd * LIVES_REGEN_MS });
+    }
+  }
   function getLives() {
     const p = getProfile();
     if (!p) return LIVES_MAX;
