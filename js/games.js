@@ -183,7 +183,7 @@ window.GameSopa = (function() {
     const size = data.size || 8;
     const words = shuffle([...data.words]).slice(0, 6);
     const grid  = buildGrid(words, size);
-    state = { subject, grade, words, grid, size, found:[], selecting:false,
+    state = { subject, grade, words, grid, size, found:[], foundCells:[], selecting:false,
                startCell:null, cells:[], score:0, startTime:Date.now() };
     CleoGame.updateStreak();
     renderSopa();
@@ -295,6 +295,7 @@ window.GameSopa = (function() {
     const found = state.words.find(w => w===word || w===wordRev);
     if (found && !state.found.includes(found)) {
       state.found.push(found);
+      state.foundCells.push(...selCells);
       highlightCells(selCells, 'var(--c-primary)');
       document.getElementById('word-'+found)?.setAttribute('style',
         'background:var(--c-primary);color:#fff;text-decoration:line-through;');
@@ -353,7 +354,10 @@ window.GameSopa = (function() {
     document.querySelectorAll('.sopa-cell').forEach(el => {
       el.style.background = 'var(--c-bg-card)';
     });
-    // Re-highlight found words (stored in state.found)
+    // Re-highlight found words
+    if (state.foundCells && state.foundCells.length > 0) {
+      highlightCells(state.foundCells, 'var(--c-primary)');
+    }
   }
   function shuffle(arr) {
     for (let i=arr.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
@@ -1219,6 +1223,186 @@ window.GameMisterio = (function() {
         { name: "Gato Marinero Tom", desc: "Húmedo, olía a pescado y venía del río", icon: "🐱🎣", isCulprit: true },
         { name: "Zorro Félix", desc: "Estaba seco junto a la fogata", icon: "🦊", isCulprit: false },
         { name: "Conejo Saltarín", desc: "Estaba comiendo zanahorias", icon: "🐰", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #3: Las Zanahorias Robadas",
+      story: "En el huerto de la escuela, alguien se llevó todas las zanahorias de la cosecha. En el suelo de tierra húmeda quedaron unas huellas de patas alargadas y grandes saltos. El oso Bernardo caminaba despacio, el perro Toby dejó huellas pequeñas, y el conejo Rabito andaba saltando de alegría.",
+      question: "¿Quién se comió las zanahorias?",
+      suspects: [
+        { name: "Oso Bernardo", desc: "Camina despacio y pesado", icon: "🐻", isCulprit: false },
+        { name: "Conejo Rabito", desc: "Tiene patas largas y avanza dando grandes saltos", icon: "🐰", isCulprit: true },
+        { name: "Perro Toby", desc: "Dejó huellas pequeñas cerca de la reja", icon: "🐕", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #4: El Pastel Mordido",
+      story: "El delicioso pastel de chocolate estaba en la ventana enfriándose, pero alguien le dio un gran mordisco. Solo había tres animales cerca, pero el mordisco dejó rastros de un hocico muy pequeño y dientes afilados que roen la madera. Toby es grande, el gato es carnívoro y el ratón Pérez adora los dulces.",
+      question: "¿Quién mordió el pastel?",
+      suspects: [
+        { name: "Ratón Pérez", desc: "Hocico diminuto y dientes para roer", icon: "🐭", isCulprit: true },
+        { name: "Perro Toby", desc: "Hocico grande y baboso", icon: "🐕", isCulprit: false },
+        { name: "Gato Tom", desc: "Dientes de cazador y come pescado", icon: "🐱", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #5: El Jarrón Roto",
+      story: "Un hermoso jarrón antiguo se rompió en el salón principal. Cerca de los cristales había unos pelos anaranjados y rayados de tigre. El perro es blanco, el ratón es gris y el gato Félix es el único felino anaranjado con rayas de la casa.",
+      question: "¿Quién rompió el jarrón?",
+      suspects: [
+        { name: "Perro Blanco", desc: "Pelaje completamente blanco", icon: "🐕", isCulprit: false },
+        { name: "Ratón Gris", desc: "Pequeño y de color gris", icon: "🐭", isCulprit: false },
+        { name: "Gato Félix", desc: "Felino anaranjado con rayas de tigre", icon: "🐱", isCulprit: true }
+      ]
+    },
+    {
+      title: "🕵️ Caso #6: Las Gafas Desaparecidas",
+      story: "El profesor Búho no puede encontrar sus gafas de lectura. Alguien las tomó y dejó un rastro brillante de baba viscosa que sube por la pared del árbol hasta una hoja mojada.",
+      question: "¿Quién se llevó las gafas?",
+      suspects: [
+        { name: "Loro Pepe", desc: "Vuela rápido pero no deja rastro", icon: "🦜", isCulprit: false },
+        { name: "Caracol Lento", desc: "Deja un rastro brillante y viscoso", icon: "🐌", isCulprit: true },
+        { name: "Rana Saltarina", desc: "Salta pero no deja baba", icon: "🐸", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #7: El Misterio de la Bellota",
+      story: "La bellota dorada del árbol central desapareció. El culpable trepó por el tronco ágilmente usando sus garras pequeñas y una cola muy tupida. El mapache es pesado, el pájaro vuela, pero la ardilla siempre guarda bellotas en sus mejillas.",
+      question: "¿Quién escondió la bellota dorada?",
+      suspects: [
+        { name: "Pájaro Carpintero", desc: "Vuela y picotea la madera", icon: "🐦", isCulprit: false },
+        { name: "Mapache Bandido", desc: "Pesado y lento para trepar", icon: "🦝", isCulprit: false },
+        { name: "Ardilla Listada", desc: "Cola tupida y experta trepadora", icon: "🐿️", isCulprit: true }
+      ]
+    },
+    {
+      title: "🕵️ Caso #8: El Cuadro Manchado",
+      story: "Alguien manchó el nuevo cuadro de la escuela con pintura negra. En el suelo quedaron marcas de ocho patas muy pequeñitas empapadas en tinta negra.",
+      question: "¿Quién manchó el cuadro?",
+      suspects: [
+        { name: "Araña Tejedora", desc: "Tiene ocho patas pequeñitas", icon: "🕷️", isCulprit: true },
+        { name: "Hormiga Obrera", desc: "Tiene seis patas pequeñas", icon: "🐜", isCulprit: false },
+        { name: "Gusano Verde", desc: "Se arrastra sin patas", icon: "🐛", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #9: La Bufanda Enredada",
+      story: "La bufanda de lana roja amaneció completamente desenredada. El culpable adora jugar con estambre y dejó un maullido grabado en la cinta de seguridad.",
+      question: "¿Quién desenredó la bufanda?",
+      suspects: [
+        { name: "Perro Dálmata", desc: "Juega con pelotas, ladra", icon: "🐶", isCulprit: false },
+        { name: "Gatito Travieso", desc: "Le encanta el estambre y maúlla", icon: "🐱", isCulprit: true },
+        { name: "Ratón de Biblioteca", desc: "Lee libros en silencio", icon: "🐭", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #10: Las Huellas de Lodo",
+      story: "El piso recién lavado tiene grandes manchas de lodo con forma de herradura. El perro tiene almohadillas suaves, el pato tiene patas palmeadas, y el caballo acaba de llegar del pantano.",
+      question: "¿Quién ensució el piso?",
+      suspects: [
+        { name: "Perro Labrador", desc: "Huellas suaves de almohadillas", icon: "🐕", isCulprit: false },
+        { name: "Caballo Veloz", desc: "Patas con herraduras", icon: "🐎", isCulprit: true },
+        { name: "Pato Nadador", desc: "Patas palmeadas planas", icon: "🦆", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #11: El Nido Vacio",
+      story: "Un huevo desapareció del nido alto del árbol. El ladrón no puede volar, pero es largo, se arrastra silenciosamente por las ramas y sisea.",
+      question: "¿Quién se robó el huevo?",
+      suspects: [
+        { name: "Mono Tití", desc: "Trepa rápido y hace mucho ruido", icon: "🐒", isCulprit: false },
+        { name: "Serpiente Sigilosa", desc: "Se arrastra y sisea en silencio", icon: "🐍", isCulprit: true },
+        { name: "Halcón Cazador", desc: "Vuela por el cielo", icon: "🦅", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #12: La Manzana Desaparecida",
+      story: "La manzana más jugosa de la canasta fue robada. Alrededor de la canasta quedaron pelos largos y una cáscara de plátano mordida.",
+      question: "¿Quién tomó la manzana?",
+      suspects: [
+        { name: "Caballo Blanco", desc: "Come heno y manzanas, no plátanos", icon: "🐎", isCulprit: false },
+        { name: "Mono Chimpancé", desc: "Peludo, adora las frutas y come plátanos", icon: "🐒", isCulprit: true },
+        { name: "Conejo Blanco", desc: "Come zanahorias y lechuga", icon: "🐰", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #13: El Charco en la Sala",
+      story: "Alguien entró a la sala mojado y dejó un charco de agua salada. Además, olvidó un hermoso caparazón duro sobre el sofá.",
+      question: "¿Quién mojó el sofá?",
+      suspects: [
+        { name: "Tortuga Marina", desc: "Viene del mar y tiene caparazón", icon: "🐢", isCulprit: true },
+        { name: "Sapo de Río", desc: "Viene del río de agua dulce, piel blanda", icon: "🐸", isCulprit: false },
+        { name: "Gato Pescador", desc: "No le gusta el agua, no tiene caparazón", icon: "🐱", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #14: El Queso Rallado",
+      story: "Una rueda de queso amarillo gigante fue mordisqueada. Quedaron pequeños túneles en el queso y un agujerito en la pared inferior por donde el ladrón escapó.",
+      question: "¿Quién se comió el queso?",
+      suspects: [
+        { name: "Ratón Pequeñín", desc: "Vive en agujeros y ama el queso", icon: "🐭", isCulprit: true },
+        { name: "Zorro Astuto", desc: "Demasiado grande para el agujero", icon: "🦊", isCulprit: false },
+        { name: "Búho Nocturno", desc: "Vuela y come ratones", icon: "🦉", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #15: La Miel Robada",
+      story: "El panal de abejas fue vaciado por completo. El ladrón es inmenso, de pelaje grueso y marrón, y dejó grandes garras pegajosas de miel en el tronco.",
+      question: "¿Quién se comió la miel?",
+      suspects: [
+        { name: "Pájaro Carpintero", desc: "No come miel en grandes cantidades", icon: "🐦", isCulprit: false },
+        { name: "Oso Goloso", desc: "Pelaje grueso, grande, ama la miel", icon: "🐻", isCulprit: true },
+        { name: "Lobo Feroz", desc: "Come carne, no miel", icon: "🐺", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #16: Las Flores Pisoteadas",
+      story: "El jardín de tulipanes fue aplastado. Quedaron huellas gigantes, circulares y profundas en el suelo, como columnas pesadas. También se escuchó un fuerte sonido de trompeta.",
+      question: "¿Quién pisó el jardín?",
+      suspects: [
+        { name: "León Rey", desc: "Ruge fuerte, huellas de felino", icon: "🦁", isCulprit: false },
+        { name: "Elefante Sabio", desc: "Huellas enormes como columnas, trompeta sonora", icon: "🐘", isCulprit: true },
+        { name: "Caballo Salvaje", desc: "Relincha y tiene herraduras", icon: "🐎", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #17: La Lechuga Masticada",
+      story: "En la granja, toda la lechuga fue devorada durante la noche. El culpable dejó rastros de lana blanca enredada en la cerca de madera y suena con un suave 'beee'.",
+      question: "¿Quién se comió la lechuga?",
+      suspects: [
+        { name: "Cerdo Rosado", desc: "Piel sin lana, gruñe", icon: "🐷", isCulprit: false },
+        { name: "Vaca Lechera", desc: "Hace muu, pelo corto", icon: "🐮", isCulprit: false },
+        { name: "Oveja Esponjosa", desc: "Tiene lana blanca y hace beee", icon: "🐑", isCulprit: true }
+      ]
+    },
+    {
+      title: "🕵️ Caso #18: El Pez Desaparecido",
+      story: "Un pez dorado desapareció de la cubeta. El culpable dejó plumas grandes, tiene un pico enorme como una bolsa y sus patas son palmeadas.",
+      question: "¿Quién se llevó al pez?",
+      suspects: [
+        { name: "Gato Pescador", desc: "No tiene plumas ni pico", icon: "🐱", isCulprit: false },
+        { name: "Pelícano Pescador", desc: "Plumas, pico de bolsa, come peces", icon: "🦤", isCulprit: true },
+        { name: "Loro Verde", desc: "Pico pequeño, come semillas", icon: "🦜", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #19: Las Nueces Enterradas",
+      story: "Alguien cavó agujeros en el patio trasero y enterró muchas nueces. El jardín está lleno de pequeños montículos y se vio una cola peluda moviéndose rápido.",
+      question: "¿Quién enterró las nueces?",
+      suspects: [
+        { name: "Perro Cavador", desc: "Entierra huesos, no nueces", icon: "🐕", isCulprit: false },
+        { name: "Ardilla Veloz", desc: "Entierra nueces, cola peluda", icon: "🐿️", isCulprit: true },
+        { name: "Gato Solitario", desc: "Entierra otras cosas, no nueces", icon: "🐱", isCulprit: false }
+      ]
+    },
+    {
+      title: "🕵️ Caso #20: El Misterio de la Noche",
+      story: "Durante la noche, un sonido agudo y chirriante despertó a Cleo. El animal que hacía el ruido volaba en la oscuridad usando sus grandes orejas de radar y dormía boca abajo durante el día.",
+      question: "¿Quién hizo el ruido nocturno?",
+      suspects: [
+        { name: "Búho Sabio", desc: "Vuela pero ulula y duerme de pie", icon: "🦉", isCulprit: false },
+        { name: "Murciélago Ciego", desc: "Vuela en la noche, radar, duerme boca abajo", icon: "🦇", isCulprit: true },
+        { name: "Ratón Común", desc: "No vuela, hace ruido pero en el suelo", icon: "🐭", isCulprit: false }
       ]
     }
   ];

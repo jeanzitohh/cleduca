@@ -389,9 +389,10 @@ window.CleoUI = (function() {
   }
 
   function showAdModal(onComplete) {
+    document.querySelectorAll('.modal-overlay.ad-modal').forEach(m => m.remove());
     let secondsLeft = 5;
     const modal = document.createElement('div');
-    modal.className = 'modal-backdrop active';
+    modal.className = 'modal-overlay center ad-modal active';
     modal.style.zIndex = '99999';
     modal.innerHTML = `
       <div class="modal-card animate-scaleUp" style="text-align:center;padding:24px;">
@@ -478,6 +479,7 @@ window.CleoRouter = (function() {
             renderSubject(data); showView('subject');
           }
           break;
+        case 'idiomas':  renderIdiomas(); showView('idiomas'); break;
         case 'game':     showView('game'); break;
         case 'grade':    showGradeSelector(); break;
         case 'login':    showAuthScreen(); break;
