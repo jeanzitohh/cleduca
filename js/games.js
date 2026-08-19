@@ -1490,16 +1490,35 @@ window.GamePintura = (function() {
   return { start, setColor, clear };
 })();
 
-// ── VISTE A CLEO ──
+// ── VISTE A CLEO (CUSTOMIZADOR DE MASCOTA INTERACTIVO) ──
 window.GameDressUp = (function() {
-  let selectedSkin = 'verde';
-  let selectedAcc = 'none';
+  let activeSkin = 'verde';
+  let activeAcc = 'none';
+
+  const ACCESSORIES = [
+    { id: 'none', name: 'Sin Accesorio', emoji: '❌' },
+    { id: 'corona', name: 'Corona Real', emoji: '👑' },
+    { id: 'gafas', name: 'Gafas de Sol', emoji: '🕶️' },
+    { id: 'gorra', name: 'Gorra Deportiva', emoji: '🧢' },
+    { id: 'sombrero', name: 'Sombrero Elegante', emoji: '🎩' },
+    { id: 'moño', name: 'Moño Rosado', emoji: '🎀' },
+    { id: 'birrete', name: 'Birrete Graduado', emoji: '🎓' },
+    { id: 'audifonos', name: 'Audífonos Dj', emoji: '🎧' }
+  ];
+
+  const SKINS = [
+    { id: 'verde', name: 'Husky Clásico', emoji: '🐶' },
+    { id: 'galaxia', name: 'Cleo Morado', emoji: '🔮' },
+    { id: 'fuego', name: 'Cleo Fuego', emoji: '🔥' },
+    { id: 'oceanica', name: 'Cleo Azul', emoji: '🌊' },
+    { id: 'primavera', name: 'Cleo Rosado', emoji: '🌸' },
+    { id: 'dorada', name: 'Cleo Dorado', emoji: '⭐' }
+  ];
 
   function start() {
-    const profile = CleoAuth.getActive() || {};
-    selectedSkin = profile.skin || 'verde';
-    selectedAcc = profile.accessory || 'none';
-
+    const p = CleoAuth.getActive() || {};
+    activeSkin = p.skin || 'verde';
+    activeAcc = p.accessory || 'none';
     render();
   }
 
@@ -1509,94 +1528,268 @@ window.GameDressUp = (function() {
       progress: 100,
       lives: CleoGame.getLives(),
       content: `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:16px;gap:16px;text-align:center;">
-          <div style="width:140px;height:140px;border-radius:50%;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.15);background:#fff;padding:10px;">
-            ${CleoChr.getSVG(selectedSkin, 'happy', selectedAcc).replace('class="cleo-svg"', 'class="cleo-svg" style="width:100%;height:100%;"')}
-          </div>
+        <div style="display:flex;flex-direction:column;align-items:center;padding:16px;gap:14px;text-align:center;width:100%;">
           
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;color:var(--c-primary);">
-            ¡Personaliza el look de Cleo!
+          <div id="cleo-dressup-preview" style="width:150px;height:150px;border-radius:50%;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.15);background:#fff;padding:10px;cursor:pointer;"
+               onclick="CleoSpeech.say('¡Me encanta este nuevo look!'); CleoAnimations.confetti();">
+            ${CleoChr.getSVG(activeSkin, 'happy', activeAcc).replace('class="cleo-svg"', 'class="cleo-svg" style="width:100%;height:100%;"')}
           </div>
 
-          <div style="display:flex;gap:12px;justify-content:center;">
-            <button class="btn btn-secondary" onclick="GameDressUp.changeAcc('corona')">👑 Corona</button>
-            <button class="btn btn-secondary" onclick="GameDressUp.changeAcc('gafas')">🕶️ Gafas</button>
-            <button class="btn btn-secondary" onclick="GameDressUp.changeAcc('gorra')">🧢 Gorra</button>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.15rem;color:var(--c-primary);">
+            ¡Personaliza y Viste a Cleo!
           </div>
 
-          <button class="btn btn-primary btn-full btn-lg" onclick="CleoUI.toast('¡Cleo luce hermosa!', '✨', 'success'); CleoAnimations.confetti(); CleoSpeech.say('¡Me encanta mi nuevo estilo!');">
-            💖 ¡Guardar Estilo!
-          </button>
+          <div class="card" style="padding:14px;width:100%;max-width:340px;background:var(--c-surface);">
+            <div style="font-weight:800;font-size:0.85rem;margin-bottom:10px;color:var(--c-text-muted);text-align:left;">🎩 Elige un Accesorio:</div>
+            <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:8px;">
+              ${ACCESSORIES.map(a => `
+                <button class="btn ${activeAcc === a.id ? 'btn-primary' : 'btn-secondary'}"
+                        style="padding:10px 4px;display:flex;flex-direction:column;align-items:center;font-size:0.75rem;"
+                        onclick="GameDressUp.setAcc('${a.id}')">
+                  <span style="font-size:1.4rem;">${a.emoji}</span>
+                  <span style="font-size:0.65rem;margin-top:2px;">${a.name.split(' ')[0]}</span>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="card" style="padding:14px;width:100%;max-width:340px;background:var(--c-surface);">
+            <div style="font-weight:800;font-size:0.85rem;margin-bottom:10px;color:var(--c-text-muted);text-align:left;">🎨 Color de Cleo:</div>
+            <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;">
+              ${SKINS.map(s => `
+                <button class="btn ${activeSkin === s.id ? 'btn-primary' : 'btn-secondary'}"
+                        style="padding:10px 4px;font-size:0.78rem;"
+                        onclick="GameDressUp.setSkin('${s.id}')">
+                  <span>${s.emoji} ${s.name.split(' ')[1]||s.name}</span>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;width:100%;max-width:340px;">
+            <button class="btn btn-ghost btn-sm" onclick="GameDressUp.showHint()" style="flex:1;font-weight:800;">💡 Pista</button>
+            <button class="btn btn-primary btn-lg" style="flex:2;" onclick="GameDressUp.saveToProfile()">
+              💖 ¡Guardar en Mi Perfil!
+            </button>
+          </div>
+
         </div>
       `,
       onBack: () => CleoRouter.navigate('juegos')
     });
   }
 
-  function changeAcc(acc) {
-    selectedAcc = acc;
-    const p = CleoAuth.getActive();
-    if (p) CleoAuth.updateProfile(p.id, { accessory: acc });
+  function setAcc(accId) {
+    activeAcc = accId;
     CleoSpeech.say('¡Me queda genial!');
     render();
   }
 
-  return { start, changeAcc };
+  function setSkin(skinId) {
+    activeSkin = skinId;
+    CleoSpeech.say('¡Qué lindo color!');
+    render();
+  }
+
+  function showHint() {
+    CleoUI.toast('💡 Selecciona cualquier accesorio o color y presiona "Guardar en Mi Perfil"', '💡', 'info');
+    CleoSpeech.say('¡Prueba todos los accesorios para encontrar tu favorito!');
+  }
+
+  function saveToProfile() {
+    const p = CleoAuth.getActive();
+    if (p) {
+      CleoAuth.updateProfile(p.id, { skin: activeSkin, accessory: activeAcc });
+      CleoGame.addXP(20);
+      CleoAnimations.confetti();
+      CleoSpeech.say('¡Estilo guardado en tu perfil con éxito!');
+      CleoUI.toast('¡Cleo actualizado en tu perfil! 💖', '✨', 'success');
+    }
+  }
+
+  return { start, setAcc, setSkin, showHint, saveToProfile };
 })();
 
-// ── PIANO Y MÚSICA ──
+// ── PIANO Y MÚSICA EDUCATIVA (MODOS DE JUEGO & NIVELES) ──
 window.GameMusica = (function() {
+  let state = {};
+
   const NOTES = [
-    { note: 'Do', freq: 261.63, color: '#FF4757' },
-    { note: 'Re', freq: 293.66, color: '#FFA500' },
-    { note: 'Mi', freq: 329.63, color: '#2ED573' },
-    { note: 'Fa', freq: 349.23, color: '#1E90FF' },
-    { note: 'Sol', freq: 392.00, color: '#9B59B6' },
-    { note: 'La', freq: 440.00, color: '#E67E22' },
-    { note: 'Si', freq: 493.88, color: '#34495E' }
+    { note: 'Do', freq: 261.63, color: '#FF4757', key: 'C' },
+    { note: 'Re', freq: 293.66, color: '#FFA500', key: 'D' },
+    { note: 'Mi', freq: 329.63, color: '#2ED573', key: 'E' },
+    { note: 'Fa', freq: 349.23, color: '#1E90FF', key: 'F' },
+    { note: 'Sol', freq: 392.00, color: '#9B59B6', key: 'G' },
+    { note: 'La', freq: 440.00, color: '#E67E22', key: 'A' },
+    { note: 'Si', freq: 493.88, color: '#EC4899', key: 'B' }
   ];
 
-  function start() {
+  const SONGS = [
+    { title: '🎵 Estrellita Dónde Estás', sequence: [0, 0, 4, 4, 5, 5, 4], desc: 'Do Do Sol Sol La La Sol' },
+    { title: '🎂 Cumpleaños Feliz', sequence: [0, 0, 1, 0, 3, 2], desc: 'Do Do Re Do Fa Mi' },
+    { title: '🐥 Los Pollitos Dicen', sequence: [0, 1, 2, 3, 4, 4], desc: 'Do Re Mi Fa Sol Sol' }
+  ];
+
+  function start(mode = 'partitura') {
+    state = {
+      mode,
+      currentLevel: 0,
+      sequencePos: 0,
+      targetNoteIdx: 0,
+      score: 0,
+      lives: CleoGame.getLives()
+    };
+    if (mode === 'oido') {
+      nextEarTraining();
+    } else {
+      render();
+    }
+  }
+
+  function playTone(freq) {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.6);
+    } catch(e) {}
+  }
+
+  function playNote(idx) {
+    const note = NOTES[idx];
+    if (!note) return;
+    playTone(note.freq);
+    CleoSpeech.say(note.note);
+
+    if (state.mode === 'partitura') {
+      const song = SONGS[state.currentLevel % SONGS.length];
+      const expectedNoteIdx = song.sequence[state.sequencePos];
+      if (idx === expectedNoteIdx) {
+        state.sequencePos++;
+        if (state.sequencePos >= song.sequence.length) {
+          state.score += 20;
+          CleoGame.addXP(20);
+          CleoAnimations.confetti();
+          CleoSpeech.say('¡Excelente! Completaste la canción.');
+          CleoUI.toast(`¡Melodía ${song.title} lograda! 🎉`, '🎵', 'success');
+          state.sequencePos = 0;
+          state.currentLevel++;
+        }
+      } else {
+        CleoGame.loseLife();
+        CleoSpeech.say('Mmm, esa no era la nota. Escucha la secuencia.');
+      }
+    } else if (state.mode === 'oido') {
+      if (idx === state.targetNoteIdx) {
+        state.score += 15;
+        CleoGame.addXP(15);
+        CleoSpeech.say('¡Correcto! Adivinaste el sonido.');
+        CleoUI.toast('¡Oído musical perfecto! 🎵', '👂', 'success');
+        setTimeout(nextEarTraining, 600);
+      } else {
+        CleoGame.loseLife();
+        CleoSpeech.say('Esa no fue la nota. ¡Escucha de nuevo!');
+      }
+    }
+
+    render();
+  }
+
+  function nextEarTraining() {
+    state.targetNoteIdx = Math.floor(Math.random() * NOTES.length);
+    render();
+    setTimeout(() => {
+      playTone(NOTES[state.targetNoteIdx].freq);
+    }, 400);
+  }
+
+  function playTargetTone() {
+    playTone(NOTES[state.targetNoteIdx].freq);
+  }
+
+  function showHint() {
+    if (state.mode === 'partitura') {
+      const song = SONGS[state.currentLevel % SONGS.length];
+      const expected = NOTES[song.sequence[state.sequencePos]];
+      CleoUI.toast(`Pista: Toca la nota ${expected.note}`, '💡', 'info');
+      CleoSpeech.say(`Toca la nota ${expected.note}`);
+    } else if (state.mode === 'oido') {
+      const expected = NOTES[state.targetNoteIdx];
+      CleoUI.toast(`Pista: El sonido es ${expected.note}`, '💡', 'info');
+      CleoSpeech.say(`El sonido es ${expected.note}`);
+    } else {
+      CleoUI.toast('💡 Toca las teclas de colores para experimentar y componer tu música', '💡', 'info');
+    }
+  }
+
+  function render() {
+    const song = SONGS[state.currentLevel % SONGS.length];
+
     CleoUI.renderGameView({
-      title: '🎹 Piano de Cleo',
-      progress: 100,
+      title: '🎹 Piano y Música',
+      progress: state.mode === 'partitura' ? (state.sequencePos / song.sequence.length) * 100 : 100,
       lives: CleoGame.getLives(),
       content: `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:16px;gap:20px;text-align:center;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;color:var(--c-primary);">
-            Toca las teclas y crea hermosas melodías
+        <div style="display:flex;flex-direction:column;align-items:center;padding:14px;text-align:center;gap:14px;width:100%;">
+          
+          <div style="display:flex;gap:6px;background:var(--c-surface);padding:6px;border-radius:16px;border:2px solid var(--c-border);width:100%;max-width:340px;">
+            <button class="btn btn-sm ${state.mode==='partitura'?'btn-primary':'btn-ghost'}" style="flex:1;font-size:0.78rem;" onclick="GameMusica.start('partitura')">🎼 Partitura</button>
+            <button class="btn btn-sm ${state.mode==='oido'?'btn-primary':'btn-ghost'}" style="flex:1;font-size:0.78rem;" onclick="GameMusica.start('oido')">👂 Oído Musical</button>
+            <button class="btn btn-sm ${state.mode==='libre'?'btn-primary':'btn-ghost'}" style="flex:1;font-size:0.78rem;" onclick="GameMusica.start('libre')">🎹 Libre</button>
           </div>
 
-          <div style="display:flex;gap:6px;background:var(--c-surface);padding:16px;border-radius:20px;border:2px solid var(--c-border);width:100%;max-width:340px;justify-content:center;">
-            ${NOTES.map(n => `
-              <button onclick="GameMusica.play('${n.note}', ${n.freq})" style="flex:1;height:160px;background:${n.color};border:none;border-radius:12px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;box-shadow:0 6px 0 rgba(0,0,0,0.2);cursor:pointer;transition:transform 0.1s;">
-                ${n.note}
-              </button>
-            `).join('')}
+          <div class="card" style="padding:14px;width:100%;max-width:340px;background:var(--c-surface);border:2px solid var(--c-primary);box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+            ${state.mode === 'partitura' ? `
+              <div style="font-weight:900;color:var(--c-primary);margin-bottom:4px;">${song.title}</div>
+              <div style="font-size:0.85rem;color:var(--c-text-muted);">Sigue las notas: <strong>${song.desc}</strong></div>
+              <div style="font-size:0.8rem;margin-top:6px;color:var(--c-text);">Nota actual: <span style="background:var(--c-primary);color:#fff;padding:2px 8px;border-radius:10px;font-weight:800;">${NOTES[song.sequence[state.sequencePos]]?.note}</span></div>
+            ` : state.mode === 'oido' ? `
+              <div style="font-weight:900;color:var(--c-primary);margin-bottom:4px;">🎯 Adivina el Sonido</div>
+              <div style="font-size:0.85rem;color:var(--c-text-muted);">Escucha la nota de Cleo y toca la tecla correspondiente</div>
+              <button class="btn btn-secondary btn-sm" style="margin-top:8px;" onclick="GameMusica.playTargetTone()">🔊 Repetir Sonido</button>
+            ` : `
+              <div style="font-weight:900;color:var(--c-primary);margin-bottom:4px;">🎹 Piano Libre</div>
+              <div style="font-size:0.85rem;color:var(--c-text-muted);">Toca las teclas para practicar y componer melodías</div>
+            `}
           </div>
+
+          <div style="display:flex;gap:6px;background:var(--c-surface);padding:14px 10px;border-radius:24px;border:3px solid var(--c-border);width:100%;max-width:340px;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.08);box-sizing:border-box;">
+            ${NOTES.map((n, idx) => {
+              const isHighlight = state.mode === 'partitura' && song.sequence[state.sequencePos] === idx;
+              return `
+                <button onclick="GameMusica.playNote(${idx})"
+                        style="flex:1;height:120px;border-radius:14px;border:3px solid ${isHighlight ? 'var(--c-primary)' : 'var(--c-border)'};
+                        background:${n.color};color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.05rem;
+                        display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 2px;
+                        box-shadow:${isHighlight ? '0 0 0 4px var(--c-primary)' : '0 6px 0 rgba(0,0,0,0.2)'};
+                        cursor:pointer;transition:transform 0.1s ease;transform:scale(${isHighlight ? '1.05' : '1'});">
+                  <span>${n.note}</span>
+                  <span style="font-size:0.75rem;opacity:0.8;">${n.key}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          <button class="btn btn-ghost btn-full" onclick="GameMusica.showHint()" style="max-width:340px;font-weight:800;color:var(--c-primary);">
+            💡 Pista de Cleo
+          </button>
+
         </div>
       `,
       onBack: () => CleoRouter.navigate('juegos')
     });
   }
 
-  function play(name, freq) {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.8);
-      setTimeout(() => ctx.close(), 900);
-    } catch (e) {}
-    CleoGame.addXP(2);
-  }
-
-  return { start, play };
+  return { start, playNote, playTargetTone, showHint };
 })();
 
 // ── MOTOR INTERACTIVO TIPO DUOLINGO (IDIOMAS) ──
