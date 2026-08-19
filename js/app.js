@@ -1680,39 +1680,81 @@ function selectProfile(id) {
 }
 
 function showPinModal(profileId) {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.remove());
   const overlay = document.createElement('div');
-  overlay.className = 'modal-overlay center';
+  overlay.className = 'modal-overlay center active';
+  overlay.id = 'modal-pin-overlay';
+  overlay.style.zIndex = '999999';
   overlay.innerHTML = `
-    <div class="modal-dialog" style="text-align:center;">
-      <div style="font-size:2rem;margin-bottom:12px;">🔒</div>
-      <h3 class="modal-title">Ingresa tu PIN</h3>
-      <p class="modal-subtitle">PIN de 4 dígitos para entrar al perfil</p>
-      <div class="pin-inputs">
-        ${[0,1,2,3].map(i=>`<input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="pd${i}" oninput="movePinFocus(${i})">`).join('')}
+    <div class="modal-dialog animate-scaleUp" style="text-align:center;padding:24px;max-width:320px;">
+      <div style="font-size:2.8rem;margin-bottom:8px;">🔒</div>
+      <h3 class="modal-title" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;">Ingresa tu PIN</h3>
+      <p class="modal-subtitle" style="font-size:0.85rem;color:var(--c-text-muted);margin-bottom:16px;">PIN de 4 dígitos para ingresar al perfil</p>
+      
+      <div class="pin-inputs" style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;">
+        ${[0,1,2,3].map(i => `
+          <input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="pd${i}"
+                 style="width:48px;height:54px;font-size:1.5rem;text-align:center;border-radius:14px;border:2px solid var(--c-border);background:var(--c-surface);font-weight:900;"
+                 oninput="movePinFocus(${i}, '${profileId}')"
+                 onkeydown="handlePinBackspace(event, ${i})">
+        `).join('')}
       </div>
-      <button class="btn btn-primary btn-full" onclick="validatePin('${profileId}')">Entrar</button>
-      <button class="btn btn-ghost btn-full" onclick="this.closest('.modal-overlay').remove()" style="margin-top:8px;">Cancelar</button>
+
+      <button class="btn btn-primary btn-full btn-lg" onclick="validatePin('${profileId}')">
+        🚀 Entrar al Perfil
+      </button>
+      <button class="btn btn-ghost btn-full" onclick="document.getElementById('modal-pin-overlay')?.remove()" style="margin-top:8px;color:var(--c-text-muted);">
+        Cancelar
+      </button>
     </div>
   `;
   document.body.appendChild(overlay);
-  document.getElementById('pd0')?.focus();
+  setTimeout(() => document.getElementById('pd0')?.focus(), 100);
 }
 
-function movePinFocus(i) {
-  const next = document.getElementById(`pd${i+1}`);
-  if (next) next.focus();
+function movePinFocus(i, profileId) {
+  const currentInput = document.getElementById(`pd${i}`);
+  if (currentInput && currentInput.value) {
+    const next = document.getElementById(`pd${i+1}`);
+    if (next) {
+      next.focus();
+    } else if (i === 3) {
+      validatePin(profileId);
+    }
+  }
 }
+
+function handlePinBackspace(e, i) {
+  if (e.key === 'Backspace') {
+    const currentInput = document.getElementById(`pd${i}`);
+    if (currentInput && !currentInput.value && i > 0) {
+      const prev = document.getElementById(`pd${i-1}`);
+      if (prev) prev.focus();
+    }
+  }
+}
+
 function validatePin(profileId) {
-  const pin = [0,1,2,3].map(i=>document.getElementById(`pd${i}`)?.value||'').join('');
+  const pin = [0,1,2,3].map(i => document.getElementById(`pd${i}`)?.value || '').join('');
+  if (pin.length < 4) {
+    CleoUI.toast('Ingresa los 4 dígitos de tu PIN', '🔒', 'info');
+    return;
+  }
+
   if (CleoAuth.validatePin(profileId, pin)) {
-    document.querySelector('.modal-overlay')?.remove();
+    document.querySelectorAll('.modal-overlay').forEach(m => m.remove());
     CleoAuth.setActive(profileId);
     const p = CleoAuth.getActive();
     applyProfileSettings(p);
     CleoRouter.navigate('home');
+    CleoUI.toast(`¡Bienvenido de nuevo, ${p.name}! 🚀`, '👋', 'success');
   } else {
-    [0,1,2,3].forEach(i => { const el = document.getElementById(`pd${i}`); if(el) el.value=''; el?.classList.add('animate-shake'); });
-    CleoUI.toast('PIN incorrecto', '🔒', 'error');
+    [0,1,2,3].forEach(i => {
+      const el = document.getElementById(`pd${i}`);
+      if (el) el.value = '';
+    });
+    document.getElementById('pd0')?.focus();
+    CleoUI.toast('PIN incorrecto. Inténtalo de nuevo.', '🔒', 'error');
   }
 }
 
