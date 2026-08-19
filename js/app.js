@@ -1536,7 +1536,12 @@ function showAuthScreen() {
           </div>
           <div class="input-group">
             <label class="input-label">Contraseña</label>
-            <input type="password" class="input-field" id="auth-pass" placeholder="Mínimo 6 caracteres">
+            <div style="position:relative;display:flex;align-items:center;">
+              <input type="password" class="input-field" id="auth-pass" placeholder="Mínimo 6 caracteres" style="padding-right:46px;">
+              <button type="button" onclick="togglePasswordVisibility('auth-pass', this)" style="position:absolute;right:8px;background:none;border:none;font-size:1.3rem;cursor:pointer;padding:6px;color:var(--c-text-muted);" title="Ver / Ocultar Contraseña">
+                👁️
+              </button>
+            </div>
           </div>
           <div style="display:flex;gap:12px;margin-top:24px;">
             <button class="btn btn-secondary btn-full" onclick="handleRegister()">Crear Cuenta</button>
@@ -1561,6 +1566,18 @@ function showAuthScreen() {
     </div>
   `;
   CleoRouter.showView('login');
+}
+
+function togglePasswordVisibility(inputId, btnEl) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    if (btnEl) btnEl.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    if (btnEl) btnEl.textContent = '👁️';
+  }
 }
 
 async function handleGoogleLogin() {
