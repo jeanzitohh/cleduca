@@ -888,44 +888,273 @@ window.GameDiferencias = (function() {
   return { start, check };
 })();
 
-// ── ROMPECABEZAS (JIGSAW PUZZLE) ──
+// ── SOPA DE LETRAS ──
+window.GameSopa = (function() {
+  let state = {};
+  const WORDS_DB = {
+    ciencias: ['CELULA', 'ECOSISTEMA', 'PLANETA', 'SOLAR', 'NUCLEO'],
+    lenguaje: ['CUENTO', 'POEMA', 'LETRAS', 'VERBO', 'ORACION'],
+    matematicas: ['SUMA', 'NUMERO', 'RESTA', 'FIGURA', 'CONTEO'],
+    sociales: ['MAPA', 'HISTORIA', 'COLOMBIA', 'PUEBLO', 'REGION'],
+    logica: ['PISTA', 'SECRET', 'CODIGO', 'REGLA', 'ORDEN'],
+    arte: ['COLOR', 'PINCEL', 'LIENZO', 'DIBUJO', 'TRAZO']
+  };
+
+  const WORD_COLORS = ['#EC4899', '#10B981', '#38BDF8', '#8B5CF6', '#F59E0B', '#EF4444'];
+
+  function start(subject='ciencias', grade=3) {
+    const rawWords = WORDS_DB[subject] || WORDS_DB.ciencias;
+    const words = Array.from(new Set(rawWords.map(w => w.toUpperCase())));
+    const gridData = generateGrid(words, 8);
+
+    state = {
+      subject,
+      words: words,
+      grid: gridData.grid,
+      wordPositions: gridData.positions,
+      foundWords: {},
+      selectedCoords: [],
+      score: 0
+    };
+    render();
+  }
+
+  function generateGrid(words, size) {
+    const grid = Array(size).fill(null).map(() => Array(size).fill(''));
+    const positions = {};
+
+    words.forEach(word => {
+      let placed = false;
+      let attempts = 0;
+      while (!placed && attempts < 100) {
+        attempts++;
+        const dir = Math.random() > 0.5 ? 'H' : 'V';
+        const row = Math.floor(Math.random() * (dir === 'V' ? size - word.length + 1 : size));
+        const col = Math.floor(Math.random() * (dir === 'H' ? size - word.length + 1 : size));
+
+        let canPlace = true;
+        for (let i = 0; i < word.length; i++) {
+          const r = dir === 'V' ? row + i : row;
+          const c = dir === 'H' ? col + i : col;
+          if (grid[r][c] !== '' && grid[r][c] !== word[i]) {
+            canPlace = false;
+            break;
+          }
+        }
+
+        if (canPlace) {
+          const coords = [];
+          for (let i = 0; i < word.length; i++) {
+            const r = dir === 'V' ? row + i : row;
+            const c = dir === 'H' ? col + i : col;
+            grid[r][c] = word[i];
+            coords.push({ r, c });
+          }
+          positions[word] = coords;
+          placed = true;
+        }
+      }
+    });
+
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (!grid[r][c]) {
+          grid[r][c] = letters[Math.floor(Math.random() * letters.length)];
+        }
+      }
+    }
+
+    return { grid, positions };
+  }
+
+  function render() {
+    const isFinished = Object.keys(state.foundWords).length >= state.words.length;
+
+    CleoUI.renderGameView({
+      title: '🔤 Sopa de Letras',
+      progress: (Object.keys(state.foundWords).length / state.words.length) * 100,
+      lives: CleoGame.getLives(),
+      content: `
+        <div style="display:flex;flex-direction:column;align-items:center;padding:14px;text-align:center;gap:14px;width:100%;">
+          
+          <div style="display:flex;align-items:center;justify-space-between;width:100%;max-width:340px;background:var(--c-surface);padding:10px 16px;border-radius:16px;border:2px solid var(--c-border);">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.95rem;color:var(--c-primary);">
+              🎯 Encontradas: ${Object.keys(state.foundWords).length} / ${state.words.length}
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="GameSopa.showHint()" style="color:var(--c-primary);font-weight:800;">💡 Pista</button>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:340px;">
+            ${state.words.map((w) => {
+              const isFound = state.foundWords[w];
+              const color = isFound || 'var(--c-bg-card)';
+              return `
+                <div style="padding:6px 12px;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.8rem;background:${isFound ? color : 'var(--c-surface)'};color:${isFound ? '#fff' : 'var(--c-text)'};border:2px solid ${isFound ? color : 'var(--c-border)'};text-decoration:${isFound ? 'line-through' : 'none'};box-shadow:0 2px 6px rgba(0,0,0,0.05);">
+                  ${w} ${isFound ? '✓' : ''}
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(8, 1fr);gap:4px;background:var(--c-surface);padding:10px;border-radius:20px;border:2px solid var(--c-border);width:100%;max-width:340px;margin:0 auto;box-sizing:border-box;">
+            ${state.grid.map((row, r) => row.map((char, c) => {
+              const coordStr = `${r}-${c}`;
+              let cellColor = '';
+              let isSelected = state.selectedCoords.includes(coordStr);
+
+              Object.keys(state.foundWords).forEach(word => {
+                const coords = state.wordPositions[word];
+                if (coords && coords.some(pos => pos.r === r && pos.c === c)) {
+                  cellColor = state.foundWords[word];
+                }
+              });
+
+              return `
+                <button onclick="GameSopa.clickCell(${r},${c})"
+                        style="aspect-ratio:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.05rem;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+                        background:${cellColor || (isSelected ? 'var(--c-primary)' : 'rgba(0,0,0,0.03)')};
+                        color:${(cellColor || isSelected) ? '#fff' : 'var(--c-text)'};
+                        box-shadow:${isSelected ? '0 0 0 3px #fff inset' : '0 2px 0 var(--c-border)'};
+                        transition:transform 0.15s ease;">
+                  ${char}
+                </button>
+              `;
+            }).join('')).join('')}
+          </div>
+
+          ${isFinished ? `
+            <button class="btn btn-primary btn-full btn-lg" onclick="GameSopa.finish()">
+              ✨ ¡Sopa de Letras Completada! (+25 XP)
+            </button>
+          ` : ''}
+
+        </div>
+      `,
+      onBack: () => CleoRouter.navigate('juegos')
+    });
+  }
+
+  function clickCell(r, c) {
+    const coordStr = `${r}-${c}`;
+    const idx = state.selectedCoords.indexOf(coordStr);
+    if (idx >= 0) {
+      state.selectedCoords.splice(idx, 1);
+    } else {
+      state.selectedCoords.push(coordStr);
+    }
+
+    state.words.forEach((word) => {
+      if (!state.foundWords[word]) {
+        const positions = state.wordPositions[word];
+        if (positions && positions.length === state.selectedCoords.length) {
+          const match = positions.every(pos => state.selectedCoords.includes(`${pos.r}-${pos.c}`));
+          if (match) {
+            const color = WORD_COLORS[Object.keys(state.foundWords).length % WORD_COLORS.length];
+            state.foundWords[word] = color;
+            state.selectedCoords = [];
+            state.score += 15;
+            CleoGame.addXP(15);
+            CleoSpeech.say(`¡Encontraste la palabra ${word}!`);
+            CleoUI.toast(`¡Palabra ${word} encontrada! 🎉`, '🔤', 'success');
+          }
+        }
+      }
+    });
+
+    render();
+  }
+
+  function showHint() {
+    const unfound = state.words.filter(w => !state.foundWords[w]);
+    if (unfound.length > 0) {
+      const word = unfound[0];
+      const pos = state.wordPositions[word];
+      if (pos && pos.length > 0) {
+        CleoUI.toast(`Pista: ${word} empieza en la fila ${pos[0].r + 1}, columna ${pos[0].c + 1}`, '💡', 'info');
+        CleoSpeech.say(`La palabra ${word} empieza en la fila ${pos[0].r + 1}`);
+      }
+    }
+  }
+
+  function finish() {
+    CleoGame.addXP(25);
+    CleoAnimations.confetti();
+    CleoSpeech.say('¡Excelente trabajo! Encontraste todas las palabras.');
+    CleoUI.showGameEnd({
+      score: state.score, total: state.words.length, correct: Object.keys(state.foundWords).length, wrong: 0, perfect: true,
+      onReplay: () => start(state.subject), onHome: () => CleoRouter.navigate('home')
+    });
+  }
+
+  return { start, clickCell, showHint, finish };
+})();
+
+// ── ROMPECABEZAS VISUAL HD ──
 window.GameRompecabezas = (function() {
   let state = {};
-  const TILES = ['🧩 1', '🧩 2', '🧩 3', '🧩 4'];
+  const PUZZLE_IMAGES = [
+    { title: 'Cleo y sus Amigos 🐶', img: 'img/cleo_logo.png' },
+    { title: 'Naturaleza y Selva 🌳', img: 'img/cleo_logo.png' }
+  ];
 
   function start() {
-    state = { current: 0, score: 0, pieces: [2, 0, 3, 1], selected: null };
+    state = {
+      level: 0,
+      pieces: [2, 0, 3, 1],
+      selected: null,
+      score: 0
+    };
     render();
   }
 
   function render() {
+    const pData = PUZZLE_IMAGES[state.level % PUZZLE_IMAGES.length];
     const isSolved = state.pieces.every((val, idx) => val === idx);
 
     CleoUI.renderGameView({
-      title: '🧩 Rompecabezas de Cleo',
+      title: `🧩 ${pData.title}`,
       progress: isSolved ? 100 : 50,
       lives: CleoGame.getLives(),
       content: `
         <div style="display:flex;flex-direction:column;align-items:center;padding:16px;text-align:center;gap:16px;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;color:var(--c-primary);">
-            Intercambia las fichas para armar la imagen
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;color:var(--c-primary);">
+            Toca una ficha y luego otra para ordenar la imagen
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:10px;background:var(--c-surface);padding:16px;border-radius:20px;border:2px solid var(--c-border);width:100%;max-width:280px;">
-            ${state.pieces.map((pIdx, idx) => `
-              <button onclick="GameRompecabezas.clickTile(${idx})" style="height:90px;font-size:1.3rem;font-weight:900;border:3px solid ${state.selected === idx ? 'var(--c-primary)' : 'var(--c-border)'};background:${isSolved ? '#dcfce7' : 'var(--c-bg-card)'};border-radius:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 var(--c-border);">
-                Pieza #${pIdx + 1}
-              </button>
-            `).join('')}
+          <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;background:var(--c-surface);padding:14px;border-radius:24px;border:3px solid var(--c-border);width:100%;max-width:280px;box-shadow:0 8px 24px rgba(0,0,0,0.08);box-sizing:border-box;">
+            ${state.pieces.map((pieceVal, gridIdx) => {
+              const row = Math.floor(pieceVal / 2);
+              const col = pieceVal % 2;
+              const bgPosX = col * 100;
+              const bgPosY = row * 100;
+              const isSelected = state.selected === gridIdx;
+
+              return `
+                <div onclick="GameRompecabezas.clickTile(${gridIdx})"
+                     style="aspect-ratio:1;border-radius:14px;border:4px solid ${isSelected ? 'var(--c-primary)' : (isSolved ? '#22c55e' : 'var(--c-border)')};
+                     background-image:url('${pData.img}');
+                     background-size:200% 200%;
+                     background-position:${bgPosX}% ${bgPosY}%;
+                     cursor:pointer;box-shadow:${isSelected ? '0 0 0 4px var(--c-primary)' : '0 4px 10px rgba(0,0,0,0.1)'};
+                     position:relative;transition:transform 0.2s ease;">
+                  <div style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.5);color:#fff;font-size:0.75rem;font-weight:800;padding:2px 6px;border-radius:8px;">
+                    #${pieceVal + 1}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div style="display:flex;gap:10px;width:100%;max-width:280px;">
+            <button class="btn btn-ghost btn-sm" onclick="GameRompecabezas.showHint()" style="flex:1;font-weight:700;">💡 Pista</button>
           </div>
 
           ${isSolved ? `
             <button class="btn btn-primary btn-full btn-lg" onclick="GameRompecabezas.finish()">
               ✨ ¡Rompecabezas Armado! (+20 XP)
             </button>
-          ` : `
-            <div style="font-size:0.85rem;color:var(--c-text-muted);">Toca una pieza y luego otra para intercambiarlas</div>
-          `}
+          ` : ''}
         </div>
       `,
       onBack: () => CleoRouter.navigate('juegos')
@@ -941,43 +1170,55 @@ window.GameRompecabezas = (function() {
       state.pieces[prev] = state.pieces[idx];
       state.pieces[idx] = tmp;
       state.selected = null;
+      if (state.pieces.every((v, i) => v === i)) {
+        CleoSpeech.say('¡Excelente! Armaste la imagen.');
+      }
     }
     render();
+  }
+
+  function showHint() {
+    const wrongIdx = state.pieces.findIndex((v, i) => v !== i);
+    if (wrongIdx >= 0) {
+      CleoUI.toast(`Pista: La ficha en la posición ${wrongIdx + 1} debe cambiar de lugar`, '💡', 'info');
+    }
   }
 
   function finish() {
     CleoGame.addXP(20);
     CleoAnimations.confetti();
-    CleoSpeech.say('¡Excelente! ¡Armaste el rompecabezas!');
+    CleoSpeech.say('¡Felicidades! Armaste el rompecabezas.');
     CleoUI.showGameEnd({
       score: 20, total: 1, correct: 1, wrong: 0, perfect: true,
-      onReplay: () => start(), onHome: () => CleoRouter.navigate('home')
+      onReplay: () => { state.level++; start(); }, onHome: () => CleoRouter.navigate('home')
     });
   }
 
-  return { start, clickTile, finish };
+  return { start, clickTile, showHint, finish };
 })();
 
-// ── DETECTIVE CLEO (MISTERIO & CRÍTICO) ──
+// ── DETECTIVE CLEO (MISTERIOS Y LECTURA) ──
 window.GameMisterio = (function() {
   let state = {};
   const CASES = [
     {
-      title: "El misterio de la manzana desaparecida 🍎",
-      clue: "Pista: El culpable lleva SOMBRERO 🎩 y tiene BIGOTE.",
+      title: "🕵️ Caso #1: El Diamante de la Selva",
+      story: "Durante la fiesta de la selva, la medalla brillante de Cleo desapareció de la mesa de regalos. Tres sospechosos estuvieron cerca: el zorro Félix que llevaba un sombrero negro, el oso Bernardo que comía miel sin sombrero, y el loro Pepe que volaba por el techo. Cleo encontró una huella con forma de pluma blanca volando cerca del techo.",
+      question: "¿Quién es el verdadero culpable?",
       suspects: [
-        { name: "Zorro Félix", desc: "Lleva sombrero y bigote", icon: "🦊🎩", isCulprit: true },
-        { name: "Oso Bernardo", desc: "No tiene sombrero", icon: "🐻", isCulprit: false },
-        { name: "Gato Tom", desc: "Lleva gafas sin bigote", icon: "🐱👓", isCulprit: false }
+        { name: "Loro Pepe", desc: "Tiene plumas blancas y vuela cerca del techo", icon: "🦜", isCulprit: true },
+        { name: "Zorro Félix", desc: "Lleva sombrero negro y camina por tierra", icon: "🦊🎩", isCulprit: false },
+        { name: "Oso Bernardo", desc: "Estaba en la mesa comiendo miel", icon: "🐻", isCulprit: false }
       ]
     },
     {
-      title: "El secreto del mapa del tesoro 🗺️",
-      clue: "Pista: El culpable tiene PLUMAS y VUELA.",
+      title: "🕵️ Caso #2: El Misterio del Mapa Perdido",
+      story: "Cleo y su equipo iban a buscar un tesoro en las montañas, pero el mapa de navegación desapareció del campamento. El sospechoso dejó tras de sí huellas húmedas con olor a pescado y sal marina. Félix el zorro estaba seco, pero el gato marinero Tom venía nadando del río con su caña de pescar.",
+      question: "¿Quién se llevó el mapa?",
       suspects: [
-        { name: "Perro Bobby", desc: "No tiene plumas", icon: "🐶", isCulprit: false },
-        { name: "Loro Pepe", desc: "Tiene plumas y vuela", icon: "🦜", isCulprit: true },
-        { name: "Conejo Saltarín", desc: "No vuela", icon: "🐰", isCulprit: false }
+        { name: "Gato Marinero Tom", desc: "Húmedo, olía a pescado y venía del río", icon: "🐱🎣", isCulprit: true },
+        { name: "Zorro Félix", desc: "Estaba seco junto a la fogata", icon: "🦊", isCulprit: false },
+        { name: "Conejo Saltarín", desc: "Estaba comiendo zanahorias", icon: "🐰", isCulprit: false }
       ]
     }
   ];
@@ -996,23 +1237,26 @@ window.GameMisterio = (function() {
       progress: (state.current / CASES.length) * 100,
       lives: CleoGame.getLives(),
       content: `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:16px;text-align:center;gap:16px;">
-          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-primary);font-size:1.2rem;">
+        <div style="display:flex;flex-direction:column;align-items:center;padding:16px;text-align:center;gap:16px;width:100%;">
+          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-primary);font-size:1.15rem;margin:0;">
             ${c.title}
           </h2>
 
-          <div class="card" style="padding:16px;background:var(--c-surface);border:2px solid var(--c-primary);">
-            <div style="font-weight:800;color:var(--c-primary);margin-bottom:4px;">🔍 Pista de Cleo:</div>
-            <div style="font-size:0.95rem;">${c.clue}</div>
+          <div class="card" style="padding:16px;background:var(--c-surface);border:2px solid var(--c-primary);text-align:left;line-height:1.6;font-size:0.92rem;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+            <div style="font-weight:900;color:var(--c-primary);margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+              <span>📖 Historia del Acertijo:</span>
+            </div>
+            <div>${c.story}</div>
+            <div style="margin-top:10px;font-weight:800;color:var(--c-text);">${c.question}</div>
           </div>
 
-          <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;">
+          <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;">
             ${c.suspects.map((s, idx) => `
-              <button class="btn btn-secondary btn-full" style="font-size:1rem;padding:14px;display:flex;align-items:center;gap:12px;" onclick="GameMisterio.check(${idx})">
-                <span style="font-size:2rem;">${s.icon}</span>
-                <div style="text-align:left;flex:1;">
-                  <div style="font-weight:800;">${s.name}</div>
-                  <div style="font-size:0.75rem;color:var(--c-text-muted);">${s.desc}</div>
+              <button class="btn btn-secondary btn-full" style="font-size:0.95rem;padding:14px;display:flex;align-items:center;gap:12px;border-radius:16px;text-align:left;" onclick="GameMisterio.check(${idx})">
+                <span style="font-size:2rem;flex-shrink:0;">${s.icon}</span>
+                <div style="flex:1;">
+                  <div style="font-weight:900;font-family:'Plus Jakarta Sans',sans-serif;">${s.name}</div>
+                  <div style="font-size:0.75rem;color:var(--c-text-muted);margin-top:2px;">${s.desc}</div>
                 </div>
               </button>
             `).join('')}
@@ -1029,12 +1273,14 @@ window.GameMisterio = (function() {
     if (s.isCulprit) {
       CleoGame.addXP(20);
       state.score += 20;
-      CleoSpeech.say('¡Brillante deducción! Encontraste al culpable.');
+      CleoSpeech.say('¡Excelente lectura y deducción! Encontraste al culpable.');
+      CleoUI.toast('¡Sospechoso correcto! 🎉', '🕵️', 'success');
       state.current++;
-      setTimeout(render, 400);
+      setTimeout(render, 500);
     } else {
       CleoGame.loseLife();
-      CleoSpeech.say('Ese sospechoso no coincide con la pista. Lee de nuevo.');
+      CleoSpeech.say('Ese sospechoso no coincide con la pista de la lectura. Lee con atención.');
+      CleoUI.toast('No coincide con las pistas. ¡Lee de nuevo!', '❌', 'error');
     }
   }
 

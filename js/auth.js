@@ -236,25 +236,24 @@ window.CleoGame = (function() {
     const p = getProfile();
     if (!p) return LIVES_MAX;
     if (CleoMonetization.isPremium()) return LIVES_MAX;
-    regenerateLives(p);
-    return Math.min(getProfile().lives || 0, LIVES_MAX);
-  }
-  function regenerateLives(p) {
-    const now = Date.now();
-    const lastRegen = p.livesLastRegen || now;
-    const elapsed = now - lastRegen;
-    const livesToAdd = Math.floor(elapsed / LIVES_REGEN_MS);
-    if (livesToAdd > 0 && (p.lives || 0) < LIVES_MAX) {
-      const newLives = Math.min((p.lives || 0) + livesToAdd, LIVES_MAX);
-      saveProfile({ lives: newLives, livesLastRegen: now });
+    if (p.lives === undefined || p.lives === null) {
+      saveProfile({ lives: LIVES_MAX, livesLastRegen: Date.now() });
+      return LIVES_MAX;
     }
+    regenerateLives(p);
+    return Math.min(getProfile().lives ?? LIVES_MAX, LIVES_MAX);
   }
   function loseLife() {
     const p = getProfile();
     if (!p) return false;
     if (CleoMonetization.isPremium()) return true;
-    const lives = Math.max(0, (p.lives || 0) - 1);
+    const currentLives = (p.lives !== undefined && p.lives !== null) ? p.lives : LIVES_MAX;
+    const lives = Math.max(0, currentLives - 1);
     saveProfile({ lives });
+    // Actualizar fichas de vida en el DOM
+    document.querySelectorAll('.stat-chip.lives').forEach(chip => {
+      chip.innerHTML = `<span class="icon">❤️</span> ${lives}`;
+    });
     return lives > 0;
   }
   function refillLives() {

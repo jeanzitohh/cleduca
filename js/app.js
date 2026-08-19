@@ -799,9 +799,47 @@ function renderSubject(data) {
   const subData = CLEDUCA_DATA.subjects.find(s=>s.id===subject);
   const content = CLEDUCA_DATA.content[grade]?.[subject];
 
-  const games = [
-    { type:'quiz', label:'Quiz Veloz', icon:'⚡', desc:'10 preguntas contra el tiempo' },
-    { type:'sopa', label:'Sopa de Letras', icon:'🔤', desc:'Encuentra las palabras ocultas' }
+  const SUBJECT_GAMES = {
+    matematicas: [
+      { type:'carrera', label:'Carrera de Números', icon:'🏎️', desc:'Sumas y cálculos a toda velocidad' },
+      { type:'snake', label:'La Serpiente de Cleo', icon:'🐍', desc:'Atrapa las operaciones correctas' },
+      { type:'quiz', label:'Quiz de Matemáticas', icon:'⚡', desc:'Desafíos matemáticos por tiempo' },
+      { type:'sopa', label:'Sopa de Números', icon:'🔤', desc:'Encuentra términos matemáticos' }
+    ],
+    lenguaje: [
+      { type:'sopa', label:'Sopa de Letras', icon:'🔤', desc:'Encuentra sustantivos, verbos y palabras' },
+      { type:'quiz', label:'Quiz de Lenguaje', icon:'⚡', desc:'Ortografía, gramática y lecturas' },
+      { type:'misterio', label:'Cuentos & Adivinanzas', icon:'📖', desc:'Comprensión de lectura interactiva' }
+    ],
+    ciencias: [
+      { type:'capibara', label:'Aventura Capibara', icon:'🦦', desc:'Esquiva obstáculos y atrapa respuestas' },
+      { type:'anatomia', label:'Anatomía del Cuerpo', icon:'🫀', desc:'Conoce los órganos y sistemas del cuerpo' },
+      { type:'quiz', label:'Trivia de Ciencias', icon:'🌿', desc:'Naturaleza, células y ecosistemas' },
+      { type:'sopa', label:'Sopa de Ciencias', icon:'🔤', desc:'Buscador de términos científicos' }
+    ],
+    sociales: [
+      { type:'quiz', label:'Explorador del Mundo', icon:'🌎', desc:'Geografía e historia de Colombia' },
+      { type:'rompecabezas', label:'Rompecabezas de Mapas', icon:'🧩', desc:'Arma los mapas e imágenes históricas' },
+      { type:'sopa', label:'Sopa de Sociales', icon:'🔤', desc:'Regiones y mapas de Colombia' }
+    ],
+    logica: [
+      { type:'misterio', label:'Detective Cleo', icon:'🕵️', desc:'Resuelve casos y lecturas detectivescas' },
+      { type:'rompecabezas', label:'Rompecabezas Visual HD', icon:'🧩', desc:'Arma imágenes visuales HD' },
+      { type:'diferencias', label:'5 Diferencias', icon:'👀', desc:'Encuentra la figura intrusa' },
+      { type:'puzzle', label:'Puzzles de Secuencias', icon:'🧠', desc:'Patrones numéricos y lógicos' },
+      { type:'memoria', label:'Memoria Visual', icon:'🧠', desc:'Parejas de imágenes' }
+    ],
+    arte: [
+      { type:'pintura', label:'Estudio de Dibujo y Color', icon:'🎨', desc:'Lienzo interactivo para pintar' },
+      { type:'dressup', label:'Viste a Cleo', icon:'👗', desc:'Atuendos y sombreros para la mascota' },
+      { type:'musica', label:'Piano de Cleo', icon:'🎹', desc:'Crea notas y canciones en piano' },
+      { type:'diferencias', label:'Diferencias Artísticas', icon:'👀', desc:'Encuentra los detalles en las obras' }
+    ]
+  };
+
+  const games = SUBJECT_GAMES[subject] || [
+    { type:'quiz', label:'Quiz Veloz', icon:'⚡', desc:'Preguntas de conocimiento' },
+    { type:'sopa', label:'Sopa de Letras', icon:'🔤', desc:'Encuentra las palabras' }
   ];
 
   document.getElementById('view-subject').innerHTML = `
