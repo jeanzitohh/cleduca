@@ -1733,7 +1733,7 @@ function showPinModal(profileId) {
       </div>
 
       <button class="btn btn-primary btn-full btn-lg" onclick="validatePin('${profileId}')">
-        🚀 Entrar al Perfil
+        🚀 Entrar al perfil
       </button>
       <button class="btn btn-ghost btn-full" onclick="document.getElementById('modal-pin-overlay')?.remove()" style="margin-top:8px;color:var(--c-text-muted);">
         Cancelar
@@ -1751,6 +1751,7 @@ function movePinFocus(i, profileId) {
     if (next) {
       next.focus();
     } else if (i === 3) {
+      currentInput.blur();
       validatePin(profileId);
     }
   }
@@ -1778,13 +1779,23 @@ function validatePin(profileId) {
 
   isPinValidating = true;
   if (CleoAuth.validatePin(profileId, pin)) {
+    // 1. Quitar foco activo de teclados en celular
+    if (document.activeElement) document.activeElement.blur();
+    
+    // 2. Destruir todos los modales
     document.querySelectorAll('.modal-overlay').forEach(m => m.remove());
+
+    // 3. Activar perfil y aplicar tema
     CleoAuth.setActive(profileId);
     const p = CleoAuth.getActive();
     applyProfileSettings(p);
-    CleoRouter.navigate('home');
-    CleoUI.toast(`¡Bienvenido de nuevo, ${p?.name || 'Explorador'}! 🚀`, '👋', 'success');
-    setTimeout(() => { isPinValidating = false; }, 500);
+
+    // 4. Navegación garantizada asíncrona
+    requestAnimationFrame(() => {
+      CleoRouter.navigate('home');
+      CleoUI.toast(`¡Bienvenido de nuevo, ${p?.name || 'Explorador'}! 🚀`, '👋', 'success');
+      setTimeout(() => { isPinValidating = false; }, 300);
+    });
   } else {
     isPinValidating = false;
     [0,1,2,3].forEach(i => {
