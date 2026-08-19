@@ -30,12 +30,8 @@ window.CleoAuth = (function() {
     if (!currentUser || !currentUser.user_metadata) return;
     const cloudProfiles = currentUser.user_metadata.cleduca_profiles;
     if (cloudProfiles && Array.isArray(cloudProfiles)) {
+      // Solo actualizar datos en localStorage, NUNCA cambiar la vista activa
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudProfiles));
-      // Refresh UI if needed
-      if (window.renderPerfil && typeof window.renderPerfil === 'function') {
-        const active = getActive();
-        if (active) window.renderPerfil();
-      }
     }
   }
 
