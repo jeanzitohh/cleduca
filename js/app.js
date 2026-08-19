@@ -464,25 +464,30 @@ window.CleoRouter = (function() {
   }
 
   function navigate(to, data={}) {
-    switch(to) {
-      case 'home':     renderHome(); showView('home'); break;
-      case 'materias': renderMaterias(); showView('materias'); break;
-      case 'juegos':   renderJuegos(); showView('juegos'); break;
-      case 'logros':   renderLogros(); showView('logros'); break;
-      case 'perfil':   renderPerfil(); showView('perfil'); break;
-      case 'subject':
-        if (data.subject === 'idiomas') {
-          renderIdiomas(); showView('idiomas');
-        } else {
-          renderSubject(data); showView('subject');
-        }
-        break;
-      case 'game':     showView('game'); break;
-      case 'grade':    showGradeSelector(); break;
-      case 'login':    showAuthScreen(); break;
-      default: showView(to);
+    try {
+      switch(to) {
+        case 'home':     renderHome(); showView('home'); break;
+        case 'materias': renderMaterias(); showView('materias'); break;
+        case 'juegos':   renderJuegos(); showView('juegos'); break;
+        case 'logros':   renderLogros(); showView('logros'); break;
+        case 'perfil':   renderPerfil(); showView('perfil'); break;
+        case 'subject':
+          if (data.subject === 'idiomas') {
+            renderIdiomas(); showView('idiomas');
+          } else {
+            renderSubject(data); showView('subject');
+          }
+          break;
+        case 'game':     showView('game'); break;
+        case 'grade':    showGradeSelector(); break;
+        case 'login':    showAuthScreen(); break;
+        default: showView(to);
+      }
+      updateFab(to);
+    } catch(err) {
+      console.error('[CleoRouter] Error en navigate('+to+'):', err);
+      CleoUI.toast('Error interno: ' + err.message, '⚠️', 'error');
     }
-    updateFab(to);
   }
 
   function updateNav(view) {
@@ -537,7 +542,12 @@ window.CleoRouter = (function() {
 // ── RENDER FUNCTIONS ──
 function renderHome() {
   const profile = CleoAuth.getActive();
-  if (!profile) { CleoRouter.navigate('profiles'); return; }
+  if (!profile) {
+    console.warn('[renderHome] No hay perfil activo, redirigiendo a perfiles...');
+    CleoRouter.navigate('profiles');
+    return;
+  }
+  console.log('[renderHome] Perfil activo:', profile.name, '| Tema:', profile.theme);
   const grade = profile.grade || 3;
   const xp = profile.xp || 0;
   const lives = CleoGame.getLives();
