@@ -4,11 +4,35 @@
 
 window.CLEO_BACK_ARROW = `<svg style="width:22px;height:22px;display:block;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>`;
 
-// ── SPEECH (Voz Femenina para Cleo) ──
+// ── SPEECH (Voz Femenina para Cleo con Persistencia) ──
 window.CleoSpeech = (function() {
-  let enabled = true;
+  const VOICE_KEY = 'cleduca_voice_enabled';
   const synth = window.speechSynthesis;
   let cachedVoice = null;
+
+  function isEnabled() {
+    const profile = window.CleoAuth ? CleoAuth.getActive() : null;
+    if (profile && profile.voiceEnabled !== undefined) {
+      return !!profile.voiceEnabled;
+    }
+    const stored = localStorage.getItem(VOICE_KEY);
+    return stored === null ? true : stored === 'true';
+  }
+
+  function setEnabled(val) {
+    localStorage.setItem(VOICE_KEY, val ? 'true' : 'false');
+    const profile = window.CleoAuth ? CleoAuth.getActive() : null;
+    if (profile && profile.voiceEnabled !== val) {
+      CleoAuth.updateProfile(profile.id, { voiceEnabled: val });
+    }
+    if (!val && synth) synth.cancel();
+  }
+
+  function toggle() {
+    const current = isEnabled();
+    setEnabled(!current);
+    return !current;
+  }
 
   // Nombres de voces femeninas conocidas en español
   const FEMALE_NAMES = ['paulina','sabina','mónica','monica','elena','laura','helena',
@@ -17,45 +41,38 @@ window.CleoSpeech = (function() {
 
   function findFemaleVoice() {
     if (cachedVoice) return cachedVoice;
-    const voices = synth.getVoices();
+    const voices = synth ? synth.getVoices() : [];
     if (!voices.length) return null;
-    // 1. Buscar voz femenina en español por nombre
     const esVoices = voices.filter(v => v.lang.startsWith('es'));
     const female = esVoices.find(v => {
       const n = v.name.toLowerCase();
       return FEMALE_NAMES.some(f => n.includes(f));
     });
     if (female) { cachedVoice = female; return female; }
-    // 2. Buscar cualquier voz española que NO sea masculina (evitar 'Jorge','Andrés','Diego')
     const MALE_NAMES = ['jorge','andrés','andres','diego','enrique','carlos','pablo','juan'];
     const nonMale = esVoices.find(v => !MALE_NAMES.some(m => v.name.toLowerCase().includes(m)));
     if (nonMale) { cachedVoice = nonMale; return nonMale; }
-    // 3. Cualquier voz en español
     if (esVoices.length) { cachedVoice = esVoices[0]; return esVoices[0]; }
-    // 4. Fallback
     cachedVoice = voices[0];
     return voices[0];
   }
 
-  // Refrescar cache cuando las voces se cargan (async en Chrome)
   if (synth) synth.onvoiceschanged = () => { cachedVoice = null; };
 
   function say(text, rate=0.92, pitch=1.35) {
-    if (!enabled || !synth || !text) return;
+    if (!isEnabled() || !synth || !text) return;
     synth.cancel();
     const utt = new SpeechSynthesisUtterance(text);
     utt.lang = 'es-CO';
     utt.rate = rate;
-    utt.pitch = pitch; // Más agudo = más femenino/dulce
+    utt.pitch = pitch;
     utt.volume = 0.9;
     const voice = findFemaleVoice();
     if (voice) utt.voice = voice;
     synth.speak(utt);
   }
-  function toggle() { enabled = !enabled; return enabled; }
-  function isEnabled() { return enabled; }
 
-  return { say, toggle, isEnabled };
+  return { say, toggle, isEnabled, setEnabled };
 })();
 
 // ── ANIMATIONS ──
@@ -1388,13 +1405,11 @@ function toggleDarkMode() {
 }
 function toggleVoice() {
   const p = CleoAuth.getActive();
+  if (!p) return;
   const newState = p.voiceEnabled !== false ? false : true;
   CleoAuth.updateProfile(p.id, { voiceEnabled: newState });
-  if (!newState && CleoSpeech.isEnabled()) {
-    CleoSpeech.toggle();
-  } else if (newState && !CleoSpeech.isEnabled()) {
-    CleoSpeech.toggle();
-  }
+  CleoSpeech.setEnabled(newState);
+  CleoUI.toast(newState ? '🔊 Voz de Cleo activada' : '🔇 Voz de Cleo desactivada', newState ? '🔊' : '🔇', 'info');
   renderPerfil();
 }
 function changeGrade(gradeId) {
@@ -1751,21 +1766,27 @@ function handlePinBackspace(e, i) {
   }
 }
 
+let isPinValidating = false;
+
 function validatePin(profileId) {
+  if (isPinValidating) return;
   const pin = [0,1,2,3].map(i => document.getElementById(`pd${i}`)?.value || '').join('');
   if (pin.length < 4) {
     CleoUI.toast('Ingresa los 4 dígitos de tu PIN', '🔒', 'info');
     return;
   }
 
+  isPinValidating = true;
   if (CleoAuth.validatePin(profileId, pin)) {
     document.querySelectorAll('.modal-overlay').forEach(m => m.remove());
     CleoAuth.setActive(profileId);
     const p = CleoAuth.getActive();
     applyProfileSettings(p);
     CleoRouter.navigate('home');
-    CleoUI.toast(`¡Bienvenido de nuevo, ${p.name}! 🚀`, '👋', 'success');
+    CleoUI.toast(`¡Bienvenido de nuevo, ${p?.name || 'Explorador'}! 🚀`, '👋', 'success');
+    setTimeout(() => { isPinValidating = false; }, 500);
   } else {
+    isPinValidating = false;
     [0,1,2,3].forEach(i => {
       const el = document.getElementById(`pd${i}`);
       if (el) el.value = '';
@@ -1776,8 +1797,12 @@ function validatePin(profileId) {
 }
 
 function applyProfileSettings(p) {
+  if (!p) return;
   document.documentElement.setAttribute('data-theme', p.theme || 'selva');
   document.documentElement.setAttribute('data-dark', p.darkMode || false);
+  if (window.CleoSpeech && p.voiceEnabled !== undefined) {
+    CleoSpeech.setEnabled(p.voiceEnabled);
+  }
 }
 
 function showCreateProfile(isGuest=false) {
