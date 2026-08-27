@@ -607,16 +607,23 @@ window.GameSnake = (function() {
       content: `
         <div style="display:flex;flex-direction:column;align-items:center;padding:12px;">
           <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2rem;font-weight:800;color:var(--c-primary);margin-bottom:8px;" id="snake-q">${state.question}</div>
-          <canvas id="snake-canvas" width="${state.width}" height="${state.height}" 
-                  style="background:var(--c-surface);border:2px solid var(--c-border);border-radius:12px;touch-action:none;"></canvas>
-          
-          <div style="display:grid;grid-template-columns:50px 50px 50px;gap:8px;margin-top:20px;">
-            <div></div>
-            <button class="btn btn-primary" onclick="GameSnake.turn(0,-1)">⬆️</button>
-            <div></div>
-            <button class="btn btn-primary" onclick="GameSnake.turn(-1,0)">⬅️</button>
-            <button class="btn btn-primary" onclick="GameSnake.turn(0,1)">⬇️</button>
-            <button class="btn btn-primary" onclick="GameSnake.turn(1,0)">➡️</button>
+        <div style="display:flex;flex-direction:column;align-items:center;padding:10px;gap:12px;">
+          <div id="snake-q" class="card" style="font-size:1.1rem;font-weight:900;color:var(--c-primary);padding:10px;width:100%;max-width:340px;text-align:center;">
+            Preparando...
+          </div>
+          <div style="position:relative;width:${state.width}px;height:${state.height}px;">
+            <canvas id="snake-canvas" width="${state.width}" height="${state.height}" style="background:#fff;border-radius:12px;border:3px solid var(--c-border);box-shadow:0 8px 24px rgba(0,0,0,0.1);touch-action:none;"></canvas>
+            <div id="snake-overlay" style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;">
+              <button class="btn btn-primary btn-lg" onclick="GameSnake.play()" style="font-size:1.2rem;padding:12px 32px;box-shadow:0 8px 24px rgba(0,0,0,0.3);">▶ ¡Empezar Juego!</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;width:100%;max-width:340px;">
+            <button class="btn btn-secondary" style="flex:1;height:60px;font-size:1.5rem;" onclick="GameSnake.turn(-1,0)">⬅️</button>
+            <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
+              <button class="btn btn-secondary" style="height:60px;font-size:1.5rem;" onclick="GameSnake.turn(0,-1)">⬆️</button>
+              <button class="btn btn-secondary" style="height:60px;font-size:1.5rem;" onclick="GameSnake.turn(0,1)">⬇️</button>
+            </div>
+            <button class="btn btn-secondary" style="flex:1;height:60px;font-size:1.5rem;" onclick="GameSnake.turn(1,0)">➡️</button>
           </div>
         </div>
       `,
@@ -630,23 +637,9 @@ window.GameSnake = (function() {
     canvas = document.getElementById('snake-canvas');
     ctx = canvas.getContext('2d');
     
-    // Swipe controls
-    let touchX = 0, touchY = 0;
-    canvas.addEventListener('touchstart', e => { touchX = e.changedTouches[0].screenX; touchY = e.changedTouches[0].screenY; });
-    canvas.addEventListener('touchend', e => {
-      let dx = e.changedTouches[0].screenX - touchX;
-      let dy = e.changedTouches[0].screenY - touchY;
-      if (Math.abs(dx) > Math.abs(dy)) {
-        if (dx > 0) turn(1,0); else turn(-1,0);
-      } else {
-        if (dy > 0) turn(0,1); else turn(0,-1);
-      }
-    });
-
-    // Keyboard controls
     keyHandler = (e) => {
       if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
-        e.preventDefault(); // Prevent page scroll
+        e.preventDefault();
         if (e.key === 'ArrowUp') turn(0,-1);
         else if (e.key === 'ArrowDown') turn(0,1);
         else if (e.key === 'ArrowLeft') turn(-1,0);
@@ -655,7 +648,28 @@ window.GameSnake = (function() {
     };
     window.addEventListener('keydown', keyHandler);
 
-    loopId = requestAnimationFrame(loop);
+    generateFood();
+    draw();
+  }
+
+  function play() {
+    let overlay = document.getElementById('snake-overlay');
+    overlay.innerHTML = '<div style="font-size:4rem;color:#fff;font-weight:900;">3</div>';
+    CleoSpeech.say("3");
+    let count = 3;
+    let inv = setInterval(() => {
+      count--;
+      if(count > 0) {
+        overlay.innerHTML = `<div style="font-size:4rem;color:#fff;font-weight:900;">${count}</div>`;
+        CleoSpeech.say(count.toString());
+      } else {
+        clearInterval(inv);
+        overlay.style.display = 'none';
+        state.running = true;
+        loopId = requestAnimationFrame(loop);
+        CleoSpeech.say("¡A jugar!");
+      }
+    }, 1000);
   }
 
   function generateFood() {
@@ -676,7 +690,8 @@ window.GameSnake = (function() {
   }
 
   function loop(timestamp) {
-    if (!document.getElementById('snake-canvas')) return; // Exit if view changed
+    if (!document.getElementById('snake-canvas')) return;
+    if (!state.running) return;
     loopId = requestAnimationFrame(loop);
     
     if (timestamp - state.lastRender < state.speed) return;
@@ -685,18 +700,15 @@ window.GameSnake = (function() {
     
     const head = { x: state.snake[0].x + state.dir.x, y: state.snake[0].y + state.dir.y };
     
-    // Wall collision
     if (head.x < 0 || head.x >= state.width/state.gridSize || head.y < 0 || head.y >= state.height/state.gridSize) {
       return gameOver();
     }
-    // Self collision
     for (let i = 0; i < state.snake.length; i++) {
       if (head.x === state.snake[i].x && head.y === state.snake[i].y) return gameOver();
     }
 
     state.snake.unshift(head);
 
-    // Eat food
     if (head.x === state.food.x && head.y === state.food.y) {
       CleoSpeech.say("¡Ñam!");
       CleoGame.addXP(5);
@@ -711,7 +723,6 @@ window.GameSnake = (function() {
 
   function draw() {
     ctx.clearRect(0, 0, state.width, state.height);
-    // Draw food
     ctx.fillStyle = '#EF4444';
     ctx.beginPath();
     ctx.arc(state.food.x*state.gridSize + state.gridSize/2, state.food.y*state.gridSize + state.gridSize/2, state.gridSize/2-2, 0, Math.PI*2);
@@ -721,16 +732,12 @@ window.GameSnake = (function() {
     ctx.textAlign = 'center';
     ctx.fillText(state.food.val, state.food.x*state.gridSize + state.gridSize/2, state.food.y*state.gridSize + state.gridSize/2 + 3);
 
-    // Draw snake
     ctx.fillStyle = '#58CC02';
     for (let i = 0; i < state.snake.length; i++) {
       const p = state.snake[i];
       if (i===0) {
         ctx.fillStyle = '#4CAF50';
         ctx.fillRect(p.x*state.gridSize, p.y*state.gridSize, state.gridSize, state.gridSize);
-        ctx.fillStyle = '#000';
-        ctx.fillRect(p.x*state.gridSize + 4, p.y*state.gridSize + 4, 4, 4);
-        ctx.fillRect(p.x*state.gridSize + 12, p.y*state.gridSize + 4, 4, 4);
       } else {
         ctx.fillStyle = '#89E219';
         ctx.fillRect(p.x*state.gridSize+1, p.y*state.gridSize+1, state.gridSize-2, state.gridSize-2);
@@ -740,6 +747,7 @@ window.GameSnake = (function() {
 
   function gameOver() {
     cancelAnimationFrame(loopId);
+    state.running = false;
     CleoSpeech.say("¡Ups! Te chocaste");
     CleoGame.loseLife();
     CleoUI.showGameEnd({
@@ -749,7 +757,7 @@ window.GameSnake = (function() {
     });
   }
 
-  return { start, turn };
+  return { start, turn, play };
 })();
 
 // ── AVENTURA CAPIBARA ──
@@ -841,23 +849,26 @@ window.GameDiferencias = (function() {
   function nextLevel() {
     if (state.current >= LEVELS.length) return endGame();
     const lvl = LEVELS[state.current];
-    const grid = Array(9).fill(lvl.base);
-    const diffIdx = Math.floor(Math.random() * 9);
+    const grid = Array(12).fill(lvl.base);
+    const diffIdx = Math.floor(Math.random() * 12);
     grid[diffIdx] = lvl.diff;
     state.diffIdx = diffIdx;
 
     CleoUI.renderGameView({
-      title: '👀 Diferencias',
+      title: '🔍 Diferencias Visuales',
       progress: (state.current / LEVELS.length) * 100,
       lives: CleoGame.getLives(),
+      tip: lvl.desc,
       content: `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:16px;text-align:center;gap:16px;width:100%;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;color:var(--c-primary);">
-            ${lvl.desc}
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:space-between;height:100%;width:100%;padding:20px;box-sizing:border-box;background:#0F172A;color:#fff;">
+          
+          <div style="background:#1E293B;padding:16px 20px;border-radius:16px;border:2px solid #A855F7;width:100%;max-width:440px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,0.3);">
+            <h3 style="margin:0;font-size:1.1rem;color:#F8FAFC;">🔍 ${lvl.desc}</h3>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;background:var(--c-surface);padding:16px;border-radius:20px;border:2px solid var(--c-border);width:100%;max-width:280px;margin:0 auto;box-sizing:border-box;">
+
+          <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;background:#1E293B;padding:20px;border-radius:20px;border:2px solid #334155;width:100%;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
             ${grid.map((emoji, idx) => `
-              <button onclick="GameDiferencias.check(${idx})" style="aspect-ratio:1;font-size:2.2rem;border:none;background:rgba(0,0,0,0.03);border-radius:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 var(--c-border);">
+              <button onclick="GameDiferencias.check(${idx})" style="aspect-ratio:1;font-size:2.5rem;border:2px solid #475569;background:#0F172A;border-radius:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #334155;">
                 ${emoji}
               </button>
             `).join('')}
@@ -870,21 +881,21 @@ window.GameDiferencias = (function() {
 
   function check(idx) {
     if (idx === state.diffIdx) {
-      CleoGame.addXP(15);
-      state.score += 15;
-      CleoSpeech.say('¡Lo encontraste! ¡Qué buena vista!');
-      state.current++;
-      setTimeout(nextLevel, 400);
+      CleoGame.addXP(20); state.score += 20; CleoAnimations.confetti(); CleoSpeech.say("¡Excelente observación!");
+      state.current++; setTimeout(nextLevel, 600);
     } else {
-      CleoGame.loseLife();
-      CleoSpeech.say('Ese no es. ¡Mira con atención!');
+      CleoUI.toast("Ese no es el diferente", "❌", "error");
+      window.handleWrongAnswerBase(
+        () => { setTimeout(() => CleoMonetization.watchAdForLives(() => { state.current++; nextLevel(); }), 500); },
+        () => { /* continua buscando */ }
+      );
     }
   }
 
   function endGame() {
     CleoAnimations.confetti();
     CleoUI.showGameEnd({
-      score: state.score, total: LEVELS.length, correct: state.current, wrong: 0, perfect: true,
+      score: state.score, total: LEVELS.length, correct: state.score/20, wrong: LEVELS.length - (state.score/20), perfect: (state.score/20 === LEVELS.length),
       onReplay: () => start(), onHome: () => CleoRouter.navigate('home')
     });
   }
@@ -893,270 +904,111 @@ window.GameDiferencias = (function() {
 })();
 
 // ── SOPA DE LETRAS ──
-window.GameSopa = (function() {
+// ── ROMPECABEZAS VISUAL HD ──
+window.GameRompecabezas = (function() {
   let state = {};
-  const WORDS_DB = {
-    ciencias: ['CELULA', 'ECOSISTEMA', 'PLANETA', 'SOLAR', 'NUCLEO'],
-    lenguaje: ['CUENTO', 'POEMA', 'LETRAS', 'VERBO', 'ORACION'],
-    matematicas: ['SUMA', 'NUMERO', 'RESTA', 'FIGURA', 'CONTEO'],
-    sociales: ['MAPA', 'HISTORIA', 'COLOMBIA', 'PUEBLO', 'REGION'],
-    logica: ['PISTA', 'SECRET', 'CODIGO', 'REGLA', 'ORDEN'],
-    arte: ['COLOR', 'PINCEL', 'LIENZO', 'DIBUJO', 'TRAZO']
-  };
+  const PUZZLE_IMAGES = [
+    { title: '🐾 Animales Salvajes', icon: '🦁', emoji: '🐘 🦁 🦒 🦓', bg: 'linear-gradient(135deg, #059669, #10B981)', img: 'img/Logo_cleduca_transparente.png' },
+    { title: '🏞️ Paisaje Natural', icon: '🌲', emoji: '🏔️ 🌲 🦅 🌊', bg: 'linear-gradient(135deg, #0284C7, #38BDF8)', img: 'img/Logo_cleduca_transparente.png' },
+    { title: '🚀 Misión Espacial', icon: '🪐', emoji: '🚀 🪐 🌌 👩‍🚀', bg: 'linear-gradient(135deg, #7C3AED, #A855F7)', img: 'img/Logo_cleduca_transparente.png' },
+    { title: '🏰 Castillo Fantástico', icon: '🏰', emoji: '👑 🏰 🐉 ⚔️', bg: 'linear-gradient(135deg, #D97706, #F59E0B)', img: 'img/Logo_cleduca_transparente.png' },
+    { title: '🐶 Cleo y sus Amigos', icon: '🐶', emoji: '🐶 🎩 🕶️ ⭐', bg: 'linear-gradient(135deg, #BE185D, #EC4899)', img: 'img/Logo_cleduca_transparente.png' }
+  ];
 
-  const WORD_COLORS = ['#EC4899', '#10B981', '#38BDF8', '#8B5CF6', '#F59E0B', '#EF4444'];
-
-  function start(subject='ciencias', grade=3) {
-    const rawWords = WORDS_DB[subject] || WORDS_DB.ciencias;
-    const words = Array.from(new Set(rawWords.map(w => w.toUpperCase())));
-    const gridData = generateGrid(words, 8);
-
-    state = {
-      subject,
-      words: words,
-      grid: gridData.grid,
-      wordPositions: gridData.positions,
-      foundWords: {},
-      selectedCoords: [],
-      score: 0
-    };
-    render();
-  }
-
-  function generateGrid(words, size) {
-    const grid = Array(size).fill(null).map(() => Array(size).fill(''));
-    const positions = {};
-
-    words.forEach(word => {
-      let placed = false;
-      let attempts = 0;
-      while (!placed && attempts < 100) {
-        attempts++;
-        const dir = Math.random() > 0.5 ? 'H' : 'V';
-        const row = Math.floor(Math.random() * (dir === 'V' ? size - word.length + 1 : size));
-        const col = Math.floor(Math.random() * (dir === 'H' ? size - word.length + 1 : size));
-
-        let canPlace = true;
-        for (let i = 0; i < word.length; i++) {
-          const r = dir === 'V' ? row + i : row;
-          const c = dir === 'H' ? col + i : col;
-          if (grid[r][c] !== '' && grid[r][c] !== word[i]) {
-            canPlace = false;
-            break;
-          }
-        }
-
-        if (canPlace) {
-          const coords = [];
-          for (let i = 0; i < word.length; i++) {
-            const r = dir === 'V' ? row + i : row;
-            const c = dir === 'H' ? col + i : col;
-            grid[r][c] = word[i];
-            coords.push({ r, c });
-          }
-          positions[word] = coords;
-          placed = true;
-        }
-      }
-    });
-
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    for (let r = 0; r < size; r++) {
-      for (let c = 0; c < size; c++) {
-        if (!grid[r][c]) {
-          grid[r][c] = letters[Math.floor(Math.random() * letters.length)];
-        }
-      }
-    }
-
-    return { grid, positions };
-  }
-
-  function render() {
-    const isFinished = Object.keys(state.foundWords).length >= state.words.length;
-
+  function start() {
     CleoUI.renderGameView({
-      title: '🔤 Sopa de Letras',
-      progress: (Object.keys(state.foundWords).length / state.words.length) * 100,
+      title: '🧩 Rompecabezas',
+      progress: 0,
       lives: CleoGame.getLives(),
+      tip: "Elige una dificultad para comenzar a ordenar las piezas tocando una y luego otra.",
       content: `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:14px;text-align:center;gap:14px;width:100%;">
-          
-          <div style="display:flex;align-items:center;justify-space-between;width:100%;max-width:340px;background:var(--c-surface);padding:10px 16px;border-radius:16px;border:2px solid var(--c-border);">
-            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.95rem;color:var(--c-primary);">
-              🎯 Encontradas: ${Object.keys(state.foundWords).length} / ${state.words.length}
-            </div>
-            <button class="btn btn-ghost btn-sm" onclick="GameSopa.showHint()" style="color:var(--c-primary);font-weight:800;">💡 Pista</button>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;width:100%;padding:20px;box-sizing:border-box;background:#0F172A;color:#fff;text-align:center;">
+          <div style="font-size:4rem;margin-bottom:10px;">🧩</div>
+          <h2 style="margin-bottom:20px;color:#38BDF8;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;">Elige la Dificultad</h2>
+          <div style="display:flex;flex-direction:column;gap:14px;width:100%;max-width:320px;">
+            <button onclick="window._rompecabezasLvl=0; GameRompecabezas.playLevel()" style="background:#10B981;color:#fff;border:none;padding:16px;border-radius:16px;font-weight:900;font-size:1.1rem;box-shadow:0 4px 0 #047857;cursor:pointer;">🟢 Fácil (3x3)</button>
+            <button onclick="window._rompecabezasLvl=1; GameRompecabezas.playLevel()" style="background:#8B5CF6;color:#fff;border:none;padding:16px;border-radius:16px;font-weight:900;font-size:1.1rem;box-shadow:0 4px 0 #6D28D9;cursor:pointer;">🟣 Medio (4x4)</button>
+            <button onclick="window._rompecabezasLvl=2; GameRompecabezas.playLevel()" style="background:#EF4444;color:#fff;border:none;padding:16px;border-radius:16px;font-weight:900;font-size:1.1rem;box-shadow:0 4px 0 #B91C1C;cursor:pointer;">🔴 Difícil (5x5)</button>
           </div>
-
-          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:340px;">
-            ${state.words.map((w) => {
-              const isFound = state.foundWords[w];
-              const color = isFound || 'var(--c-bg-card)';
-              return `
-                <div style="padding:6px 12px;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.8rem;background:${isFound ? color : 'var(--c-surface)'};color:${isFound ? '#fff' : 'var(--c-text)'};border:2px solid ${isFound ? color : 'var(--c-border)'};text-decoration:${isFound ? 'line-through' : 'none'};box-shadow:0 2px 6px rgba(0,0,0,0.05);">
-                  ${w} ${isFound ? '✓' : ''}
-                </div>
-              `;
-            }).join('')}
-          </div>
-
-          <div style="display:grid;grid-template-columns:repeat(8, 1fr);gap:4px;background:var(--c-surface);padding:10px;border-radius:20px;border:2px solid var(--c-border);width:100%;max-width:340px;margin:0 auto;box-sizing:border-box;">
-            ${state.grid.map((row, r) => row.map((char, c) => {
-              const coordStr = `${r}-${c}`;
-              let cellColor = '';
-              let isSelected = state.selectedCoords.includes(coordStr);
-
-              Object.keys(state.foundWords).forEach(word => {
-                const coords = state.wordPositions[word];
-                if (coords && coords.some(pos => pos.r === r && pos.c === c)) {
-                  cellColor = state.foundWords[word];
-                }
-              });
-
-              return `
-                <button onclick="GameSopa.clickCell(${r},${c})"
-                        style="aspect-ratio:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.05rem;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-                        background:${cellColor || (isSelected ? 'var(--c-primary)' : 'rgba(0,0,0,0.03)')};
-                        color:${(cellColor || isSelected) ? '#fff' : 'var(--c-text)'};
-                        box-shadow:${isSelected ? '0 0 0 3px #fff inset' : '0 2px 0 var(--c-border)'};
-                        transition:transform 0.15s ease;">
-                  ${char}
-                </button>
-              `;
-            }).join('')).join('')}
-          </div>
-
-          ${isFinished ? `
-            <button class="btn btn-primary btn-full btn-lg" onclick="GameSopa.finish()">
-              ✨ ¡Sopa de Letras Completada! (+25 XP)
-            </button>
-          ` : ''}
-
         </div>
       `,
       onBack: () => CleoRouter.navigate('juegos')
     });
   }
 
-  function clickCell(r, c) {
-    const coordStr = `${r}-${c}`;
-    const idx = state.selectedCoords.indexOf(coordStr);
-    if (idx >= 0) {
-      state.selectedCoords.splice(idx, 1);
-    } else {
-      state.selectedCoords.push(coordStr);
-    }
+  function playLevel() {
+    let currentLvl = window._rompecabezasLvl || 0;
+    const s = Math.min(5, 3 + currentLvl);
+    const numPieces = s * s;
+    
+    // Asegurar que las fichas queden desordenadas al inicio
+    let p = Array.from({length: numPieces}, (_, i) => i);
+    do {
+      p = p.sort(() => Math.random() - 0.5);
+    } while (p.every((v, i) => v === i));
 
-    state.words.forEach((word) => {
-      if (!state.foundWords[word]) {
-        const positions = state.wordPositions[word];
-        if (positions && positions.length === state.selectedCoords.length) {
-          const match = positions.every(pos => state.selectedCoords.includes(`${pos.r}-${pos.c}`));
-          if (match) {
-            const color = WORD_COLORS[Object.keys(state.foundWords).length % WORD_COLORS.length];
-            state.foundWords[word] = color;
-            state.selectedCoords = [];
-            state.score += 15;
-            CleoGame.addXP(15);
-            CleoSpeech.say(`¡Encontraste la palabra ${word}!`);
-            CleoUI.toast(`¡Palabra ${word} encontrada! 🎉`, '🔤', 'success');
-          }
-        }
-      }
-    });
-
-    render();
-  }
-
-  function showHint() {
-    const unfound = state.words.filter(w => !state.foundWords[w]);
-    if (unfound.length > 0) {
-      const word = unfound[0];
-      const pos = state.wordPositions[word];
-      if (pos && pos.length > 0) {
-        CleoUI.toast(`Pista: ${word} empieza en la fila ${pos[0].r + 1}, columna ${pos[0].c + 1}`, '💡', 'info');
-        CleoSpeech.say(`La palabra ${word} empieza en la fila ${pos[0].r + 1}`);
-      }
-    }
-  }
-
-  function finish() {
-    CleoGame.addXP(25);
-    CleoAnimations.confetti();
-    CleoSpeech.say('¡Excelente trabajo! Encontraste todas las palabras.');
-    CleoUI.showGameEnd({
-      score: state.score, total: state.words.length, correct: Object.keys(state.foundWords).length, wrong: 0, perfect: true,
-      onReplay: () => start(state.subject), onHome: () => CleoRouter.navigate('home')
-    });
-  }
-
-  return { start, clickCell, showHint, finish };
-})();
-
-// ── ROMPECABEZAS VISUAL HD ──
-window.GameRompecabezas = (function() {
-  let state = {};
-  const PUZZLE_IMAGES = [
-    { title: 'Cleo y sus Amigos 🐶', img: 'img/cleo_logo.png' },
-    { title: 'Naturaleza y Selva 🌳', img: 'img/cleo_logo.png' }
-  ];
-
-  function start() {
     state = {
-      level: 0,
-      pieces: [2, 0, 3, 1],
+      level: currentLvl,
+      size: s,
+      pieces: p,
       selected: null,
-      score: 0
+      score: 0,
+      moves: 0
     };
     render();
   }
 
   function render() {
     const pData = PUZZLE_IMAGES[state.level % PUZZLE_IMAGES.length];
-    const isSolved = state.pieces.every((val, idx) => val === idx);
+    const isSolved = state.moves > 0 && state.pieces.every((val, idx) => val === idx);
 
     CleoUI.renderGameView({
       title: `🧩 ${pData.title}`,
-      progress: isSolved ? 100 : 50,
+      progress: isSolved ? 100 : Math.min(90, state.moves * 10),
       lives: CleoGame.getLives(),
+      tip: "Toca una ficha y luego otra para intercambiar sus posiciones hasta armar la imagen.",
       content: `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:16px;text-align:center;gap:16px;">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;color:var(--c-primary);">
-            Toca una ficha y luego otra para ordenar la imagen
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:space-between;height:100%;width:100%;padding:16px;box-sizing:border-box;background:#0F172A;color:#fff;text-align:center;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1rem;color:#38BDF8;">
+            ${pData.icon} Ordena la imagen (${state.size}x${state.size}) — ${pData.emoji}
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;background:var(--c-surface);padding:14px;border-radius:24px;border:3px solid var(--c-border);width:100%;max-width:280px;box-shadow:0 8px 24px rgba(0,0,0,0.08);box-sizing:border-box;">
+          <div style="display:grid;grid-template-columns:repeat(${state.size}, 1fr);gap:6px;background:#1E293B;padding:10px;border-radius:20px;border:3px solid #334155;width:100%;max-width:330px;box-shadow:0 8px 28px rgba(0,0,0,0.4);box-sizing:border-box;">
             ${state.pieces.map((pieceVal, gridIdx) => {
-              const row = Math.floor(pieceVal / 2);
-              const col = pieceVal % 2;
-              const bgPosX = col * 100;
-              const bgPosY = row * 100;
+              const row = Math.floor(pieceVal / state.size);
+              const col = pieceVal % state.size;
+              const bgPosX = col * (100 / (state.size - 1));
+              const bgPosY = row * (100 / (state.size - 1));
               const isSelected = state.selected === gridIdx;
 
               return `
                 <div onclick="GameRompecabezas.clickTile(${gridIdx})"
-                     style="aspect-ratio:1;border-radius:14px;border:4px solid ${isSelected ? 'var(--c-primary)' : (isSolved ? '#22c55e' : 'var(--c-border)')};
+                     style="aspect-ratio:1;border-radius:10px;border:2px solid ${isSelected ? '#F59E0B' : (isSolved ? '#10B981' : 'rgba(255,255,255,0.25)')};
+                     background:${pData.bg};
                      background-image:url('${pData.img}');
-                     background-size:200% 200%;
+                     background-size:${state.size * 100}% ${state.size * 100}%;
                      background-position:${bgPosX}% ${bgPosY}%;
-                     cursor:pointer;box-shadow:${isSelected ? '0 0 0 4px var(--c-primary)' : '0 4px 10px rgba(0,0,0,0.1)'};
-                     position:relative;transition:transform 0.2s ease;">
-                  <div style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.5);color:#fff;font-size:0.75rem;font-weight:800;padding:2px 6px;border-radius:8px;">
+                     background-repeat:no-repeat;
+                     cursor:pointer;box-shadow:${isSelected ? '0 0 12px #F59E0B' : 'none'};
+                     position:relative;display:flex;align-items:center;justify-content:center;transition:transform 0.15s ease;">
+                  <div style="position:absolute;top:4px;left:4px;background:rgba(0,0,0,0.65);color:#fff;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;">
                     #${pieceVal + 1}
+                  </div>
+                  <div style="font-size:1.4rem;opacity:0.85;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));">
+                    ${['🦁','🐘','🦒','🦓','🌲','🦅','🪐','🚀','🏰','👑'][pieceVal % 10]}
                   </div>
                 </div>
               `;
             }).join('')}
           </div>
 
-          <div style="display:flex;gap:10px;width:100%;max-width:280px;">
-            <button class="btn btn-ghost btn-sm" onclick="GameRompecabezas.showHint()" style="flex:1;font-weight:700;">💡 Pista</button>
+          <div style="display:flex;gap:10px;width:100%;max-width:280px;margin-bottom:10px;">
+            <button class="btn btn-ghost btn-sm" onclick="GameRompecabezas.showHint()" style="flex:1;font-weight:800;color:#F59E0B;background:#1E293B;">💡 Pista</button>
           </div>
 
           ${isSolved ? `
-            <button class="btn btn-primary btn-full btn-lg" onclick="GameRompecabezas.finish()">
-              ✨ ¡Rompecabezas Armado! (+20 XP)
+            <button class="btn btn-primary btn-full btn-lg" onclick="GameRompecabezas.finish()" style="margin-bottom:10px;background:linear-gradient(135deg,#22C55E,#16A34A);">
+              🎉 ¡Rompecabezas Armado! (+20 XP)
             </button>
           ` : ''}
         </div>
@@ -1164,6 +1016,43 @@ window.GameRompecabezas = (function() {
       onBack: () => CleoRouter.navigate('juegos')
     });
   }
+
+  function clickTile(idx) {
+    if (state.selected === null) {
+      state.selected = idx;
+      render();
+    } else {
+      const prev = state.selected;
+      const tmp = state.pieces[prev];
+      state.pieces[prev] = state.pieces[idx];
+      state.pieces[idx] = tmp;
+      state.selected = null;
+      state.moves++;
+
+      if (state.pieces.every((v, i) => v === i)) {
+        CleoGame.addXP(20);
+        CleoAnimations.confetti();
+        CleoSpeech.say('¡Excelente! Armaste el rompecabezas.');
+      }
+      render();
+    }
+  }
+
+  function showHint() {
+    CleoUI.toast(`Ordena las fichas del 1 al ${state.size * state.size}`, '💡', 'info');
+  }
+
+  function finish() {
+    CleoAnimations.confetti();
+    CleoUI.showGameEnd({
+      score: 20, total: 1, correct: 1, wrong: 0, perfect: true,
+      onReplay: () => start(),
+      onHome: () => CleoRouter.navigate('home')
+    });
+  }
+
+  return { start, playLevel, clickTile, showHint, finish };
+})();
 
   function clickTile(idx) {
     if (state.selected === null) {
@@ -1182,10 +1071,7 @@ window.GameRompecabezas = (function() {
   }
 
   function showHint() {
-    const wrongIdx = state.pieces.findIndex((v, i) => v !== i);
-    if (wrongIdx >= 0) {
-      CleoUI.toast(`Pista: La ficha en la posición ${wrongIdx + 1} debe cambiar de lugar`, '💡', 'info');
-    }
+    CleoUI.toast("Observa los números de cada pieza para colocarlos en orden de izquierda a derecha.", "💡", "info");
   }
 
   function finish() {
@@ -1194,11 +1080,11 @@ window.GameRompecabezas = (function() {
     CleoSpeech.say('¡Felicidades! Armaste el rompecabezas.');
     CleoUI.showGameEnd({
       score: 20, total: 1, correct: 1, wrong: 0, perfect: true,
-      onReplay: () => { state.level++; start(); }, onHome: () => CleoRouter.navigate('home')
+      onReplay: () => { window._rompecabezasLvl = (window._rompecabezasLvl || 0) + 1; GameRompecabezas.playLevel(); }, onHome: () => CleoRouter.navigate('home')
     });
   }
 
-  return { start, clickTile, showHint, finish };
+  return { start, clickTile, showHint, finish, playLevel };
 })();
 
 // ── DETECTIVE CLEO (MISTERIOS Y LECTURA) ──
@@ -1415,6 +1301,7 @@ window.GameMisterio = (function() {
   function render() {
     if (state.current >= CASES.length) return endGame();
     const c = CASES[state.current];
+    try { CleoSpeech.say(c.title + '. ' + c.story); } catch(e) {}
 
     CleoUI.renderGameView({
       title: '🕵️ Detective Cleo',
@@ -1427,8 +1314,11 @@ window.GameMisterio = (function() {
           </h2>
 
           <div class="card" style="padding:16px;background:var(--c-surface);border:2px solid var(--c-primary);text-align:left;line-height:1.6;font-size:0.92rem;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
-            <div style="font-weight:900;color:var(--c-primary);margin-bottom:6px;display:flex;align-items:center;gap:6px;">
-              <span>📖 Historia del Acertijo:</span>
+            <div style="font-weight:900;color:var(--c-primary);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
+              <span>📖 Historia Acompañada:</span>
+              <button class="btn btn-sm btn-secondary" onclick="CleoSpeech.say('${c.story.replace(/'/g, "\\'")}')" style="font-size:0.75rem;padding:4px 8px;">
+                🔊 Escuchar
+              </button>
             </div>
             <div>${c.story}</div>
             <div style="margin-top:10px;font-weight:800;color:var(--c-text);">${c.question}</div>
@@ -1557,11 +1447,14 @@ window.GamePuzzle = (function() {
 // ── ANATOMÍA INTERACTIVA ──
 window.GameAnatomia = (function() {
   let state = {};
-  const PARTS = [
-    { name: 'Corazón 🫀', desc: 'Bombea la sangre a todo tu cuerpo.', icon: '🫀' },
-    { name: 'Cerebro 🧠', desc: 'Controla tus pensamientos y movimientos.', icon: '🧠' },
-    { name: 'Pulmones 🫁', desc: 'Te permiten respirar el oxígeno del aire.', icon: '🫁' },
-    { name: 'Huesos 🦴', desc: 'Dan estructura y protegen tus órganos.', icon: '🦴' }
+  const ANATOMIA_DATA = [
+    { organ: "🫀 Corazón", question: "¿Cuál es la función principal del Corazón?", opts: ["Bombar sangre a todo el cuerpo", "Digerir la comida", "Filtrar el aire", "Pensar y recordar"], ans: 0, tip: "Palpita en tu pecho y envía oxígeno a todas tus células." },
+    { organ: "🧠 Cerebro", question: "¿Qué órgano controla los pensamientos y movimientos?", opts: ["Cerebro", "Estómago", "Huesos", "Piel"], ans: 0, tip: "Es el centro de mando de todo tu cuerpo." },
+    { organ: "🫁 Pulmones", question: "¿Qué órgano nos permite respirar el oxígeno del aire?", opts: ["Pulmones", "Hígado", "Riñones", "Corazón"], ans: 0, tip: "Se inflan como globos cuando tomas aire." },
+    { organ: "🦴 Huesos", question: "¿Qué estructura sostiene el cuerpo y protege los órganos?", opts: ["Esqueleto / Huesos", "Músculos", "Venas", "Uñas"], ans: 0, tip: "Son 206 piezas rígidas que forman tu esqueleto." },
+    { organ: "👁️ Ojos", question: "¿Qué sentido nos permite captar la luz y los colores?", opts: ["Vista (Ojos)", "Oído", "Gusto", "Tacto"], ans: 0, tip: "Gracias a ellos puedes leer este texto." },
+    { organ: "🦷 Dientes", question: "¿Para qué sirven los Dientes en la digestión?", opts: ["Triturar los alimentos", "Absorber agua", "Respirar", "Producir saliva"], ans: 0, tip: "Mastican la comida para facilitar la digestión." },
+    { organ: "🦿 Músculos", question: "¿Qué parte del cuerpo nos permite movernos tirando de los huesos?", opts: ["Músculos", "Cabello", "Sangre", "Grasa"], ans: 0, tip: "Se contraen y relajan para hacer fuerza." }
   ];
 
   function start() {
@@ -1570,47 +1463,57 @@ window.GameAnatomia = (function() {
   }
 
   function render() {
-    if (state.current >= PARTS.length) return endGame();
-    const p = PARTS[state.current];
+    if (state.current >= ANATOMIA_DATA.length) return endGame();
+    const item = ANATOMIA_DATA[state.current];
     CleoUI.renderGameView({
       title: '🫀 Anatomía del Cuerpo',
-      progress: (state.current / PARTS.length) * 100,
+      progress: (state.current / ANATOMIA_DATA.length) * 100,
       lives: CleoGame.getLives(),
+      tip: item.tip,
       content: `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:16px;text-align:center;gap:16px;">
-          <div style="font-size:5rem;animation:floatBig 3s infinite ease-in-out;">${p.icon}</div>
-          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-primary);font-size:1.5rem;">
-            ${p.name}
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:space-between;height:100%;width:100%;padding:20px;box-sizing:border-box;background:#0F172A;color:#fff;">
+          <div style="font-size:4.5rem;margin-top:10px;animation:floatBig 3s infinite ease-in-out;">${item.organ.split(' ')[0]}</div>
+          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:#38BDF8;font-size:1.3rem;margin:0 0 10px 0;text-align:center;">
+            ${item.organ}
           </h2>
-          <div class="card" style="padding:16px;line-height:1.5;font-size:1rem;color:var(--c-text);">
-            ${p.desc}
+          <div style="background:#1E293B;padding:18px;border-radius:16px;border:2px solid #334155;width:100%;max-width:440px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,0.3);">
+            ${item.question}
           </div>
-          <button class="btn btn-primary btn-full btn-lg" onclick="GameAnatomia.next()">
-            Aprender más ▶
-          </button>
+          <div style="display:grid;grid-template-columns:1fr;gap:10px;width:100%;max-width:440px;margin-bottom:10px;">
+            ${item.opts.map((opt, i) => `
+              <button onclick="GameAnatomia.answer(${i})" style="background:#1E293B;color:#F8FAFC;border:2px solid #38BDF8;padding:14px;border-radius:14px;font-weight:800;font-size:1rem;cursor:pointer;text-align:center;">${opt}</button>
+            `).join('')}
+          </div>
         </div>
       `,
       onBack: () => CleoRouter.navigate('juegos')
     });
-    CleoSpeech.say(`${p.name}. ${p.desc}`);
+    CleoSpeech.say(`${item.organ}. ${item.question}`);
   }
 
-  function next() {
-    CleoGame.addXP(10);
-    state.score += 10;
-    state.current++;
-    render();
+  function answer(idx) {
+    const item = ANATOMIA_DATA[state.current];
+    if (idx === item.ans) {
+      CleoGame.addXP(20); state.score += 20; CleoAnimations.confetti(); CleoSpeech.say("¡Respuesta correcta!");
+      state.current++; setTimeout(render, 800);
+    } else {
+      CleoUI.toast("Respuesta incorrecta", "❌", "error");
+      window.handleWrongAnswerBase(
+        () => { setTimeout(() => CleoMonetization.watchAdForLives(() => { state.current++; render(); }), 500); },
+        () => { state.current++; setTimeout(render, 1000); }
+      );
+    }
   }
 
   function endGame() {
     CleoAnimations.confetti();
     CleoUI.showGameEnd({
-      score: state.score, total: PARTS.length, correct: PARTS.length, wrong: 0, perfect: true,
+      score: state.score, total: ANATOMIA_DATA.length, correct: state.score/20, wrong: ANATOMIA_DATA.length - (state.score/20), perfect: (state.score/20 === ANATOMIA_DATA.length),
       onReplay: () => start(), onHome: () => CleoRouter.navigate('home')
     });
   }
 
-  return { start, next };
+  return { start, answer };
 })();
 
 // ── DIBUJO Y PINTURA MONTESSORI ──
@@ -1809,12 +1712,33 @@ window.GameMusica = (function() {
   ];
 
   const SONGS = [
-    { title: '🎵 Estrellita Dónde Estás', sequence: [0, 0, 4, 4, 5, 5, 4], desc: 'Do Do Sol Sol La La Sol' },
+    { title: '⭐ Estrellita Dónde Estás', sequence: [0, 0, 4, 4, 5, 5, 4], desc: 'Do Do Sol Sol La La Sol' },
     { title: '🎂 Cumpleaños Feliz', sequence: [0, 0, 1, 0, 3, 2], desc: 'Do Do Re Do Fa Mi' },
     { title: '🐥 Los Pollitos Dicen', sequence: [0, 1, 2, 3, 4, 4], desc: 'Do Re Mi Fa Sol Sol' }
   ];
 
-  function start(mode = 'partitura') {
+  function start() {
+    CleoUI.renderGameView({
+      title: '🎹 Piano de Cleo',
+      progress: 0,
+      lives: CleoGame.getLives(),
+      tip: "Elige la modalidad que prefieras: Tocar canciones, responder quizzes de oído o practicar libremente.",
+      content: `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;width:100%;padding:20px;box-sizing:border-box;background:#0F172A;color:#fff;text-align:center;">
+          <div style="font-size:4rem;margin-bottom:10px;">🎹</div>
+          <h2 style="font-size:1.5rem;margin-bottom:20px;color:#F59E0B;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;">Elige tu Modo Musical</h2>
+          <div style="display:flex;flex-direction:column;gap:14px;width:100%;max-width:320px;">
+            <button onclick="GameMusica.selectMode('partitura')" style="background:#38BDF8;color:#fff;border:none;padding:16px;border-radius:16px;font-weight:900;font-size:1.1rem;box-shadow:0 4px 0 #0284C7;cursor:pointer;">🎼 Modo Canciones</button>
+            <button onclick="GameMusica.selectMode('oido')" style="background:#EC4899;color:#fff;border:none;padding:16px;border-radius:16px;font-weight:900;font-size:1.1rem;box-shadow:0 4px 0 #BE185D;cursor:pointer;">👂 Quiz de Oído</button>
+            <button onclick="GameMusica.selectMode('libre')" style="background:#10B981;color:#fff;border:none;padding:16px;border-radius:16px;font-weight:900;font-size:1.1rem;box-shadow:0 4px 0 #047857;cursor:pointer;">🎹 Modo Libre</button>
+          </div>
+        </div>
+      `,
+      onBack: () => CleoRouter.navigate('juegos')
+    });
+  }
+
+  function selectMode(mode) {
     state = {
       mode,
       currentLevel: 0,
@@ -1826,154 +1750,116 @@ window.GameMusica = (function() {
     if (mode === 'oido') {
       nextEarTraining();
     } else {
-      render();
+      renderPiano();
     }
   }
 
-  function playTone(freq) {
+  function playNote(index) {
+    const n = NOTES[index];
+    if (!n) return;
     try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+      osc.frequency.setValueAtTime(n.freq, ctx.currentTime);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.8);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
-      osc.stop(ctx.currentTime + 0.6);
-    } catch(e) {}
-  }
-
-  function playNote(idx) {
-    const note = NOTES[idx];
-    if (!note) return;
-    playTone(note.freq);
-    CleoSpeech.say(note.note);
+      osc.stop(ctx.currentTime + 0.8);
+    } catch (e) {}
 
     if (state.mode === 'partitura') {
-      const song = SONGS[state.currentLevel % SONGS.length];
-      const expectedNoteIdx = song.sequence[state.sequencePos];
-      if (idx === expectedNoteIdx) {
+      const song = SONGS[state.currentLevel];
+      if (song && index === song.sequence[state.sequencePos]) {
         state.sequencePos++;
         if (state.sequencePos >= song.sequence.length) {
-          state.score += 20;
-          CleoGame.addXP(20);
-          CleoAnimations.confetti();
-          CleoSpeech.say('¡Excelente! Completaste la canción.');
-          CleoUI.toast(`¡Melodía ${song.title} lograda! 🎉`, '🎵', 'success');
-          state.sequencePos = 0;
-          state.currentLevel++;
+          CleoGame.addXP(25); state.score += 25; CleoAnimations.confetti(); CleoSpeech.say("¡Excelente interpretación!");
+          state.currentLevel++; state.sequencePos = 0;
+          if (state.currentLevel >= SONGS.length) return endGame();
         }
-      } else {
-        CleoGame.loseLife();
-        CleoSpeech.say('Mmm, esa no era la nota. Escucha la secuencia.');
+        renderPiano();
+      } else if (song) {
+        CleoUI.toast("Nota incorrecta", "🎵", "error");
+        window.handleWrongAnswerBase(
+          () => { setTimeout(() => CleoMonetization.watchAdForLives(() => { renderPiano(); }), 500); },
+          () => { state.sequencePos = 0; renderPiano(); }
+        );
       }
     } else if (state.mode === 'oido') {
-      if (idx === state.targetNoteIdx) {
-        state.score += 15;
-        CleoGame.addXP(15);
-        CleoSpeech.say('¡Correcto! Adivinaste el sonido.');
-        CleoUI.toast('¡Oído musical perfecto! 🎵', '👂', 'success');
-        setTimeout(nextEarTraining, 600);
+      if (index === state.targetNoteIdx) {
+        CleoGame.addXP(20); state.score += 20; CleoAnimations.confetti(); CleoSpeech.say("¡Excelente oído!");
+        state.currentLevel++;
+        if (state.currentLevel >= 5) return endGame();
+        setTimeout(nextEarTraining, 1000);
       } else {
-        CleoGame.loseLife();
-        CleoSpeech.say('Esa no fue la nota. ¡Escucha de nuevo!');
+        CleoUI.toast("No era esa nota", "👂", "error");
+        window.handleWrongAnswerBase(
+          () => { setTimeout(() => CleoMonetization.watchAdForLives(() => { nextEarTraining(); }), 500); },
+          () => { setTimeout(nextEarTraining, 1000); }
+        );
       }
     }
-
-    render();
   }
 
   function nextEarTraining() {
     state.targetNoteIdx = Math.floor(Math.random() * NOTES.length);
-    render();
-    setTimeout(() => {
-      playTone(NOTES[state.targetNoteIdx].freq);
-    }, 400);
+    playNote(state.targetNoteIdx);
+    renderPiano();
   }
 
-  function playTargetTone() {
-    playTone(NOTES[state.targetNoteIdx].freq);
-  }
-
-  function showHint() {
-    if (state.mode === 'partitura') {
-      const song = SONGS[state.currentLevel % SONGS.length];
-      const expected = NOTES[song.sequence[state.sequencePos]];
-      CleoUI.toast(`Pista: Toca la nota ${expected.note}`, '💡', 'info');
-      CleoSpeech.say(`Toca la nota ${expected.note}`);
-    } else if (state.mode === 'oido') {
-      const expected = NOTES[state.targetNoteIdx];
-      CleoUI.toast(`Pista: El sonido es ${expected.note}`, '💡', 'info');
-      CleoSpeech.say(`El sonido es ${expected.note}`);
-    } else {
-      CleoUI.toast('💡 Toca las teclas de colores para experimentar y componer tu música', '💡', 'info');
-    }
-  }
-
-  function render() {
-    const song = SONGS[state.currentLevel % SONGS.length];
-
+  function renderPiano() {
+    const song = SONGS[state.currentLevel];
     CleoUI.renderGameView({
-      title: '🎹 Piano y Música',
-      progress: state.mode === 'partitura' ? (state.sequencePos / song.sequence.length) * 100 : 100,
+      title: '🎹 Piano de Cleo',
+      progress: (state.currentLevel / (state.mode === 'partitura' ? SONGS.length : 5)) * 100,
       lives: CleoGame.getLives(),
+      tip: "Toca las teclas de colores para producir sonido y resolver los retos.",
       content: `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:14px;text-align:center;gap:14px;width:100%;">
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:space-between;height:100%;width:100%;padding:16px;box-sizing:border-box;background:#0F172A;color:#fff;">
           
-          <div style="display:flex;gap:6px;background:var(--c-surface);padding:6px;border-radius:16px;border:2px solid var(--c-border);width:100%;max-width:340px;">
-            <button class="btn btn-sm ${state.mode==='partitura'?'btn-primary':'btn-ghost'}" style="flex:1;font-size:0.78rem;" onclick="GameMusica.start('partitura')">🎼 Partitura</button>
-            <button class="btn btn-sm ${state.mode==='oido'?'btn-primary':'btn-ghost'}" style="flex:1;font-size:0.78rem;" onclick="GameMusica.start('oido')">👂 Oído Musical</button>
-            <button class="btn btn-sm ${state.mode==='libre'?'btn-primary':'btn-ghost'}" style="flex:1;font-size:0.78rem;" onclick="GameMusica.start('libre')">🎹 Libre</button>
-          </div>
-
-          <div class="card" style="padding:14px;width:100%;max-width:340px;background:var(--c-surface);border:2px solid var(--c-primary);box-shadow:0 4px 12px rgba(0,0,0,0.05);">
-            ${state.mode === 'partitura' ? `
-              <div style="font-weight:900;color:var(--c-primary);margin-bottom:4px;">${song.title}</div>
-              <div style="font-size:0.85rem;color:var(--c-text-muted);">Sigue las notas: <strong>${song.desc}</strong></div>
-              <div style="font-size:0.8rem;margin-top:6px;color:var(--c-text);">Nota actual: <span style="background:var(--c-primary);color:#fff;padding:2px 8px;border-radius:10px;font-weight:800;">${NOTES[song.sequence[state.sequencePos]]?.note}</span></div>
-            ` : state.mode === 'oido' ? `
-              <div style="font-weight:900;color:var(--c-primary);margin-bottom:4px;">🎯 Adivina el Sonido</div>
-              <div style="font-size:0.85rem;color:var(--c-text-muted);">Escucha la nota de Cleo y toca la tecla correspondiente</div>
-              <button class="btn btn-secondary btn-sm" style="margin-top:8px;" onclick="GameMusica.playTargetTone()">🔊 Repetir Sonido</button>
+          <div style="background:#1E293B;padding:16px;border-radius:16px;border:2px solid #38BDF8;width:100%;max-width:440px;text-align:center;">
+            ${state.mode === 'partitura' && song ? `
+              <div style="font-weight:900;color:#F59E0B;font-size:1.1rem;">${song.title}</div>
+              <div style="font-size:0.9rem;color:#94A3B8;margin-top:4px;">${song.desc}</div>
+              <div style="margin-top:8px;font-weight:800;color:#38BDF8;">Nota actual: ${NOTES[song.sequence[state.sequencePos]]?.note}</div>
+            ` : (state.mode === 'oido' ? `
+              <div style="font-weight:900;color:#EC4899;font-size:1.1rem;">👂 Escucha y adivina la nota</div>
+              <button onclick="GameMusica.replayEar()" style="margin-top:8px;background:#EC4899;color:#fff;border:none;padding:8px 16px;border-radius:10px;font-weight:800;cursor:pointer;">🔊 Escuchar de nuevo</button>
             ` : `
-              <div style="font-weight:900;color:var(--c-primary);margin-bottom:4px;">🎹 Piano Libre</div>
-              <div style="font-size:0.85rem;color:var(--c-text-muted);">Toca las teclas para practicar y componer melodías</div>
-            `}
+              <div style="font-weight:900;color:#10B981;font-size:1.1rem;">🎹 Modo Piano Libre</div>
+            `)}
           </div>
 
-          <div style="display:flex;gap:6px;background:var(--c-surface);padding:14px 10px;border-radius:24px;border:3px solid var(--c-border);width:100%;max-width:340px;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.08);box-sizing:border-box;">
-            ${NOTES.map((n, idx) => {
-              const isHighlight = state.mode === 'partitura' && song.sequence[state.sequencePos] === idx;
-              return `
-                <button onclick="GameMusica.playNote(${idx})"
-                        style="flex:1;height:120px;border-radius:14px;border:3px solid ${isHighlight ? 'var(--c-primary)' : 'var(--c-border)'};
-                        background:${n.color};color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.05rem;
-                        display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 2px;
-                        box-shadow:${isHighlight ? '0 0 0 4px var(--c-primary)' : '0 6px 0 rgba(0,0,0,0.2)'};
-                        cursor:pointer;transition:transform 0.1s ease;transform:scale(${isHighlight ? '1.05' : '1'});">
-                  <span>${n.note}</span>
-                  <span style="font-size:0.75rem;opacity:0.8;">${n.key}</span>
-                </button>
-              `;
-            }).join('')}
+          <!-- Teclado del Piano -->
+          <div style="display:flex;gap:6px;width:100%;max-width:440px;height:220px;background:#1E293B;padding:10px;border-radius:16px;box-sizing:border-box;box-shadow:0 8px 24px rgba(0,0,0,0.4);margin-bottom:10px;">
+            ${NOTES.map((n, i) => `
+              <div onclick="GameMusica.playNote(${i})" style="flex:1;background:${n.color};border-radius:0 0 12px 12px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:12px;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,0.3);user-select:none;font-weight:900;font-size:1rem;color:#fff;">
+                <span>${n.note}</span>
+              </div>
+            `).join('')}
           </div>
-
-          <button class="btn btn-ghost btn-full" onclick="GameMusica.showHint()" style="max-width:340px;font-weight:800;color:var(--c-primary);">
-            💡 Pista de Cleo
-          </button>
-
         </div>
       `,
-      onBack: () => CleoRouter.navigate('juegos')
+      onBack: () => start()
     });
   }
 
-  return { start, playNote, playTargetTone, showHint };
+  function replayEar() {
+    playNote(state.targetNoteIdx);
+  }
+
+  function endGame() {
+    CleoAnimations.confetti();
+    CleoUI.showGameEnd({
+      score: state.score, total: 5, correct: 5, wrong: 0, perfect: true,
+      onReplay: () => start(), onHome: () => CleoRouter.navigate('home')
+    });
+  }
+
+  return { start, selectMode, playNote, replayEar };
 })();
 
 // ── MOTOR INTERACTIVO TIPO DUOLINGO (IDIOMAS) ──

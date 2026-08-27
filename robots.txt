@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /app/
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /js/data/
+
+Sitemap: https://cleduca.com/sitemap.xml

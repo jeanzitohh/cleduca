@@ -17,8 +17,10 @@ window.CLEDUCA_DATA = {
     { id:"lenguaje",    name:"Lenguaje",           emoji:"📖", color:"#1CB0F6", desc:"Lectura, escritura y vocabulario" },
     { id:"ciencias",    name:"Ciencias Naturales", emoji:"🌿", color:"#58CC02", desc:"Animales, plantas y cuerpo humano" },
     { id:"sociales",    name:"Ciencias Sociales",  emoji:"🗺️", color:"#A855F7", desc:"Colombia, mapas e historia" },
+    { id:"programacion",name:"Programación",       emoji:"👨‍💻", color:"#6366F1", desc:"Algoritmos, código y secuencias de movimiento" },
     { id:"logica",      name:"Pensamiento Lógico", emoji:"🧩", color:"#EF4444", desc:"Patrones, puzzles y secuencias" },
-    { id:"arte",        name:"Arte y Creatividad", emoji:"🎨", color:"#EC4899", desc:"Colores, música y expresión" },
+    { id:"arte",        name:"Arte y Creatividad", emoji:"🎨", color:"#EC4899", desc:"Dibujo, colores y expresión" },
+    { id:"teatro",      name:"Teatro y Expresión", emoji:"🎭", color:"#F43F5E", desc:"Actuación, emociones y dramatización" },
     { id:"idiomas",     name:"Idiomas del Mundo",  emoji:"🌎", color:"#38BDF8", desc:"Aprende Inglés y Portugués", isSpecial:true }
   ],
 
@@ -51,11 +53,11 @@ window.CLEDUCA_DATA = {
         {
           id: 3, name: "Frases Básicas y Oraciones",
           quiz: [
-            { q:"Traducción: 'The dog is red'", opts:["The dog is red","The cat is blue","A red bird","My dog"], ans:0, xp:20 },
+            { q:"Traducción: 'The dog is red'", opts:["El perro es rojo","El gato es azul","Un pájaro rojo","Mi perro"], ans:0, xp:20 },
             { q:"¿Qué significa 'I am happy'?", opts:["Tengo hambre","Estoy triste","Estoy feliz","Tengo frío"], ans:2, xp:20 },
             { q:"¿Cómo se dice 'Me llamo...'?", opts:["I am...","My name is...","You are...","He is..."], ans:1, xp:20 },
             { q:"¿Qué es 'How are you?'?", opts:["¿Dónde estás?","¿Cómo estás?","¿Qué hora es?","¿Quién eres?"], ans:1, xp:20 },
-            { q:"Traducción: 'The apple is green'", opts:["The strawberry is red","The apple is green","The apple is red","The banana"], ans:1, xp:20 }
+            { q:"Traducción: 'The apple is green'", opts:["La fresa es roja","La manzana es verde","La manzana es roja","El plátano"], ans:1, xp:20 }
           ]
         },
         {
@@ -65,7 +67,7 @@ window.CLEDUCA_DATA = {
             { q:"¿Qué es 'Father'?", opts:["Hermano","Papá","Abuelo","Tío"], ans:1, xp:20 },
             { q:"¿Cómo se dice 'Escuela'?", opts:["House","School","Park","Car"], ans:1, xp:20 },
             { q:"¿Qué significa 'Book'?", opts:["Libro","Lápiz","Mesa","Silla"], ans:0, xp:20 },
-            { q:"Traducción: 'I love my family'", opts:["I love my family","I like school","My house is big","Good morning"], ans:0, xp:20 }
+            { q:"Traducción: 'I love my family'", opts:["Amo a mi familia","Me gusta la escuela","Mi casa es grande","Buenos días"], ans:0, xp:20 }
           ]
         }
       ]
@@ -606,12 +608,27 @@ window.CLEDUCA_DATA = {
   ],
 
   accessories: [
-    { id:"none",      name:"Sin accesorio",  emoji:"✨", locked:false,  xpRequired:0 },
-    { id:"hat",       name:"Sombrero",       emoji:"🎩", locked:true,   xpRequired:300 },
-    { id:"glasses",   name:"Gafas",          emoji:"🕶️", locked:true,  xpRequired:600 },
-    { id:"crown",     name:"Corona",         emoji:"👑", locked:true,   xpRequired:2500 },
-    { id:"bowtie",    name:"Corbatín",       emoji:"🎀", locked:true,   xpRequired:800 },
-    { id:"cape",      name:"Capa Mágica",    emoji:"🦸", locked:true,   xpRequired:1200 }
+    // Cabeza
+    { id:"none",         category:"cabeza", name:"Sin Accesorio",     emoji:"✨", locked:false, xpRequired:0 },
+    { id:"hat",          category:"cabeza", name:"Sombrero de Copa",  emoji:"🎩", locked:true,  xpRequired:300 },
+    { id:"crown",        category:"cabeza", name:"Corona Real",       emoji:"👑", locked:true,  xpRequired:2500 },
+    { id:"pirate",       category:"cabeza", name:"Sombrero Pirata",   emoji:"🏴‍☠️", locked:true, xpRequired:900 },
+    { id:"beanie",       category:"cabeza", name:"Gorro de Lana",     emoji:"🧶", locked:true,  xpRequired:450 },
+    { id:"ninja",        category:"cabeza", name:"Cinta Ninja",       emoji:"🥷", locked:true,  xpRequired:1500 },
+
+    // Cara
+    { id:"glasses",      category:"cara",   name:"Gafas de Sol",      emoji:"🕶️", locked:true,  xpRequired:600 },
+    { id:"smart_glasses",category:"cara",   name:"Gafas Sabias",      emoji:"👓", locked:true,  xpRequired:750 },
+    { id:"hero_mask",    category:"cara",   name:"Antifaz de Héroe",  emoji:"🎭", locked:true,  xpRequired:1100 },
+    { id:"monocle",      category:"cara",   name:"Monóculo",          emoji:"🧐", locked:true,  xpRequired:1800 },
+    { id:"star_glasses", category:"cara",   name:"Gafas Estrella",    emoji:"🤩", locked:true,  xpRequired:2000 },
+
+    // Cuerpo
+    { id:"bowtie",       category:"cuerpo", name:"Corbatín",          emoji:"🎀", locked:true,  xpRequired:800 },
+    { id:"cape",         category:"cuerpo", name:"Capa Mágica",       emoji:"🦸", locked:true,  xpRequired:1200 },
+    { id:"explorer",     category:"cuerpo", name:"Chaleco Explorador",emoji:"🦺", locked:true,  xpRequired:1000 },
+    { id:"armor",        category:"cuerpo", name:"Armadura Dorada",   emoji:"🛡️", locked:true,  xpRequired:3500 },
+    { id:"tutu",         category:"cuerpo", name:"Tutú de Danza",     emoji:"🩰", locked:true,  xpRequired:1600 }
   ],
 
   themes: [
@@ -626,7 +643,7 @@ window.CLEDUCA_DATA = {
   ],
 
   cleoMessages: {
-    welcome:    ["¡Hola! Soy Cleo, ¡tu compañera de aventuras! 🐉","¡Bienvenido de vuelta! ¡Hoy aprenderemos cosas increíbles! ✨","¡Estaba esperándote! ¿Listo para ser más sabio? 🧠"],
+    welcome:    ["¡Hola! Soy Cleo, ¡tu compañera de aventuras! 🐉","¡Bienvenid@ de vuelta! ¡Hoy aprenderemos cosas increíbles! ✨","¡Estaba esperándote! ¿Listo para ser más sabio? 🧠"],
     correct:    ["¡INCREÍBLE! ¡Lo sabías! 🎉","¡Eso estuvo GENIAL! ⭐","¡Correcto! ¡Eres muy inteligente! 🏆","¡PERFECTO! ¡Sigue así! 💪","¡Wow, qué rápido! 🚀"],
     wrong:      ["¡No te preocupes, a seguir intentando! 💪","¡Casi! La respuesta correcta te sorprenderá 🤔","¡Error es parte del aprendizaje! Sigamos 🌟","¡Tranquilo/a! ¡La próxima sí! 😊"],
     levelUp:    ["¡SUBISTE DE NIVEL! ¡Eres una estrella! 🌟⬆️","¡INCREÍBLE! ¡Nuevo nivel desbloqueado! 🏆","¡Lo lograste! ¡Eres más sabio/a que antes! 🧠✨"],

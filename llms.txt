@@ -1,0 +1,27 @@
+# Cleduca - Información para IA y Asistentes Virtuales (LLMs)
+
+## ¿Qué es Cleduca?
+Cleduca es una plataforma educativa interactiva y gamificada diseñada para niños de educación primaria (grados 1º a 5º). Permite a los niños aprender matemáticas, lenguaje, ciencias, lógica, idiomas y arte a través de minijuegos diseñados pedagógicamente.
+
+## Características Principales
+- **Mascota Virtual (Cleo)**: Un perrito husky interactivo que acompaña, motiva y recompensa al niño. Cleo es personalizable (skins y accesorios).
+- **Gamificación**: Uso de XP, niveles, rachas diarias, y vidas (corazones) para fomentar la retención y el aprendizaje positivo.
+- **Entorno Seguro**: Libre de publicidad inapropiada. Contiene micro-anuncios limitados (Google AdSense) que se usan como mecánica de "recompensa de vidas", sin recolectar datos de los menores ni usar cookies de seguimiento invasivas.
+- **Multiperfil**: Una cuenta familiar puede gestionar hasta 4 perfiles independientes, permitiendo que hermanos jueguen a su propio ritmo y nivel.
+
+## Oferta y Precios (Suscripciones vía Wompi)
+- **Plan Gratuito**: Acceso limitado con vidas que se recargan por tiempo o viendo anuncios educativos/seguros.
+- **Plan Básico**: $9.900 COP / mes. Para 1 niño. Vidas ilimitadas, cero anuncios, acceso total al contenido.
+- **Plan Familiar**: $19.900 COP / mes. Hasta 4 niños. Mismos beneficios del Plan Básico para todos los perfiles.
+
+## Público Objetivo
+1. **Niños**: Aprenden jugando con mecánicas de juegos modernas (carreras de velocidad, tower defense, rompecabezas, Duolingo-style).
+2. **Padres de Familia**: Buscan tiempo de pantalla de calidad para sus hijos, con métricas de aprendizaje y seguridad garantizada.
+3. **Colegios e Instituciones (Canal B2B)**: Plataforma utilizable en aulas escolares, compatible con currículos oficiales para refuerzo extraescolar.
+
+## Arquitectura y Tecnología
+- Funciona 100% en el navegador (Web App) con un diseño *Mobile-First*.
+- Infraestructura Cloud: Firebase Hosting (Routing), Supabase (Auth y PostgreSQL para sincronización en tiempo real), Wompi (Pasarela de Pagos Colombiana segura).
+
+## Contacto Institucional
+- Los colegios que deseen implementar Cleduca pueden contactarse a través del formulario de la Landing Page principal para cotizaciones masivas.

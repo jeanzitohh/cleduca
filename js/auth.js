@@ -316,7 +316,7 @@ window.CleoGame = (function() {
     const p = getProfile();
     if (!p) return null;
     const rewards = generateChestRewards();
-    saveProfile({ chests: { lastFree: Date.now(), available: 0 } });
+    updateProfile(p.id, { chests: { lastFree: Date.now(), available: 0 } });
     return rewards;
   }
   function generateChestRewards() {
@@ -392,7 +392,7 @@ window.CleoGame = (function() {
 
   return {
     addXP, addSubjectXP, getLevelProgress, getLevelName, getXPForLevel, getNextLevelXP,
-    getLives, loseLife, refillLives, getLifeRegenTime,
+    getLives, loseLife, removeLife: loseLife, refillLives, getLifeRegenTime,
     updateStreak, saveStreak,
     checkFreeChest, claimFreeChest,
     unlockAchievement, checkGameAchievement,

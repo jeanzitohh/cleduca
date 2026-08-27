@@ -53,10 +53,13 @@
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-10px); }
 }
-@keyframes floatBig {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50%       { transform: translateY(-18px) rotate(3deg); }
+@keyframes floatUp {
+  0%   { transform: translateY(0) scale(0.9); opacity: 0.85; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateY(-550px) scale(1.1); opacity: 0; }
 }
+
 @keyframes spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }

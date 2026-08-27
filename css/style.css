@@ -2,6 +2,10 @@
    CLEDUCA — Estilos Principales
    =========================== */
 
+* {
+  touch-action: manipulation;
+}
+
 /* Scrollbars personalizados */
 ::-webkit-scrollbar {
   width: 6px;
@@ -107,6 +111,13 @@ h1, h2, h3, h4, h5, h6 {
   min-height: 100dvh;
   flex-direction: column;
   padding-bottom: 90px;
+}
+#view-game {
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  min-height: 100dvh !important;
+  overflow: hidden !important;
+  padding-bottom: 0 !important;
 }
 .view.active {
   display: flex;

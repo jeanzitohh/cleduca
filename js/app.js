@@ -93,126 +93,24 @@ window.CleoAnimations = (function() {
 
 // ── MASCOTA CLEO SVG ──
 window.CleoChr = (function() {
-  // Genera el SVG de Cleo (Perrito Husky/Criollo) según skin activa
   function getSVG(skin='verde', expression='happy', accessory='none') {
-    const colors = {
-      verde:     { body:'#292524', belly:'#F8FAFC', eye:'#3B82F6', innerEar:'#F472B6', collar:'#EF4444' }, // Husky Clásico (Negro/Blanco Ojos Azules)
-      galaxia:   { body:'#4C1D95', belly:'#EDE9FE', eye:'#8B5CF6', innerEar:'#C4B5FD', collar:'#F59E0B' }, // Purple
-      oceanica:  { body:'#0369A1', belly:'#E0F2FE', eye:'#0284C7', innerEar:'#BAE6FD', collar:'#10B981' }, // Blue
-      fuego:     { body:'#9A3412', belly:'#FFEDD5', eye:'#EA580C', innerEar:'#FDBA74', collar:'#F59E0B' }, // Orange/Red
-      artica:    { body:'#64748B', belly:'#F8FAFC', eye:'#38BDF8', innerEar:'#CBD5E1', collar:'#3B82F6' }, // Light Grey
-      primavera: { body:'#BE185D', belly:'#FCE7F3', eye:'#EC4899', innerEar:'#F9A8D4', collar:'#F59E0B' }, // Pink
-      dorada:    { body:'#B45309', belly:'#FEF3C7', eye:'#D97706', innerEar:'#FDE68A', collar:'#EF4444' }, // Golden
-      oscura:    { body:'#18181B', belly:'#52525B', eye:'#A1A1AA', innerEar:'#71717A', collar:'#3B82F6' }  // Dark mode
+    const accEmojis = {
+      hat: '🎩', crown: '👑', pirate: '🏴‍☠️', beanie: '🧶', ninja: '🥷',
+      glasses: '🕶️', smart_glasses: '👓', hero_mask: '🎭', monocle: '🧐', star_glasses: '🤩',
+      bowtie: '🎀', cape: '🦸', explorer: '🦺', armor: '🛡️', tutu: '🩰'
     };
-    const c = colors[skin] || colors.verde;
+    const accEmoji = accEmojis[accessory] || '';
 
-    // Expression variants (Eyes and mouth)
-    const eyes = {
-      happy:     `<circle cx="37" cy="46" r="6.5" fill="${c.eye}"/>
-                  <circle cx="63" cy="46" r="6.5" fill="${c.eye}"/>
-                  <circle cx="35" cy="43.5" r="2.5" fill="#FFFFFF"/>
-                  <circle cx="61" cy="43.5" r="2.5" fill="#FFFFFF"/>
-                  <circle cx="38" cy="48" r="1.2" fill="#FFFFFF"/>
-                  <circle cx="64" cy="48" r="1.2" fill="#FFFFFF"/>`,
-      surprised: `<circle cx="37" cy="45" r="7.5" fill="${c.eye}"/>
-                  <circle cx="63" cy="45" r="7.5" fill="${c.eye}"/>
-                  <circle cx="35" cy="42" r="3" fill="#FFFFFF"/>
-                  <circle cx="61" cy="42" r="3" fill="#FFFFFF"/>`,
-      sad:       `<circle cx="37" cy="48" r="6" fill="${c.eye}"/>
-                  <circle cx="63" cy="48" r="6" fill="${c.eye}"/>
-                  <path d="M30 42 Q37 38 44 42" stroke="#1E293B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                  <path d="M56 42 Q63 38 70 42" stroke="#1E293B" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
-      celebrating:`<path d="M31 46 Q37 39 43 46" stroke="${c.eye}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                    <path d="M57 46 Q63 39 69 46" stroke="${c.eye}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
-      thinking:  `<circle cx="37" cy="46" r="6" fill="${c.eye}"/>
-                  <circle cx="63" cy="46" r="6" fill="${c.eye}"/>
-                  <path d="M31 38 L43 42" stroke="#1E293B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                  <path d="M57 42 L69 38" stroke="#1E293B" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
-    };
-
-    const mouths = {
-      happy:     `<ellipse cx="50" cy="56" rx="5" ry="3.5" fill="#1E293B"/>
-                  <path d="M50 59.5 L50 63" stroke="#1E293B" stroke-width="2" fill="none"/>
-                  <path d="M43 63 Q50 70 57 63" stroke="#1E293B" stroke-width="2" fill="none" stroke-linecap="round"/>
-                  <path d="M47 65 Q50 72 53 65" fill="#F43F5E"/>`, // Lengüita de perrito
-      surprised: `<ellipse cx="50" cy="55" rx="5" ry="3.5" fill="#1E293B"/>
-                  <ellipse cx="50" cy="64" rx="4" ry="6" fill="#1E293B"/>`,
-      sad:       `<ellipse cx="50" cy="56" rx="5" ry="3.5" fill="#1E293B"/>
-                  <path d="M43 67 Q50 62 57 67" stroke="#1E293B" stroke-width="2" fill="none" stroke-linecap="round"/>`,
-      celebrating:`<ellipse cx="50" cy="55" rx="5" ry="3.5" fill="#1E293B"/>
-                   <path d="M41 62 Q50 74 59 62" fill="#F43F5E" stroke="#1E293B" stroke-width="2"/>`,
-      thinking:  `<ellipse cx="50" cy="56" rx="5" ry="3.5" fill="#1E293B"/>
-                  <path d="M45 64 L55 64" stroke="#1E293B" stroke-width="2" fill="none" stroke-linecap="round"/>`
-    };
-
-    // Accessory
-    const accessories = {
-      none:  '',
-      hat:   `<path d="M22 18 C22 18 50 4 78 18 L72 22 L28 22 Z" fill="#EF4444"/>
-               <rect x="36" y="4" width="28" height="16" rx="4" fill="#EF4444"/>
-               <rect x="36" y="16" width="28" height="4" fill="#F59E0B"/>`,
-      glasses:`<circle cx="37" cy="46" r="11" fill="rgba(255,255,255,0.25)" stroke="#1E293B" stroke-width="3"/>
-               <circle cx="63" cy="46" r="11" fill="rgba(255,255,255,0.25)" stroke="#1E293B" stroke-width="3"/>
-               <line x1="48" y1="46" x2="52" y2="46" stroke="#1E293B" stroke-width="3"/>`,
-      crown: `<polygon points="50,2 58,16 70,8 66,22 34,22 30,8 42,16" fill="#F59E0B" stroke="#B45309" stroke-width="1.5"/>
-               <circle cx="50" cy="2" r="3" fill="#EF4444"/>
-               <circle cx="70" cy="8" r="3" fill="#3B82F6"/>
-               <circle cx="30" cy="8" r="3" fill="#10B981"/>`,
-      bowtie:`<polygon points="50,82 38,88 42,82 38,76 50,82 62,76 58,82 62,88" fill="#EF4444"/>
-               <circle cx="50" cy="82" r="3" fill="#B91C1C"/>`,
-      cape:  `<path d="M25 80 Q50 120 75 80 L80 105 Q50 140 20 105 Z" fill="#7C3AED" opacity="0.9"/>`
-    };
-
-    return `<svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" class="cleo-svg">
-      <!-- Sombra -->
-      <ellipse cx="50" cy="124" rx="32" ry="6" fill="rgba(0,0,0,0.12)"/>
-      <!-- Cola de perrito feliz -->
-      <path d="M70 95 Q92 85 86 112 Q76 108 68 100" fill="${c.body}" style="transform-origin:70px 95px;animation:cleoWave 1.8s ease-in-out infinite;"/>
-      <path d="M86 112 Q88 118 92 110 Q85 106 86 112" fill="${c.belly}"/>
-      <!-- Capa (detrás) -->
-      ${accessory === 'cape' ? accessories.cape : ''}
-      <!-- Cuerpo -->
-      <ellipse cx="50" cy="92" rx="26" ry="28" fill="${c.body}"/>
-      <ellipse cx="50" cy="94" rx="17" ry="22" fill="${c.belly}"/>
-      <!-- Patitas traseras -->
-      <ellipse cx="26" cy="116" rx="10" ry="8" fill="${c.body}"/>
-      <ellipse cx="26" cy="119" rx="6" ry="4" fill="${c.belly}"/>
-      <ellipse cx="74" cy="116" rx="10" ry="8" fill="${c.body}"/>
-      <ellipse cx="74" cy="119" rx="6" ry="4" fill="${c.belly}"/>
-      <!-- Patitas delanteras de perrito -->
-      <rect x="35" y="88" width="11" height="30" rx="5" fill="${c.belly}"/>
-      <rect x="54" y="88" width="11" height="30" rx="5" fill="${c.belly}"/>
-      <!-- Orejas triangulares suaves de perrito Husky -->
-      <polygon points="28,34 12,8 42,20" fill="${c.body}"/>
-      <polygon points="27,32 16,14 38,22" fill="${c.innerEar}"/>
-      <polygon points="72,34 88,8 58,20" fill="${c.body}"/>
-      <polygon points="73,32 84,14 62,22" fill="${c.innerEar}"/>
-      <!-- Cabeza redondeada de perrito -->
-      <ellipse cx="50" cy="44" rx="34" ry="30" fill="${c.body}"/>
-      <!-- Máscara facial blanca de Husky/Criollo -->
-      <path d="M50 18 Q30 18 20 44 Q20 68 50 72 Q80 68 80 44 Q70 18 50 18" fill="${c.belly}"/>
-      <!-- Estrella/Llama en la frente de Cleo -->
-      <path d="M50 20 Q44 26 40 38 Q48 40 50 34 Q52 40 60 38 Q56 26 50 20" fill="${c.body}"/>
-      <!-- Collar rojo con placa dorada -->
-      <path d="M26 71 Q50 80 74 71 L72 77 Q50 86 28 77 Z" fill="${c.collar}"/>
-      <circle cx="50" cy="80" r="4.5" fill="#F59E0B" stroke="#B45309" stroke-width="1"/>
-      <!-- Ojos -->
-      ${eyes[expression] || eyes.happy}
-      <!-- Hocico y boca -->
-      ${mouths[expression] || mouths.happy}
-      <!-- Mejillas rosaditas -->
-      <ellipse cx="26" cy="54" rx="4.5" ry="2.5" fill="#FF9DC0" opacity="0.65"/>
-      <ellipse cx="74" cy="54" rx="4.5" ry="2.5" fill="#FF9DC0" opacity="0.65"/>
-      <!-- Accesorio -->
-      ${accessory !== 'cape' ? accessories[accessory] || '' : ''}
-    </svg>`;
+    return `
+      <div class="cleo-svg" style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:visible;">
+        <img src="/img/Logo_cleduca_transparente.png" alt="Cleo" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.15));" onerror="this.src='/img/Logo_cleduca_transparente.svg'">
+        ${accEmoji ? `<div style="position:absolute;top:2px;right:2px;font-size:1.6rem;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));z-index:5;pointer-events:none;">${accEmoji}</div>` : ''}
+      </div>
+    `;
   }
-
   function renderInto(el, skin, expression, accessory) {
     if (el) el.innerHTML = getSVG(skin, expression, accessory);
   }
-
   return { getSVG, renderInto };
 })();
 
@@ -247,6 +145,8 @@ window.CleoUI = (function() {
     overlay.id = 'modal-overlay';
 
     if (type === 'plans') {
+      // Usar Wompi si está disponible, sino usar CleoWompi directamente
+      const useWompi = typeof CleoWompi !== 'undefined';
       const plans = CleoMonetization.PLANS;
       overlay.innerHTML = `
         <div class="modal-sheet">
@@ -273,8 +173,19 @@ window.CleoUI = (function() {
               <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">
                 ${p.features.map(f=>`<li style="font-size:0.85rem;color:var(--c-text-muted);">✅ ${f}</li>`).join('')}
               </ul>
-              <button class="btn btn-primary btn-full" onclick="CleoMonetization.activatePremium('${p.id}');document.getElementById('modal-overlay').remove();CleoUI.toast('¡Premium activado! 🎉','👑','success');">
-                Obtener ${p.name}
+              <!-- Botón Wompi real -->
+              <button class="btn btn-primary btn-full"
+                      style="background:${p.popular?'linear-gradient(135deg,#7C3AED,#0EA5E9)':'var(--c-primary)'};"
+                      onclick="
+                        if(typeof CleoWompi!=='undefined'){
+                          document.getElementById('modal-overlay').remove();
+                          CleoWompi.checkout('${p.id}', ()=>CleoUI.toast('¡Premium activado! 🎉','👑','success'));
+                        } else {
+                          CleoMonetization.activatePremium('${p.id}');
+                          document.getElementById('modal-overlay').remove();
+                          CleoUI.toast('¡Premium activado! 🎉','👑','success');
+                        }">
+                💳 Suscribirme — ${p.price}${p.period}
               </button>
             </div>
           `).join('')}
@@ -327,20 +238,22 @@ window.CleoUI = (function() {
     }, 1000);
   }
 
-  function renderGameView({ title, progress, lives, content, onBack }) {
+  function renderGameView({ title, progress, lives, content, onBack, tip }) {
     const view = document.getElementById('view-game');
     if (!view) return;
+    window._gameOnBack = onBack || (() => CleoRouter.navigate('juegos'));
+    window._gameTip = tip || "Lee atentamente las opciones y piensa antes de elegir. ¡Tú puedes!";
     view.innerHTML = `
-      <div class="game-header">
-        <button class="top-back-btn" onclick="(${onBack})()">${CLEO_BACK_ARROW}</button>
+      <div class="game-header" style="flex-shrink:0;">
+        <button class="top-back-btn" onclick="if(window._gameOnBack) window._gameOnBack(); else CleoRouter.navigate('juegos');">${CLEO_BACK_ARROW}</button>
         <div class="game-progress-bar"><div class="game-progress-fill" style="width:${progress}%"></div></div>
-        <div class="stat-chip lives" style="font-size:1.05rem;padding:6px 12px;"><span class="icon">❤️</span> ${lives}</div>
+        <div class="stat-chip lives" style="font-size:1.05rem;padding:6px 10px;"><span class="icon">❤️</span> ${lives}</div>
+        <button onclick="CleoUI.toast(window._gameTip, '💡', 'info'); CleoSpeech.say(window._gameTip);" style="background:#F59E0B;color:#fff;border:none;border-radius:12px;padding:6px 10px;font-weight:800;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;gap:4px;flex-shrink:0;">💡 Tip</button>
       </div>
-      <div style="display:flex;align-items:center;justify-content:center;padding:12px;
-           background:var(--c-bg-nav);border-bottom:1px solid var(--c-border);">
-        <h3 style="font-size:1rem;font-family:'Plus Jakarta Sans',sans-serif;">${title}</h3>
+      <div style="display:flex;align-items:center;justify-content:center;padding:10px 16px;background:var(--c-bg-nav);border-bottom:1px solid var(--c-border);flex-shrink:0;">
+        <h3 style="font-size:1rem;font-family:'Plus Jakarta Sans',sans-serif;margin:0;text-align:center;">${title}</h3>
       </div>
-      <div style="flex:1;overflow-y:auto;">${content}</div>
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;position:relative;width:100%;height:100%;">${content}</div>
     `;
     CleoRouter.showView('game');
   }
@@ -349,9 +262,27 @@ window.CleoUI = (function() {
     const view = document.getElementById('view-game');
     if (!view) return;
     const pct = Math.round((correct/total)*100);
+    const timeSpent = Math.round((Date.now() - (window._gameStartTime || Date.now())) / 1000);
     // Store callbacks globally so onclick can find them
     window._gameEndReplay = onReplay;
     window._gameEndHome = onHome;
+
+    // Send telemetry to Supabase
+    try {
+      if (window.supabase_client && window._activeChildId) {
+        supabase_client.from('game_telemetry').insert([{
+          child_id: window._activeChildId,
+          game_type: window._currentGameType || 'quiz',
+          subject: window._currentGameSubject || 'general',
+          grade: window._currentGameGrade || 1,
+          score: score || 0,
+          correct_answers: correct || 0,
+          wrong_answers: wrong || 0,
+          time_spent_seconds: timeSpent
+        }]).then(() => {}).catch(e => console.warn('Telemetry error:', e));
+      }
+    } catch(e) {}
+
     view.innerHTML = `
       <div style="min-height:100dvh;display:flex;flex-direction:column;align-items:center;
            justify-content:center;padding:32px 20px;gap:24px;text-align:center;">
@@ -362,26 +293,31 @@ window.CleoUI = (function() {
           <h2 style="font-size:2rem;margin-bottom:8px;">
             ${perfect?'¡Perfecto!':pct>=70?'¡Muy bien!':'¡Sigue practicando!'}
           </h2>
-          <p style="color:var(--c-text-muted);font-size:1rem;">${correct} de ${total} correctas (${pct}%)</p>
+          <p style="color:var(--c-text-muted);font-size:1rem;">${correct} de ${total} correctas (${pct}%) · ⏱️ ${timeSpent}s</p>
         </div>
-        <div style="background:var(--c-surface);border-radius:20px;padding:20px;width:100%;display:flex;gap:16px;justify-content:center;">
+        <div style="background:var(--c-surface);border-radius:20px;padding:20px;width:100%;display:flex;gap:12px;justify-content:center;">
           <div style="text-align:center;">
-            <div style="font-size:1.8rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-xp);">+${score}</div>
-            <div style="font-size:0.8rem;color:var(--c-text-muted);">XP ganados</div>
+            <div style="font-size:1.6rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-xp);">+${score}</div>
+            <div style="font-size:0.75rem;color:var(--c-text-muted);">XP</div>
           </div>
           <div style="width:1px;background:var(--c-border);"></div>
           <div style="text-align:center;">
-            <div style="font-size:1.8rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-primary);">${correct}</div>
-            <div style="font-size:0.8rem;color:var(--c-text-muted);">Correctas</div>
+            <div style="font-size:1.6rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-primary);">${correct}</div>
+            <div style="font-size:0.75rem;color:var(--c-text-muted);">Correctas</div>
           </div>
           <div style="width:1px;background:var(--c-border);"></div>
           <div style="text-align:center;">
-            <div style="font-size:1.8rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-lives);">${wrong}</div>
-            <div style="font-size:0.8rem;color:var(--c-text-muted);">Incorrectas</div>
+            <div style="font-size:1.6rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-lives);">${wrong}</div>
+            <div style="font-size:0.75rem;color:var(--c-text-muted);">Incorrectas</div>
+          </div>
+          <div style="width:1px;background:var(--c-border);"></div>
+          <div style="text-align:center;">
+            <div style="font-size:1.6rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;color:var(--c-streak);">${timeSpent}s</div>
+            <div style="font-size:0.75rem;color:var(--c-text-muted);">Tiempo</div>
           </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;width:100%;">
-          <button class="btn btn-primary btn-full btn-lg" onclick="window._gameEndReplay()">🔄 Jugar de nuevo</button>
+          <button class="btn btn-primary btn-full btn-lg" onclick="window._gameEndReplay()" style="font-size:1.15rem;padding:16px;">⏭️ Siguiente Nivel</button>
           <button class="btn btn-secondary btn-full" onclick="window._gameEndHome()">🏠 Volver al inicio</button>
         </div>
       </div>
@@ -390,56 +326,124 @@ window.CleoUI = (function() {
 
   function showAdModal(onComplete) {
     document.querySelectorAll('.modal-overlay.ad-modal').forEach(m => m.remove());
-    let secondsLeft = 5;
+    const AD_DURATION = 10; // segundos obligatorios
+    let secondsLeft = AD_DURATION;
+    let adWatched = false;
+
     const modal = document.createElement('div');
     modal.className = 'modal-overlay center ad-modal active';
     modal.style.zIndex = '99999';
     modal.innerHTML = `
-      <div class="modal-card animate-scaleUp" style="text-align:center;padding:24px;">
-        <div style="background:var(--grad-hero);border-radius:16px;padding:24px;color:#fff;margin-bottom:16px;position:relative;overflow:hidden;">
-          <div style="font-size:3rem;margin-bottom:8px;animation:floatBig 2s infinite ease-in-out;">📺</div>
-          <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.3rem;margin-bottom:4px;">
-            Anuncio publicitario
-          </h3>
-          <p style="font-size:0.85rem;opacity:0.9;">Recargando tus vidas con Cleo...</p>
-          
-          <div style="margin-top:16px;background:rgba(255,255,255,0.2);height:10px;border-radius:5px;overflow:hidden;">
-            <div id="ad-progress-bar" style="width:100%;height:100%;background:#fff;transition:width 1s linear;"></div>
+      <div class="modal-card animate-scaleUp" style="text-align:center;padding:0;overflow:hidden;max-width:360px;width:100%;">
+
+        <!-- Header -->
+        <div style="background:var(--grad-hero);padding:18px 20px 14px;position:relative;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <img src="../img/Logo_cleduca_transparente.png" alt="Cleo"
+                   style="width:32px;height:32px;object-fit:contain;"
+                   onerror="this.src='img/Logo_cleduca_transparente.png'">
+              <span style="color:#fff;font-weight:800;font-size:0.95rem;">Ver anuncio → Ganar recompensa</span>
+            </div>
+            <div id="ad-timer-badge"
+                 style="background:rgba(0,0,0,0.25);color:#fff;padding:4px 10px;border-radius:20px;
+                        font-size:0.8rem;font-weight:800;">
+              ⏱ <span id="ad-timer">${AD_DURATION}</span>s
+            </div>
+          </div>
+
+          <!-- Progress bar -->
+          <div style="margin-top:10px;background:rgba(255,255,255,0.25);height:6px;border-radius:3px;overflow:hidden;">
+            <div id="ad-progress-bar"
+                 style="width:0%;height:100%;background:#fff;border-radius:3px;transition:width 1s linear;">
+            </div>
           </div>
         </div>
 
-        <div id="ad-status-btn" class="btn btn-secondary btn-full" style="opacity:0.7;cursor:not-allowed;font-weight:700;">
-          ⏳ Espera <span id="ad-timer">5</span>s para reclamar la recompensa
+        <!-- Ad container (Google AdSense) -->
+        <div style="background:#f9f9f9;min-height:200px;display:flex;align-items:center;justify-content:center;
+                    border-bottom:1px solid #eee;padding:8px;position:relative;">
+          <!-- Etiqueta reglamentaria de AdSense -->
+          <div style="position:absolute;top:4px;left:8px;font-size:0.65rem;color:#aaa;font-family:sans-serif;">
+            Publicidad
+          </div>
+          <ins class="adsbygoogle"
+               id="cleo-ad-slot"
+               style="display:block;width:320px;min-height:180px;"
+               data-ad-client="ca-pub-4702701194736185"
+               data-ad-slot="4002873818"
+               data-ad-format="rectangle"
+               data-full-width-responsive="false">
+          </ins>
+        </div>
+
+        <!-- Footer / CTA -->
+        <div style="padding:16px 20px;">
+          <div id="ad-reward-info" style="font-size:0.85rem;color:var(--c-text-muted);margin-bottom:12px;">
+            🐶 Cleo está esperando. Mira el anuncio completo para recibir tu recompensa.
+          </div>
+          <button id="ad-claim-btn"
+                  class="btn btn-secondary btn-full"
+                  style="opacity:0.5;cursor:not-allowed;font-weight:700;font-size:0.95rem;"
+                  disabled>
+            ⏳ Disponible en <span id="ad-btn-timer">${AD_DURATION}</span>s
+          </button>
+          <button onclick="document.querySelector('.ad-modal').remove();"
+                  style="background:none;border:none;color:var(--c-text-muted);font-size:0.8rem;
+                         cursor:pointer;margin-top:8px;width:100%;padding:4px;">
+            Cancelar (sin recompensa)
+          </button>
         </div>
       </div>
     `;
     document.body.appendChild(modal);
 
+    // Iniciar AdSense dentro del modal
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch(e) {
+      console.warn('[CleoAd] AdSense no disponible:', e.message);
+    }
+
+    // Countdown
     const interval = setInterval(() => {
       secondsLeft--;
-      const timerEl = document.getElementById('ad-timer');
+      const pct = ((AD_DURATION - secondsLeft) / AD_DURATION) * 100;
+
+      const timerEl    = document.getElementById('ad-timer');
+      const btnTimerEl = document.getElementById('ad-btn-timer');
       const progressEl = document.getElementById('ad-progress-bar');
-      if (timerEl) timerEl.textContent = secondsLeft;
-      if (progressEl) progressEl.style.width = `${(secondsLeft/5)*100}%`;
+
+      if (timerEl)    timerEl.textContent    = Math.max(0, secondsLeft);
+      if (btnTimerEl) btnTimerEl.textContent = Math.max(0, secondsLeft);
+      if (progressEl) progressEl.style.width = `${Math.min(100, pct)}%`;
 
       if (secondsLeft <= 0) {
         clearInterval(interval);
-        const btn = document.getElementById('ad-status-btn');
-        if (btn) {
-          btn.style.opacity = '1';
-          btn.style.cursor = 'pointer';
-          btn.className = 'btn btn-primary btn-full btn-lg';
-          btn.innerHTML = '✨ ¡Reclamar +5 Vidas ❤️!';
-          btn.onclick = () => {
+        adWatched = true;
+
+        const claimBtn  = document.getElementById('ad-claim-btn');
+        const rewardInfo= document.getElementById('ad-reward-info');
+        const timerBadge= document.getElementById('ad-timer-badge');
+
+        if (timerBadge) timerBadge.innerHTML = '✅ ¡Listo!';
+        if (rewardInfo) rewardInfo.innerHTML  = '🎉 ¡Gracias por ver el anuncio! Ya puedes reclamar tu recompensa.';
+
+        if (claimBtn) {
+          claimBtn.disabled   = false;
+          claimBtn.style.opacity  = '1';
+          claimBtn.style.cursor   = 'pointer';
+          claimBtn.className      = 'btn btn-primary btn-full btn-lg';
+          claimBtn.innerHTML      = '✨ ¡Reclamar recompensa!';
+          claimBtn.onclick = () => {
             modal.remove();
-            CleoGame.refillLives();
-            CleoUI.toast('¡Vidas recargadas con éxito! ❤️', '❤️', 'success');
             if (onComplete) onComplete();
           };
         }
       }
     }, 1000);
   }
+
 
   return { toast, showModal, showAdModal, renderGameView, showGameEnd };
 })();
@@ -459,6 +463,9 @@ window.CleoRouter = (function() {
     if (el) { 
       el.classList.add('active'); 
       el.style.display = 'flex'; // Force show
+      el.scrollTop = 0; // Reset scroll
+      el.querySelectorAll('*').forEach(child => { if(child.style) child.scrollTop = 0; });
+      window.scrollTo(0, 0); // Reset body scroll
       currentView = id; 
     }
     updateNav(id);
@@ -893,63 +900,100 @@ function renderIdiomas() {
   let html = `
     <div class="top-bar">
       <button class="top-back-btn" onclick="CleoRouter.navigate('materias')">${CLEO_BACK_ARROW}</button>
-      <div class="top-bar-logo">🌎 Idiomas del Mundo</div>
+      <div class="top-bar-logo">🌍 Ruta de Idiomas</div>
       <div class="top-stats">
         <div class="stat-chip lives"><span class="icon">❤️</span> ${CleoGame.getLives()}</div>
       </div>
     </div>
     <div style="overflow-y:auto;flex:1;padding:20px 16px;background:var(--grad-bg);">
-      <p style="text-align:center;color:var(--c-text-muted);margin-bottom:20px;font-weight:700;">Completa cada lección para desbloquear la ruta de aprendizaje 🚀</p>
+      <p style="text-align:center;color:var(--c-text-muted);margin-bottom:20px;font-weight:800;">Avanza por Unidades Temáticas completando cada lección 🚀</p>
   `;
   
   Object.keys(data).forEach(langKey => {
     const lang = data[langKey];
     html += `
-      <div style="background:var(--c-surface);border-radius:24px;padding:20px;margin-bottom:20px;box-shadow:0 8px 24px rgba(0,0,0,0.06);">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3rem;font-weight:800;color:var(--c-primary);display:flex;align-items:center;gap:8px;margin:0;">
-            ${lang.emoji} Curso de ${lang.name}
+      <div style="background:var(--c-surface);border-radius:24px;padding:30px 10px;margin-bottom:30px;box-shadow:0 8px 24px rgba(0,0,0,0.06);position:relative;overflow:hidden;">
+        
+        <!-- Encabezado del idioma -->
+        <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:30px;z-index:2;position:relative;">
+          <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.6rem;font-weight:900;color:var(--c-primary);margin:0 0 4px 0;">
+            ${lang.emoji} ${lang.name}
           </h2>
-          <span style="font-size:0.75rem;background:var(--c-bg-card);color:var(--c-text-muted);padding:4px 10px;border-radius:12px;font-weight:700;border:1px solid var(--c-border);">
-            ${lang.category || 'Idiomas'}
+          <span style="font-size:0.75rem;background:var(--c-bg-card);color:var(--c-text-muted);padding:4px 12px;border-radius:12px;font-weight:800;border:1px solid var(--c-border);text-transform:uppercase;">
+            Ruta Temática
           </span>
         </div>
         
-        <div style="display:flex;flex-direction:column;gap:14px;position:relative;">
-          <div style="position:absolute;left:28px;top:20px;bottom:20px;width:4px;background:var(--c-border);z-index:0;border-radius:2px;"></div>
+        <!-- Línea conectora central (El camino) -->
+        <div style="position:absolute;left:50%;top:120px;bottom:60px;width:8px;background:var(--c-border);transform:translateX(-50%);z-index:0;border-radius:4px;"></div>
+        
+        <!-- Nodos de niveles (Zig-Zag estilo Duolingo) -->
+        <div style="display:flex;flex-direction:column;gap:45px;position:relative;z-index:1;align-items:center;">
     `;
     
     let isUnlocked = true;
+    const unitTopics = [
+      { unit: 'Unidad 1', topic: 'Saludos & Básicos', emoji: '👋' },
+      { unit: 'Unidad 2', topic: 'Colores & Animales', emoji: '🎨' },
+      { unit: 'Unidad 3', topic: 'En la Escuela', emoji: '🎒' },
+      { unit: 'Unidad 4', topic: 'Comida & Frutas', emoji: '🍎' },
+      { unit: 'Unidad 5', topic: 'Familia & Casa', emoji: '🏠' },
+      { unit: 'Unidad 6', topic: 'Viajes & Lugares', emoji: '✈️' }
+    ];
     
     lang.levels.forEach((lvl, i) => {
       const isCompleted = profile.gamesPlayed && profile.gamesPlayed[`idiomas_${langKey}_${lvl.id}`];
+      const topicInfo = unitTopics[i % unitTopics.length];
+      
+      const offsets = [0, 45, 60, 45, 0, -45, -60, -45];
+      const offset = offsets[i % offsets.length];
+      
+      const bgColor = isUnlocked ? (isCompleted ? '#58CC02' : '#FF9800') : '#E5E5E5';
+      const borderColor = isUnlocked ? (isCompleted ? '#46A302' : '#E65100') : '#CECECE';
+      const textColor = isUnlocked ? '#FFF' : '#AFAFAF';
+      const icon = isUnlocked ? (isCompleted ? '⭐' : topicInfo.emoji) : '🔒';
+      const scale = isUnlocked && !isCompleted ? '1.15' : '1';
+      const bounceAnim = isUnlocked && !isCompleted ? 'animation: bounce 2s infinite;' : '';
+      const cursor = isUnlocked ? 'pointer' : 'not-allowed';
+      
+      const clickAction = isUnlocked ? `startGame('quiz_idioma','${langKey}_${lvl.id}',3)` : `CleoUI.toast('Completa el nivel anterior primero','🔒','info')`;
       
       html += `
-        <div style="display:flex;align-items:center;gap:16px;z-index:1;" onclick="${isUnlocked ? `startGame('quiz_idioma','${langKey}_${lvl.id}',3)` : `CleoUI.toast('Completa el Nivel ${lvl.id-1} para desbloquear este nivel','🔒','info')`}">
-          <div style="width:58px;height:58px;border-radius:50%;background:${isUnlocked ? (isCompleted ? 'var(--c-primary)' : '#F59E0B') : 'var(--c-border)'};
-               border: 4px solid var(--c-surface);display:flex;align-items:center;justify-content:center;
-               font-size:1.4rem;box-shadow:0 4px 12px rgba(0,0,0,0.1);color:#fff;cursor:pointer;
-               transition:transform 0.2s;transform:scale(${isUnlocked ? '1' : '0.9'});">
-            ${isUnlocked ? (isCompleted ? '⭐' : '▶') : '🔒'}
+        <div style="display:flex;flex-direction:column;align-items:center;transform:translateX(${offset}px);cursor:${cursor};position:relative;" onclick="${clickAction}">
+          
+          <!-- Tooltip flotante con lección actual -->
+          ${isUnlocked && !isCompleted ? `
+            <div style="position:absolute;top:-45px;background:#FFF;padding:8px 14px;border-radius:14px;border:2px solid #E5E5E5;font-size:0.8rem;font-weight:900;color:#4B4B4B;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:10;animation: floatUp 2s infinite ease-in-out;">
+              ¡Empezar ${topicInfo.unit}!
+              <div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%) rotate(45deg);width:10px;height:10px;background:#FFF;border-right:2px solid #E5E5E5;border-bottom:2px solid #E5E5E5;"></div>
+            </div>
+          ` : ''}
+
+          <!-- Botón Circular del Nodo -->
+          <div style="width:75px;height:75px;border-radius:50%;background:${bgColor};border-bottom: 6px solid ${borderColor};display:flex;align-items:center;justify-content:center;font-size:2rem;color:${textColor};transition:transform 0.2s;${bounceAnim} transform:scale(${scale});">
+            ${icon}
           </div>
-          <div style="flex:1;background:var(--c-surface);border:2px solid ${isUnlocked ? (isCompleted?'var(--c-primary)':'#F59E0B') : 'var(--c-border)'};
-               border-radius:16px;padding:12px 16px;cursor:${isUnlocked?'pointer':'not-allowed'};
-               opacity:${isUnlocked?1:0.6};box-shadow:0 4px 12px rgba(0,0,0,0.05);">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div style="font-size:0.8rem;color:var(--c-text-muted);font-weight:700;">Nivel ${lvl.id}</div>
-              ${isCompleted ? '<span style="font-size:0.75rem;background:var(--c-primary);color:#fff;padding:2px 8px;border-radius:10px;font-weight:700;">¡Completado!</span>' : (isUnlocked ? '<span style="font-size:0.75rem;background:#F59E0B;color:#fff;padding:2px 8px;border-radius:10px;font-weight:700;">¡Empezar!</span>' : '')}
-            </div>
-            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;color:var(--c-text);font-size:1.05rem;margin-top:2px;">
-              ${lvl.name}
-            </div>
+          
+          <!-- Etiqueta con Unidad y Tema -->
+          <div style="margin-top:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:0.95rem;color:${isUnlocked ? '#1E293B' : '#AFAFAF'};background:${isUnlocked ? '#FFF' : 'transparent'};padding:4px 14px;border-radius:14px;border:${isUnlocked ? '2px solid #E5E5E5' : 'none'};box-shadow:${isUnlocked ? '0 4px 0 #E5E5E5' : 'none'};text-align:center;">
+            ${topicInfo.unit}: ${lvl.name || topicInfo.topic}
           </div>
         </div>
       `;
+      
       if (!isCompleted) isUnlocked = false; 
     });
     
     html += `
         </div>
+        
+        <!-- Cofre final -->
+        <div style="display:flex;justify-content:center;margin-top:40px;position:relative;z-index:1;">
+          <div style="width:85px;height:85px;border-radius:18px;background:var(--c-surface);border:4px solid var(--c-border);display:flex;align-items:center;justify-content:center;font-size:3rem;box-shadow:0 6px 0 var(--c-border);opacity:0.9;">
+            🎁
+          </div>
+        </div>
+        
       </div>
     `;
   });
@@ -963,18 +1007,35 @@ function renderJuegos() {
   const grade = profile?.grade || 3;
 
     const allGames = [
-      { type:'capibara', subject:'matematicas', icon:'🦦', title:'Aventura Capibara', desc:'Esquiva obstáculos y atrapa la respuesta', color:'#38BDF8', badge:'NUEVO' },
+      { type:'programacion', subject:'programacion', icon:'👨‍💻', title:'Código y Algoritmos', desc:'Programa comandos para llevar a Cleo a la meta', color:'#6366F1', badge:'NUEVO' },
+      { type:'arte_recrear', subject:'arte', icon:'🎨', title:'Recrear Dibujo (Gartic)', desc:'Recrea el dibujo muestra pintando casillas', color:'#EC4899', badge:'NUEVO' },
+      { type:'pesca_capibara', subject:'ciencias', icon:'🐟', title:'Pesca Capibara', desc:'Pesca la respuesta correcta para la Capibara', color:'#0284C7', badge:'NUEVO' },
+      { type:'teatro', subject:'teatro', icon:'🎭', title:'Taller de Teatro', desc:'Expresión corporal y dramas interactivos', color:'#F43F5E', badge:'NUEVO' },
+      { type:'cinta', subject:'matematicas', icon:'⚙️', title:'Cinta Transportadora', desc:'Clasifica los objetos en la caja correcta', color:'#38BDF8', badge:'' },
+      { type:'burbujas', subject:'lenguaje', icon:'🎈', title:'Estallido de Respuestas', desc:'Revienta burbujas con respuestas correctas', color:'#EC4899', badge:'' },
+      { type:'runner_edu', subject:'matematicas', icon:'🏃', title:'Runner Educativo', desc:'Esquiva y responde correctamente', color:'#F59E0B', badge:'' },
+      { type:'magnetico', subject:'lenguaje', icon:'🧲', title:'Imanes Educativos', desc:'Arrastra las piezas a su lugar', color:'#10B981', badge:'' },
+      { type:'hacker', subject:'logica', icon:'💻', title:'Hackeo Lógico', desc:'Desencripta antes de que se acabe el tiempo', color:'#8B5CF6', badge:'' },
+      { type:'torres', subject:'ciencias', icon:'🛡️', title:'Defensa de la Base', desc:'Detén a los enemigos con la respuesta correcta', color:'#EF4444', badge:'' },
+      { type:'alquimia', subject:'ciencias', icon:'🧪', title:'Laboratorio Químico', desc:'Combina ingredientes para la reacción', color:'#14B8A6', badge:'' },
+      { type:'circuitos', subject:'logica', icon:'🔌', title:'Constructor de Circuitos', desc:'Conecta las tuberías y completa el camino', color:'#F59E0B', badge:'' },
+      { type:'capibara', subject:'matematicas', icon:'🦦', title:'Aventura Capibara', desc:'Esquiva obstáculos y atrapa la respuesta', color:'#38BDF8', badge:'' },
       { type:'diferencias', subject:'logica', icon:'👀', title:'Diferencias', desc:'Encuentra al intruso rápidamente', color:'#A855F7', badge:'POPULAR' },
-      { type:'puzzle', subject:'logica', icon:'🧠', title:'Puzzles de Secuencias', desc:'Adivina qué número o figura sigue', color:'#EF4444', badge:'NUEVO' },
-      { type:'anatomia', subject:'ciencias', icon:'🫀', title:'Anatomía del Cuerpo', desc:'Conoce los órganos y cómo funciona tu cuerpo', color:'#E74C3C', badge:'NUEVO' },
-      { type:'pintura', subject:'arte', icon:'🎨', title:'Estudio de Dibujo', desc:'Lienzo interactivo para pintar y colorear', color:'#EC4899', badge:'CREATIVO' },
-      { type:'dressup', subject:'arte', icon:'👗', title:'Viste a Cleo', desc:'Pruébale gorras, gafas y atuendos a Cleo', color:'#F1C40F', badge:'NUEVO' },
-      { type:'musica', subject:'arte', icon:'🎹', title:'Piano de Cleo', desc:'Toca notas y compone canciones', color:'#9B59B6', badge:'NUEVO' },
+      { type:'puzzle', subject:'logica', icon:'🧠', title:'Puzzles de Secuencias', desc:'Adivina qué número o figura sigue', color:'#EF4444', badge:'' },
+      { type:'anatomia', subject:'ciencias', icon:'🫀', title:'Anatomía del Cuerpo', desc:'Conoce los órganos y cómo funciona tu cuerpo', color:'#E74C3C', badge:'' },
+      { type:'pintura', subject:'arte', icon:'🎨', title:'Estudio de Dibujo', desc:'Lienzo interactivo para pintar y colorear', color:'#EC4899', badge:'' },
+      { type:'dressup', subject:'arte', icon:'👗', title:'Viste a Cleo', desc:'Pruébale gorras, gafas y atuendos a Cleo', color:'#F1C40F', badge:'' },
+      { type:'musica', subject:'arte', icon:'🎹', title:'Piano de Cleo', desc:'Toca notas y compone canciones', color:'#9B59B6', badge:'' },
       { type:'snake', subject:'matematicas', icon:'🐍', title:'La Serpiente de Cleo', desc:'Atrapa las sumas y números correctos', color:'#58CC02', badge:'HOT' },
       { type:'carrera', subject:'matematicas', icon:'🏎️', title:'Carrera de Números', desc:'Sumas y operaciones a toda velocidad', color:'#FF9800', badge:'' },
       { type:'sopa', subject:'lenguaje', icon:'🔤', title:'Sopa de Letras', desc:'Encuentra palabras de cualquier materia', color:'#1CB0F6', badge:'' },
-      { type:'memoria', subject:'logica', icon:'🧩', title:'Memoria de Imágenes', desc:'Encuentra las parejas iguales', color:'#A855F7', badge:'' }
+      { type:'memoria', subject:'logica', icon:'🧩', title:'Memoria de Imágenes', desc:'Encuentra las parejas iguales', color:'#A855F7', badge:'' },
+      { type:'rompecabezas', subject:'logica', icon:'🧩', title:'Rompecabezas HD', desc:'Arma las piezas de las imágenes', color:'#38BDF8', badge:'' },
+      { type:'misterio', subject:'logica', icon:'🕵️', title:'Detective Cleo', desc:'Resuelve el misterio acompañado', color:'#10B981', badge:'' }
     ];
+
+  const featured = allGames[0];
+  const gridGames = allGames.slice(1);
 
   document.getElementById('view-juegos').innerHTML = `
     <div class="top-bar">
@@ -982,32 +1043,32 @@ function renderJuegos() {
       <div class="stat-chip lives"><span class="icon">❤️</span> ${CleoGame.getLives()}</div>
     </div>
     <div style="overflow-y:auto;flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;">
-      ${allGames.slice(0,1).map((g,i)=>`
-        <div class="game-card animate-fadeInUp" style="animation-delay:${i*0.07}s"
-             onclick="startGame('${g.type}','${g.subject}',${grade})">
-          <div class="game-card-img" style="background:linear-gradient(135deg,${g.color}22,${g.color}44);height:140px;">
-            <span style="font-size:4rem;">${g.icon}</span>
-            ${g.badge?`<span class="game-card-badge">${g.badge}</span>`:''}
-          </div>
-          <div class="game-card-body" style="padding:16px;">
-            <div class="game-card-tag">${CLEDUCA_DATA.subjects.find(s=>s.id===g.subject)?.emoji} ${CLEDUCA_DATA.subjects.find(s=>s.id===g.subject)?.name||''}</div>
-            <h3 class="game-card-title" style="font-size:1.1rem;">${g.title}</h3>
-            <p class="game-card-desc">${g.desc}</p>
-            <button class="game-card-btn">Jugar ▶</button>
-          </div>
+      
+      <!-- Featured Game -->
+      <div class="game-card animate-fadeInUp" onclick="startGame('${featured.type}','${featured.subject}',${grade})">
+        <div class="game-card-img" style="background:linear-gradient(135deg,${featured.color}22,${featured.color}44);height:140px;">
+          <span style="font-size:4rem;animation:pulse 2s infinite;">${featured.icon}</span>
+          ${featured.badge?`<span class="game-card-badge">${featured.badge}</span>`:''}
         </div>
-      `).join('')}
+        <div class="game-card-body" style="padding:16px;">
+          <div class="game-card-tag">${CLEDUCA_DATA.subjects.find(s=>s.id===featured.subject)?.emoji || '🎮'} ${CLEDUCA_DATA.subjects.find(s=>s.id===featured.subject)?.name || 'Especial'}</div>
+          <h3 class="game-card-title" style="font-size:1.1rem;">${featured.title}</h3>
+          <p class="game-card-desc">${featured.desc}</p>
+          <button class="game-card-btn">Jugar Destacado ▶</button>
+        </div>
+      </div>
 
-      <div class="games-grid">
-        ${allGames.slice(1).map((g,i)=>`
-          <div class="game-card animate-fadeInUp" style="animation-delay:${(i+1)*0.07}s;display:flex;flex-direction:column;height:100%;"
+      <!-- Games Grid -->
+      <div class="games-grid" style="margin-top:8px;">
+        ${gridGames.map((g,i)=>`
+          <div class="game-card animate-fadeInUp" style="animation-delay:${Math.min((i+1)*0.05, 0.5)}s;display:flex;flex-direction:column;height:100%;"
                onclick="startGame('${g.type}','${g.subject}',${grade})">
             <div class="game-card-img" style="background:linear-gradient(135deg,${g.color}22,${g.color}44);height:90px;">
               <span style="font-size:2.5rem;">${g.icon}</span>
               ${g.badge?`<span class="game-card-badge">${g.badge}</span>`:''}
             </div>
             <div class="game-card-body" style="padding:10px;flex:1;display:flex;flex-direction:column;">
-              <div class="game-card-tag" style="font-size:0.65rem;">${CLEDUCA_DATA.subjects.find(s=>s.id===g.subject)?.emoji}</div>
+              <div class="game-card-tag" style="font-size:0.65rem;">${CLEDUCA_DATA.subjects.find(s=>s.id===g.subject)?.emoji || '🎮'}</div>
               <h3 class="game-card-title" style="font-size:0.85rem;margin-bottom:4px;flex:1;">${g.title}</h3>
               <button class="game-card-btn" style="padding:6px;font-size:0.75rem;">Jugar ▶</button>
             </div>
@@ -1129,23 +1190,23 @@ function renderPerfil() {
     
     <!-- 3 TABS EXACTAS -->
     <div style="display:flex;background:var(--c-surface);border-bottom:1px solid var(--c-border);">
-      <button style="flex:1;padding:12px 4px;border:none;background:none;font-weight:800;font-size:0.85rem;
+      <button style="flex:1;padding:12px 4px;border:none;background:none;font-weight:600;font-size:0.85rem;
               color:${tab==='cleo'?'var(--c-primary)':'var(--c-text-muted)'};
               border-bottom:${tab==='cleo'?'3px solid var(--c-primary)':'3px solid transparent'};"
               onclick="window.currentProfileTab='cleo'; renderPerfil();">
         🐶 Personalizar Cleo
       </button>
-      <button style="flex:1;padding:12px 4px;border:none;background:none;font-weight:800;font-size:0.85rem;
+      <button style="flex:1;padding:12px 4px;border:none;background:none;font-weight:600;font-size:0.85rem;
               color:${tab==='cuenta'?'var(--c-primary)':'var(--c-text-muted)'};
               border-bottom:${tab==='cuenta'?'3px solid var(--c-primary)':'3px solid transparent'};"
               onclick="window.currentProfileTab='cuenta'; renderPerfil();">
-        👤 Cuenta y Datos
+        👤 Cuenta y datos
       </button>
-      <button style="flex:1;padding:12px 4px;border:none;background:none;font-weight:800;font-size:0.85rem;
+      <button style="flex:1;padding:12px 4px;border:none;background:none;font-weight:600;font-size:0.85rem;
               color:${tab==='ajustes'?'var(--c-primary)':'var(--c-text-muted)'};
               border-bottom:${tab==='ajustes'?'3px solid var(--c-primary)':'3px solid transparent'};"
               onclick="window.currentProfileTab='ajustes'; renderPerfil();">
-        ⚙️ Ajustes App
+        ⚙️ Ajustes de app
       </button>
     </div>
 
@@ -1228,11 +1289,51 @@ function renderPerfil() {
           </div>
         </div>
 
+        <!-- Cuidado de Mascota Cleo (Estilo Pou) -->
+        <div class="card" style="text-align:center;padding:16px;">
+          <h3 style="font-size:0.95rem;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;color:var(--c-primary);">
+            ❤️ Cuidados de Cleo
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;font-size:0.75rem;">
+            <div style="background:var(--c-bg-card);padding:8px;border-radius:12px;">
+              <div>🍖 Hambre</div>
+              <div style="font-weight:800;color:var(--c-primary);font-size:0.9rem;">${(window._cleoCare||{hunger:85}).hunger}%</div>
+            </div>
+            <div style="background:var(--c-bg-card);padding:8px;border-radius:12px;">
+              <div>🎾 Felicidad</div>
+              <div style="font-weight:800;color:var(--c-xp);font-size:0.9rem;">${(window._cleoCare||{happiness:90}).happiness}%</div>
+            </div>
+            <div style="background:var(--c-bg-card);padding:8px;border-radius:12px;">
+              <div>⚡ Energía</div>
+              <div style="font-weight:800;color:var(--c-streak);font-size:0.9rem;">${(window._cleoCare||{energy:95}).energy}%</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;justify-content:center;">
+            <button class="btn btn-primary btn-sm" onclick="feedCleo()">🍖 Alimentar</button>
+            <button class="btn btn-secondary btn-sm" onclick="playCleo()">🎾 Acariciar</button>
+            <button class="btn btn-secondary btn-sm" onclick="sleepCleo()">🌙 Descansar</button>
+          </div>
+        </div>
+
         <!-- Accessories -->
         <div class="card">
-          <h3 style="font-size:1rem;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;">🎩 Accesorios</h3>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <h3 style="font-size:1rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;">🎩 Accesorios por categoría</h3>
+          </div>
+
+          <!-- Category filter bar -->
+          <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px;">
+            ${['todos','cabeza','cara','cuerpo'].map(cat=>`
+              <button class="btn btn-sm ${ (window._activeAccessoryCat||'todos')===cat?'btn-primary':'btn-secondary' }"
+                      style="font-size:0.75rem;padding:6px 12px;"
+                      onclick="window._activeAccessoryCat='${cat}'; renderPerfil();">
+                ${cat==='todos'?'✨ Todos':cat==='cabeza'?'🧢 Cabeza':cat==='cara'?'👓 Cara':'👕 Cuerpo'}
+              </button>
+            `).join('')}
+          </div>
+
           <div class="skins-grid">
-            ${CLEDUCA_DATA.accessories.map(a=>{
+            ${(CLEDUCA_DATA.accessories.filter(a=>(window._activeAccessoryCat||'todos')==='todos'||a.category===(window._activeAccessoryCat||'todos')||a.id==='none')).map(a=>{
               const locked = a.locked && xp < a.xpRequired;
               return `
                 <div class="skin-card ${accessory===a.id?'selected':''} ${locked?'locked':''}"
@@ -1380,6 +1481,34 @@ function selectAccessory(id) {
   CleoUI.toast('¡Accesorio puesto! 🎩', '✨', 'success');
   renderPerfil();
 }
+window._cleoCare = window._cleoCare || { hunger: 85, happiness: 90, energy: 95 };
+
+function feedCleo() {
+  window._cleoCare.hunger = Math.min(100, window._cleoCare.hunger + 15);
+  window._cleoCare.happiness = Math.min(100, window._cleoCare.happiness + 5);
+  CleoAnimations.confetti();
+  CleoSpeech.say('¡Mmm, qué delicioso! 🍖 ¡Gracias por alimentarme!');
+  CleoUI.toast('¡Cleo comió con mucho gusto!', '🍖', 'success');
+  CleoGame.addXP(10);
+  renderPerfil();
+}
+
+function playCleo() {
+  window._cleoCare.happiness = Math.min(100, window._cleoCare.happiness + 20);
+  window._cleoCare.energy = Math.max(10, window._cleoCare.energy - 10);
+  CleoAnimations.confetti();
+  CleoSpeech.say('¡Yayy! 🎾 ¡Eres mi mejor amigo!');
+  CleoUI.toast('¡Acariciaste y jugaste con Cleo!', '🎾', 'success');
+  CleoGame.addXP(15);
+  renderPerfil();
+}
+
+function sleepCleo() {
+  window._cleoCare.energy = 100;
+  CleoSpeech.say('Zzz... 🌙 Cleo ha descansado y renovó su energía.');
+  CleoUI.toast('¡Cleo durmió y recuperó su energía!', '🌙', 'info');
+  renderPerfil();
+}
 function selectTheme(id) {
   const p = CleoAuth.getActive();
   CleoAuth.updateProfile(p.id, { theme: id });
@@ -1416,7 +1545,10 @@ function openFreeChest() {
   CleoAnimations.confetti();
   CleoSpeech.say(CLEDUCA_DATA.cleoMessages.chest[0]);
   CleoUI.toast(`¡Cofre abierto! ${rewards.message}`, '📦', 'success');
-  setTimeout(() => renderHome(), 500);
+  setTimeout(() => {
+    renderHome();
+    if (typeof renderLogros === 'function') renderLogros();
+  }, 500);
 }
 function showSettings() {
   CleoUI.toast('Configuración disponible próximamente', '⚙️', 'info');
@@ -1432,14 +1564,26 @@ const GAME_INFO = {
   carrera:     { icon:'🏎️', name:'Carrera de Números', desc:'Resuelve operaciones matemáticas a toda velocidad para llegar a la meta.', howTo:'Responde cada cálculo lo más rápido posible.' },
   snake:       { icon:'🐍', name:'La Serpiente de Cleo', desc:'Guía a la serpiente para comer el resultado correcto y crecer.', howTo:'Usa las flechas del teclado o botones en pantalla para dirigir la serpiente.' },
   capibara:    { icon:'🦦', name:'Aventura Capibara', desc:'Ayuda al simpático capibara a esquivar obstáculos y atrapar la respuesta correcta.', howTo:'Mueve al capibara a la izquierda o derecha para alinearlo con la respuesta correcta.' },
-  diferencias:  { icon:'👀', name:'Diferencias', desc:'Encuentra al elemento intruso en la cuadrícula.', howTo:'Observa con atención y toca la figura que sea diferente a las demás.' },
-  puzzle:       { icon:'🧠', name:'Puzzles de Secuencias', desc:'Descubre el patrón numérico o lógico de la serie.', howTo:'Analiza la secuencia de números y selecciona cuál sigue.' },
-  anatomia:     { icon:'🫀', name:'Anatomía del Cuerpo', desc:'Explora los órganos y la estructura del cuerpo humano.', howTo:'Lee y escucha las explicaciones de cada parte del cuerpo.' },
-  pintura:      { icon:'🎨', name:'Estudio de Dibujo', desc:'Expresa tu creatividad dibujando y coloreando en un lienzo interactivo.', howTo:'Elige tus colores favoritos y dibuja con tu dedo o ratón.' },
-  dressup:      { icon:'👗', name:'Viste a Cleo', desc:'Personaliza a Cleo con accesorios y atuendos.', howTo:'Toca los accesorios para probárselos a Cleo.' },
-  musica:       { icon:'🎹', name:'Piano de Cleo', desc:'Crea notas y melodías musicales en un piano colorido.', howTo:'Toca las teclas del piano para escuchar las notas musicales.' },
-  rompecabezas: { icon:'🧩', name:'Rompecabezas de Cleo', desc:'Arma la imagen desordenada intercambiando fichas.', howTo:'Toca una ficha y luego otra para cambiarlas de lugar.' },
-  misterio:     { icon:'🕵️', name:'Detective Cleo', desc:'Resuelve acertijos de lógica encontrando al sospechoso correcto.', howTo:'Lee la pista con atención y selecciona cuál sospechoso coincide.' }
+  diferencias: { icon:'👀', name:'Diferencias', desc:'Encuentra al elemento intruso en la cuadrícula.', howTo:'Observa con atención y toca la figura que sea diferente a las demás.' },
+  puzzle:      { icon:'🧠', name:'Puzzles de Secuencias', desc:'Descubre el patrón numérico o lógico de la serie.', howTo:'Analiza la secuencia de números y selecciona cuál sigue.' },
+  anatomia:    { icon:'🫀', name:'Anatomía del Cuerpo', desc:'Explora los órganos y la estructura del cuerpo humano.', howTo:'Lee y escucha las explicaciones de cada parte del cuerpo.' },
+  pintura:     { icon:'🎨', name:'Estudio de Dibujo', desc:'Expresa tu creatividad dibujando y coloreando en un lienzo interactivo.', howTo:'Elige tus colores favoritos y dibuja con tu dedo o ratón.' },
+  dressup:     { icon:'👗', name:'Viste a Cleo', desc:'Personaliza a Cleo con accesorios y atuendos.', howTo:'Toca los accesorios para probárselos a Cleo.' },
+  musica:      { icon:'🎹', name:'Piano de Cleo', desc:'Crea notas y melodías musicales en un piano colorido.', howTo:'Toca las teclas del piano para escuchar las notas musicales.' },
+  rompecabezas:{ icon:'🧩', name:'Rompecabezas de Cleo', desc:'Arma la imagen desordenada intercambiando fichas.', howTo:'Toca una ficha y luego otra para cambiarlas de lugar.' },
+  misterio:    { icon:'🕵️', name:'Detective Cleo', desc:'Resuelve acertijos de lógica encontrando al sospechoso correcto.', howTo:'Lee la pista con atención y selecciona cuál sospechoso coincide.' },
+  cinta:       { icon:'⚙️', name:'Cinta Transportadora', desc:'Clasifica los objetos en la caja correcta antes de que se caigan.', howTo:'Arrastra cada objeto a la categoría correspondiente.' },
+  burbujas:    { icon:'🎈', name:'Estallido de Respuestas', desc:'Revienta las burbujas que contengan la respuesta correcta.', howTo:'Toca las burbujas correctas tan rápido como puedas.' },
+  runner_edu:  { icon:'🏃', name:'Runner Educativo', desc:'Esquiva obstáculos y cambia al carril con la respuesta correcta.', howTo:'Desliza a izquierda o derecha para mover el vehículo.' },
+  magnetico:   { icon:'🧲', name:'Imanes Educativos', desc:'Arrastra letras y números a los espacios vacíos.', howTo:'Toca y arrastra cada pieza magnética a su lugar correspondiente.' },
+  hacker:      { icon:'💻', name:'Hackeo Lógico', desc:'Desencripta el sistema antes de que se acabe el tiempo.', howTo:'Escribe o selecciona la respuesta para evitar el bloqueo del sistema.' },
+  torres:      { icon:'🛡️', name:'Defensa de la Base', desc:'Usa el escudo con la respuesta correcta para detener a los enemigos.', howTo:'Selecciona la opción correcta antes de que los enemigos toquen la base.' },
+  alquimia:    { icon:'🧪', name:'Laboratorio Químico', desc:'Combina los ingredientes correctos para crear una reacción.', howTo:'Arrastra ingredientes al matraz según las instrucciones.' },
+  circuitos:   { icon:'🔌', name:'Constructor de Circuitos', desc:'Conecta las tuberías o palabras para cerrar el circuito.', howTo:'Toca las piezas para rotarlas y conectar el camino.' },
+  programacion:{ icon:'👨‍💻', name:'Código y Algoritmos', desc:'Programa la secuencia de comandos para guiar a Cleo a la meta.', howTo:'Selecciona bloques (Avanzar, Girar, Saltar) y ejecuta tu código.' },
+  arte_recrear:{ icon:'🎨', name:'Recrear Dibujo (Gartic)', desc:'Recrea la figura o dibujo de píxeles pintando las casillas según el patrón.', howTo:'Mira la muestra de la izquierda y pinta los cuadros correspondientes en tu lienzo.' },
+  pesca_capibara:{ icon:'🐟', name:'Pesca Capibara Educativa', desc:'Pesca los peces con la respuesta correcta para alimentar a la Capibara.', howTo:'Mueve la caña y atrapa el pez que contenga el resultado correcto.' },
+  teatro:      { icon:'🎭', name:'Taller de Teatro', desc:'Representa emociones y dales vida a los cuentos interactivos.', howTo:'Elige las expresiones y decisiones dramáticas para continuar la historia.' }
 };
 
 function showGameIntro(type, subject, grade) {
@@ -1488,11 +1632,15 @@ function startGame(type, subject, grade) {
 }
 
 function launchGame(type, subject, grade) {
+  window._gameStartTime = Date.now();
+  window._currentGameType = type;
+  window._currentGameSubject = subject;
+  window._currentGameGrade = grade;
   // Actually start the game engine
   document.getElementById('view-game').innerHTML = `
     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;gap:16px;">
-      <div style="width:90px;height:90px;border-radius:50%;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.15);background:#fff;animation:floatBig 2s ease-in-out infinite;">
-        <img src="img/cleo_logo.png" alt="Cleo" style="width:100%;height:100%;object-fit:cover;">
+      <div style="width:90px;height:90px;border-radius:50%;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.15);background:#fff;animation:floatBig 2s ease-in-out infinite;padding:4px;">
+        <img src="/img/Logo_cleduca_transparente.png" alt="Cleo" style="width:100%;height:100%;object-fit:contain;" onerror="this.src='/img/Logo_cleduca_transparente.svg'">
       </div>
       <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--c-primary);">Cargando lección con Cleo...</div>
     </div>
@@ -1518,6 +1666,18 @@ function launchGame(type, subject, grade) {
       case 'musica':       GameMusica.start(); break;
       case 'rompecabezas': GameRompecabezas.start(); break;
       case 'misterio':     GameMisterio.start(); break;
+      case 'cinta':        GameCinta.start(subject, grade); break;
+      case 'burbujas':     GameBurbujas.start(subject, grade); break;
+      case 'runner_edu':   GameRunner.start(subject, grade); break;
+      case 'magnetico':    GameMagnetico.start(subject, grade); break;
+      case 'hacker':       GameHacker.start(subject, grade); break;
+      case 'torres':       GameTowerDefense.start(subject, grade); break;
+      case 'alquimia':     GameAlquimia.start(subject, grade); break;
+      case 'circuitos':    GameCircuitos.start(subject, grade); break;
+      case 'programacion': GameProgramacion.start(subject, grade); break;
+      case 'arte_recrear': GameArteRecrear.start(); break;
+      case 'pesca_capibara': GameCapibaraPesca.start(subject, grade); break;
+      case 'teatro':       GameTeatro.start(subject, grade); break;
       default:             GameQuiz.start(subject, grade); break;
     }
   }, 300);
@@ -1528,8 +1688,8 @@ function showAuthScreen() {
   document.getElementById('view-login').innerHTML = `
     <div style="min-height:100dvh;display:flex;flex-direction:column;padding:0;background:var(--grad-bg);">
       <div class="onboard-header">
-        <div style="width:80px;height:80px;margin:0 auto 12px;border-radius:50%;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.15);background:#fff;animation:floatBig 4s ease-in-out infinite;">
-          <img src="img/cleo_logo.png" alt="Cleo" style="width:100%;height:100%;object-fit:cover;">
+        <div style="width:80px;height:80px;margin:0 auto 12px;border-radius:50%;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.15);background:#fff;animation:floatBig 4s ease-in-out infinite;padding:4px;">
+          <img src="/img/Logo_cleduca_transparente.png" alt="Cleo" style="width:100%;height:100%;object-fit:contain;" onerror="this.src='/img/Logo_cleduca_transparente.svg'">
         </div>
         <h1 class="onboard-title">¡Hola!</h1>
         <p class="onboard-subtitle">Guarda el progreso de tus niños en la nube</p>
@@ -1604,7 +1764,7 @@ async function handleLogin() {
   if (res.error) {
     CleoUI.toast(res.error, '❌', 'error');
   } else {
-    CleoUI.toast('¡Bienvenido!', '🎉', 'success');
+    CleoUI.toast('¡Bienvenid@!', '🎉', 'success');
     showProfiles();
   }
 }
@@ -1633,10 +1793,10 @@ function showProfiles() {
     <div style="min-height:100dvh;display:flex;flex-direction:column;padding:0;">
       <!-- Header -->
       <div style="background:var(--grad-hero);padding:48px 24px 40px;text-align:center;border-radius:0 0 32px 32px;">
-        <div style="width:80px;height:80px;margin:0 auto 12px;border-radius:50%;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.15);background:#fff;animation:floatBig 4s ease-in-out infinite;">
-          <img src="img/cleo_logo.png" alt="Cleo" style="width:100%;height:100%;object-fit:cover;">
+        <div style="width:80px;height:80px;margin:0 auto 12px;border-radius:50%;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.15);background:#fff;animation:floatBig 4s ease-in-out infinite;padding:4px;">
+          <img src="/img/Logo_cleduca_transparente.png" alt="Cleo" style="width:100%;height:100%;object-fit:contain;" onerror="this.src='/img/Logo_cleduca_transparente.svg'">
         </div>
-        <h1 style="color:#fff;font-size:2rem;margin-bottom:4px;">¡Bienvenido a Cleduca!</h1>
+        <h1 style="color:#fff;font-size:2rem;margin-bottom:4px;">¡Bienvenid@ a Cleduca!</h1>
         <p style="color:rgba(255,255,255,0.85);font-size:0.95rem;">¿Quién va a aprender hoy?</p>
       </div>
 
@@ -1783,7 +1943,15 @@ function validatePin(profileId) {
   const p = CleoAuth.getActive();
   applyProfileSettings(p);
   CleoRouter.navigate('home');
-  CleoUI.toast(`¡Bienvenido, ${p?.name || 'Explorador'}! 🚀`, '👋', 'success');
+  CleoUI.toast(`¡Bienvenid@, ${p?.name || 'Explorador'}! 🚀`, '👋', 'success');
+  CleoSpeech.say(`¡Hola ${p?.name || ''}! Listo para aprender.`);
+  document.documentElement.setAttribute('data-theme', p.theme || 'selva');
+  document.documentElement.setAttribute('data-dark', p.darkMode || false);
+  if (window.CleoSpeech && p.voiceEnabled === false) {
+    CleoSpeech.setEnabled(false);
+  } else if (window.CleoSpeech && p.voiceEnabled === true) {
+    CleoSpeech.setEnabled(true);
+  }
 }
 
 function applyProfileSettings(p) {
@@ -1809,8 +1977,8 @@ function showCreateProfile(isGuest=false) {
   document.getElementById('view-auth').innerHTML = `
     <div style="min-height:100dvh;display:flex;flex-direction:column;">
       <div class="onboard-header">
-        <div style="width:70px;height:70px;margin:0 auto 12px;border-radius:50%;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.15);background:#fff;">
-          <img src="img/cleo_logo.png" alt="Cleo" style="width:100%;height:100%;object-fit:cover;">
+        <div style="width:70px;height:70px;margin:0 auto 12px;border-radius:50%;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.15);background:#fff;padding:4px;">
+          <img src="/img/Logo_cleduca_transparente.png" alt="Cleo" style="width:100%;height:100%;object-fit:contain;" onerror="this.src='/img/Logo_cleduca_transparente.svg'">
         </div>
         <h1 class="onboard-title">Crear Perfil</h1>
         <p class="onboard-subtitle">Personaliza tu experiencia en Cleduca</p>

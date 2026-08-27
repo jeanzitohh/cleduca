@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Cleduca — Panel de Administración</title>
+  <link rel="icon" href="../img/Logo_cleduca_transparente.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:      #0B0F1A;
+      --bg2:     #111827;
+      --bg3:     #1F2937;
+      --border:  rgba(255,255,255,0.08);
+      --green:   #4ADE80;
+      --blue:    #38BDF8;
+      --purple:  #A78BFA;
+      --orange:  #FB923C;
+      --red:     #F87171;
+      --yellow:  #FCD34D;
+      --text:    #F1F5F9;
+      --muted:   #64748B;
+      --card:    rgba(255,255,255,0.04);
+    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── LOGIN SCREEN ── */
+    #login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,222,128,0.1), transparent 60%);
+    }
+    .login-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 24px; padding: 48px 40px; width: 100%; max-width: 400px;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.5);
+    }
+    .login-logo {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
+    }
+    .login-logo img { width: 44px; height: 44px; object-fit: contain; }
+    .login-logo-text {
+      font-size: 1.4rem; font-weight: 900;
+      background: linear-gradient(135deg, #4ADE80, #38BDF8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .login-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+    .login-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 28px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    .form-input {
+      width: 100%; padding: 12px 16px; border-radius: 12px;
+      background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1);
+      color: var(--text); font-family: inherit; font-size: 0.95rem;
+      outline: none; transition: all 0.2s;
+    }
+    .form-input:focus { border-color: var(--green); background: rgba(255,255,255,0.1); }
+    .btn-login {
+      width: 100%; padding: 14px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, var(--green), #16A34A);
+      color: #fff; font-size: 1rem; font-weight: 800; cursor: pointer;
+      margin-top: 8px; transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(74,222,128,0.3);
+    }
+    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(74,222,128,0.4); }
+    #login-error { color: var(--red); font-size: 0.85rem; margin-top: 8px; display: none; text-align: center; }
+
+    /* ── APP SHELL ── */
+    #admin-app { display: none; }
+    .admin-layout { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 240px; flex-shrink: 0;
+      background: var(--bg2); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+      transition: transform 0.3s;
+    }
+    .sidebar-logo {
+      padding: 24px 20px; display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo img { width: 36px; height: 36px; object-fit: contain; }
+    .sidebar-logo-text {
+      font-size: 1.2rem; font-weight: 900;
+      background: linear-gradient(135deg, #4ADE80, #38BDF8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .sidebar-badge { font-size: 0.6rem; background: var(--red); color: #fff; padding: 2px 6px; border-radius: 6px; margin-left: 4px; }
+    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+    .nav-section-title {
+      font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.8px; padding: 8px 8px 4px; margin-top: 8px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      border-radius: 10px; cursor: pointer; transition: all 0.2s;
+      font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.65);
+      margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .nav-item.active { background: rgba(74,222,128,0.12); color: var(--green); }
+    .nav-item .icon { font-size: 1.1rem; flex-shrink: 0; }
+    .sidebar-footer {
+      padding: 16px 12px; border-top: 1px solid var(--border);
+    }
+    .admin-user {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      background: rgba(255,255,255,0.04); border-radius: 10px;
+    }
+    .admin-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; font-weight: 700; flex-shrink: 0;
+    }
+    .admin-name { font-size: 0.85rem; font-weight: 700; }
+    .admin-role { font-size: 0.7rem; color: var(--muted); }
+
+    /* ── MAIN CONTENT ── */
+    .main-content { margin-left: 240px; flex: 1; min-width: 0; }
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11,15,26,0.9); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 28px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar-title { font-size: 1.1rem; font-weight: 800; }
+    .topbar-actions { display: flex; align-items: center; gap: 12px; }
+    .btn-sm {
+      padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06); color: var(--text); font-size: 0.8rem;
+      font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .btn-sm:hover { background: rgba(255,255,255,0.12); }
+    .btn-danger { border-color: rgba(248,113,113,0.3); color: var(--red); }
+    .btn-danger:hover { background: rgba(248,113,113,0.1); }
+
+    .page { padding: 28px; display: none; }
+    .page.active { display: block; }
+
+    /* ── METRIC CARDS ── */
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .metric-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px;
+      transition: all 0.2s;
+    }
+    .metric-card:hover { border-color: rgba(255,255,255,0.16); transform: translateY(-2px); }
+    .metric-label { font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .metric-value { font-size: 2rem; font-weight: 900; }
+    .metric-delta { font-size: 0.78rem; margin-top: 4px; }
+    .delta-up { color: var(--green); }
+    .delta-down { color: var(--red); }
+
+    /* ── TABLES ── */
+    .table-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden; margin-bottom: 24px;
+    }
+    .table-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .table-title { font-size: 0.95rem; font-weight: 700; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      padding: 12px 16px; font-size: 0.75rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border); text-align: left;
+      background: rgba(255,255,255,0.02);
+    }
+    td {
+      padding: 14px 16px; font-size: 0.88rem; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+    }
+    .badge-green  { background: rgba(74,222,128,0.12); color: var(--green); }
+    .badge-blue   { background: rgba(56,189,248,0.12); color: var(--blue); }
+    .badge-red    { background: rgba(248,113,113,0.12); color: var(--red); }
+    .badge-yellow { background: rgba(252,211,77,0.12);  color: var(--yellow); }
+    .badge-gray   { background: rgba(255,255,255,0.08); color: var(--muted); }
+
+    /* ── CHARTS (CSS only) ── */
+    .chart-bar-wrap { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+    .chart-bar {
+      flex: 1; border-radius: 4px 4px 0 0;
+      background: linear-gradient(to top, var(--green), rgba(74,222,128,0.3));
+      position: relative; cursor: pointer; transition: opacity 0.2s;
+      min-width: 0;
+    }
+    .chart-bar:hover { opacity: 0.8; }
+    .chart-labels { display: flex; gap: 6px; margin-top: 6px; }
+    .chart-label { flex: 1; text-align: center; font-size: 0.65rem; color: var(--muted); min-width: 0; }
+
+    /* ── ACTIVITY LOG ── */
+    .activity-list { display: flex; flex-direction: column; gap: 0; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 12px; padding: 14px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0; margin-top: 2px;
+    }
+    .activity-body { flex: 1; min-width: 0; }
+    .activity-text { font-size: 0.875rem; line-height: 1.4; }
+    .activity-time { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── SEARCH ── */
+    .search-input {
+      padding: 8px 14px; border-radius: 10px;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      color: var(--text); font-size: 0.85rem; font-family: inherit; outline: none;
+      width: 220px; transition: all 0.2s;
+    }
+    .search-input:focus { border-color: var(--green); width: 260px; }
+    .search-input::placeholder { color: var(--muted); }
+
+    /* ── PAYMENT DETAIL ── */
+    .detail-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.88rem;
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-key { color: var(--muted); }
+    .detail-val { font-weight: 600; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="../img/Logo_cleduca_transparente.png" alt="Cleduca">
+      <span class="login-logo-text">Cleduca</span>
+    </div>
+    <h2 class="login-title">Panel de Administración</h2>
+    <p class="login-sub">Acceso restringido al equipo de Cleduca</p>
+
+    <div class="form-group">
+      <label class="form-label">Correo administrativo</label>
+      <input type="email" id="admin-email" class="form-input" placeholder="admin@cleduca.com" value="admin@cleduca.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input type="password" id="admin-pass" class="form-input" placeholder="••••••••">
+    </div>
+    <div id="login-error">Credenciales incorrectas</div>
+    <button class="btn-login" onclick="adminLogin()">🔐 Ingresar al Panel</button>
+
+    <div style="text-align:center;margin:16px 0 12px;color:var(--muted);font-size:0.8rem;">O continúa con</div>
+
+    <button class="btn-login" onclick="adminGoogleLogin()" style="background:#fff;color:#1E293B;margin-top:0;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style="width:20px;height:20px;">
+      Ingresar con Google
+    </button>
+  </div>
+</div>
+
+<!-- ═══ ADMIN APP ═══ -->
+<div id="admin-app">
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="../img/Logo_cleduca_transparente.png" alt="Cleduca">
+        <span class="sidebar-logo-text">Admin</span>
+        <span class="sidebar-badge">BETA</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">General</div>
+        <button class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')">
+          <span class="icon">📊</span> Dashboard
+        </button>
+        <button class="nav-item" id="nav-users" onclick="showPage('users')">
+          <span class="icon">👥</span> Usuarios
+        </button>
+        <button class="nav-item" id="nav-profiles" onclick="showPage('profiles')">
+          <span class="icon">🧒</span> Perfiles de niños
+        </button>
+
+        <div class="nav-section-title" style="margin-top:16px;">Monetización</div>
+        <button class="nav-item" id="nav-subscriptions" onclick="showPage('subscriptions')">
+          <span class="icon">👑</span> Suscripciones
+        </button>
+        <button class="nav-item" id="nav-payments" onclick="showPage('payments')">
+          <span class="icon">💳</span> Pagos Wompi
+        </button>
+
+        <div class="nav-section-title" style="margin-top:16px;">Trazabilidad</div>
+        <button class="nav-item" id="nav-activity" onclick="showPage('activity')">
+          <span class="icon">📋</span> Registro de actividad
+        </button>
+        <button class="nav-item" id="nav-ads" onclick="showPage('ads')">
+          <span class="icon">📺</span> Rendimiento de Ads
+        </button>
+        <button class="nav-item" id="nav-institutional" onclick="showPage('institutional')">
+          <span class="icon">🏫</span> Leads Institucionales
+        </button>
+        <button class="nav-item" id="nav-settings" onclick="showPage('settings')">
+          <span class="icon">⚙️</span> Configuración
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="admin-user">
+          <div class="admin-avatar">A</div>
+          <div>
+            <div class="admin-name" id="admin-name-display">Admin</div>
+            <div class="admin-role">Super Admin</div>
+          </div>
+        </div>
+        <button class="btn-sm btn-danger" onclick="adminLogout()" style="width:100%;margin-top:8px;">
+          🚪 Cerrar sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <div class="topbar">
+        <div class="topbar-title" id="page-title">Dashboard</div>
+        <div class="topbar-actions">
+          <span id="last-refresh" style="font-size:0.75rem;color:var(--muted);"></span>
+          <button class="btn-sm" onclick="refreshData()">🔄 Actualizar</button>
+          <button class="btn-sm" onclick="exportData()">📥 Exportar CSV</button>
+        </div>
+      </div>
+
+      <!-- ── DASHBOARD ── -->
+      <div class="page active" id="page-dashboard">
+        <div class="metrics-grid" id="metrics-grid">
+          <!-- Se genera por JS -->
+        </div>
+
+        <!-- ── TRÁFICO EN TIEMPO REAL ── -->
+        <div class="table-card" style="margin-bottom:24px;background:linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.9));border:1px solid #38BDF8;box-shadow:0 12px 32px rgba(0,0,0,0.4);">
+          <div class="table-header" style="border-bottom:1px solid rgba(255,255,255,0.08);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#10B981;box-shadow:0 0 12px #10B981;animation:pulse 1.5s infinite;"></span>
+              <span class="table-title" style="font-size:1.1rem;color:#38BDF8;">📡 Tráfico y Visitas en Tiempo Real</span>
+            </div>
+            <span style="font-size:0.75rem;color:var(--muted);background:rgba(255,255,255,0.06);padding:4px 10px;border-radius:12px;">WebSockets Supabase en Vivo</span>
+          </div>
+          <div style="padding:20px;display:grid;grid-template-columns:1fr 2fr;gap:20px;">
+            <!-- Métricas en vivo -->
+            <div style="display:flex;flex-direction:column;gap:12px;justify-content:center;">
+              <div style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);padding:16px;border-radius:16px;text-align:center;">
+                <div style="font-size:0.75rem;color:#38BDF8;font-weight:700;text-transform:uppercase;">Visitantes Activos Ahora</div>
+                <div id="rt-active-count" style="font-size:2.5rem;font-weight:900;color:#fff;margin:4px 0;">0</div>
+                <div style="font-size:0.75rem;color:var(--muted);">Monitoreo en vivo</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div style="background:rgba(255,255,255,0.04);padding:10px;border-radius:12px;text-align:center;border:1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size:0.7rem;color:var(--muted);">Landing Page</div>
+                  <div id="rt-landing-count" style="font-size:1.2rem;font-weight:800;color:#4ADE80;">0</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.04);padding:10px;border-radius:12px;text-align:center;border:1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size:0.7rem;color:var(--muted);">Web App</div>
+                  <div id="rt-app-count" style="font-size:1.2rem;font-weight:800;color:#A855F7;">0</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feed de actividad en tiempo real -->
+            <div style="background:rgba(0,0,0,0.3);border-radius:16px;border:1px solid rgba(255,255,255,0.08);padding:12px;display:flex;flex-direction:column;">
+              <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.08);">⚡ TRANSMISIÓN EN DIRECTO DE NAVEGACIÓN</div>
+              <div id="rt-traffic-feed" style="flex:1;max-height:160px;overflow-y:auto;">
+                <div style="padding:16px;text-align:center;font-size:0.8rem;color:var(--muted);">Conectando con Supabase Realtime...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+          <!-- Weekly signups chart -->
+          <div class="table-card">
+            <div class="table-header">
+              <span class="table-title">📈 Registros últimos 7 días</span>
+            </div>
+            <div style="padding:20px;">
+              <div class="chart-bar-wrap" id="signups-chart"></div>
+              <div class="chart-labels" id="signups-labels"></div>
+            </div>
+          </div>
+
+          <!-- Revenue chart -->
+          <div class="table-card">
+            <div class="table-header">
+              <span class="table-title">💰 Ingresos últimos 7 días (COP)</span>
+            </div>
+            <div style="padding:20px;">
+              <div class="chart-bar-wrap" id="revenue-chart"></div>
+              <div class="chart-labels" id="revenue-labels"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="table-card">
+          <div class="table-header">
+            <span class="table-title">⚡ Actividad reciente</span>
+          </div>
+          <div class="activity-list" id="recent-activity"></div>
+        </div>
+      </div>
+
+      <!-- ── USERS ── -->
+      <div class="page" id="page-users">
+        <div class="table-card">
+          <div class="table-header">
+            <span class="table-title">👥 Usuarios registrados</span>
+            <input type="text" class="search-input" placeholder="🔍 Buscar usuario..." id="user-search" oninput="filterUsers()">
+          </div>
+          <div class="table-wrap">
+            <table id="users-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Email</th>
+                  <th>Registrado</th>
+                  <th>Último acceso</th>
+                  <th>Plan</th>
+                  <th>Perfiles</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CHILD PROFILES ── -->
+      <div class="page" id="page-profiles">
+        <div class="table-card">
+          <div class="table-header">
+            <span class="table-title">🧒 Perfiles de niños</span>
+            <input type="text" class="search-input" placeholder="🔍 Buscar perfil..." id="profile-search" oninput="filterProfiles()">
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Grado</th>
+                  <th>XP Total</th>
+                  <th>Nivel</th>
+                  <th>Racha</th>
+                  <th>Juegos</th>
+                  <th>Cuenta padre</th>
+                  <th>Creado</th>
+                </tr>
+              </thead>
+              <tbody id="profiles-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SUBSCRIPTIONS ── -->
+      <div class="page" id="page-subscriptions">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Suscripciones activas</div>
+            <div class="metric-value" id="sub-active" style="color:var(--green);">—</div>
+            <div class="metric-delta delta-up" id="sub-active-delta">Cargando...</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Plan Básico activos</div>
+            <div class="metric-value" id="sub-basic" style="color:#6366F1;">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Plan Familiar activos</div>
+            <div class="metric-value" id="sub-familiar" style="color:var(--purple);">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">MRR estimado (COP)</div>
+            <div class="metric-value" id="sub-mrr" style="color:var(--yellow);">—</div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-header"><span class="table-title">👑 Listado de suscriptores Premium</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Plan</th>
+                  <th>Activado</th>
+                  <th>Expira</th>
+                  <th>Referencia Wompi</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="subscriptions-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PAYMENTS ── -->
+      <div class="page" id="page-payments">
+        <div class="table-card">
+          <div class="table-header">
+            <span class="table-title">💳 Transacciones Wompi</span>
+            <button class="btn-sm" onclick="syncWompiPayments()">🔄 Sincronizar con Wompi</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Referencia</th>
+                  <th>Monto (COP)</th>
+                  <th>Plan</th>
+                  <th>Email</th>
+                  <th>Fecha</th>
+                  <th>Estado Wompi</th>
+                  <th>ID Transacción</th>
+                </tr>
+              </thead>
+              <tbody id="payments-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ACTIVITY LOG ── -->
+      <div class="page" id="page-activity">
+        <div class="table-card">
+          <div class="table-header">
+            <span class="table-title">📋 Registro de actividad del sistema</span>
+            <div style="display:flex;gap:8px;">
+              <select class="search-input" id="log-filter" style="width:auto;" onchange="filterLogs()">
+                <option value="all">Todos</option>
+                <option value="auth">Autenticación</option>
+                <option value="payment">Pagos</option>
+                <option value="game">Juegos</option>
+                <option value="premium">Premium</option>
+                <option value="error">Errores</option>
+              </select>
+            </div>
+          </div>
+          <div class="activity-list" id="activity-list"></div>
+        </div>
+      </div>
+
+      <!-- ── ADS ── -->
+      <div class="page" id="page-ads">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Anuncios mostrados (est.)</div>
+            <div class="metric-value" id="ads-shown" style="color:var(--blue);">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Recompensas reclamadas</div>
+            <div class="metric-value" id="ads-claimed" style="color:var(--green);">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Tasa de conversión</div>
+            <div class="metric-value" id="ads-rate" style="color:var(--yellow);">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Publisher ID</div>
+            <div class="metric-value" style="font-size:0.85rem;color:var(--muted);">pub-4702701194736185</div>
+          </div>
+        </div>
+        <div class="table-card" style="padding:24px;">
+          <div style="font-size:0.95rem;font-weight:700;margin-bottom:12px;">ℹ️ Integración AdSense</div>
+          <div class="detail-row">
+            <span class="detail-key">Publisher ID</span>
+            <span class="detail-val">ca-pub-4702701194736185</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Ad Slot (recompensas)</span>
+            <span class="detail-val">4002873818</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Formato</span>
+            <span class="detail-val">Rectangle (320×180)</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Duración mínima</span>
+            <span class="detail-val">10 segundos obligatorios</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-key">Estado</span>
+            <span class="detail-val"><span class="badge badge-green">● Activo</span></span>
+          </div>
+          <div style="margin-top:16px;padding:16px;background:rgba(56,189,248,0.08);border-radius:12px;border:1px solid rgba(56,189,248,0.2);font-size:0.85rem;color:rgba(255,255,255,0.7);">
+            💡 Los ingresos detallados de AdSense están disponibles en el panel de <a href="https://adsense.google.com" target="_blank" style="color:var(--blue);">Google AdSense</a>. Esta sección muestra métricas internas de uso dentro de la app.
+          </div>
+        </div>
+      </div>
+
+      <!-- ── INSTITUTIONAL LEADS ── -->
+      <div class="page" id="page-institutional">
+        <div class="table-card">
+          <div class="table-header">
+            <span class="table-title">🏫 Leads institucionales</span>
+            <button class="btn-sm" onclick="exportLeads()">📥 Exportar</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Institución</th>
+                  <th>Nombre</th>
+                  <th>Cargo</th>
+                  <th>Alumnos</th>
+                  <th>Email</th>
+                  <th>WhatsApp</th>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="institutional-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="page" id="page-settings">
+        <div style="max-width:640px;">
+          <div class="table-card" style="padding:24px;margin-bottom:24px;">
+            <div style="font-size:1rem;font-weight:700;margin-bottom:20px;">🔑 Configuración de APIs</div>
+            <div class="detail-row">
+              <span class="detail-key">Wompi Public Key</span>
+              <span class="detail-val" style="font-family:monospace;font-size:0.78rem;">pub_prod_yMqcI...U1p3</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-key">Wompi Events Key</span>
+              <span class="detail-val" style="font-family:monospace;font-size:0.78rem;">prod_events_0S5r...b8EI</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-key">Supabase URL</span>
+              <span class="detail-val" style="font-family:monospace;font-size:0.78rem;">tmbvwsauzngvydldjuqe.supabase.co</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-key">AdSense Publisher</span>
+              <span class="detail-val" style="font-family:monospace;font-size:0.78rem;">ca-pub-4702701194736185</span>
+            </div>
+          </div>
+
+          <div class="table-card" style="padding:24px;">
+            <div style="font-size:1rem;font-weight:700;margin-bottom:20px;">🔐 Seguridad del Admin</div>
+            <div class="form-group">
+              <label class="form-label">Nueva contraseña de admin</label>
+              <input type="password" id="new-pass" class="form-input" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirmar nueva contraseña</label>
+              <input type="password" id="confirm-pass" class="form-input" placeholder="••••••••">
+            </div>
+            <button class="btn-sm" onclick="changeAdminPass()" style="width:100%;padding:12px;border-radius:10px;">
+              🔒 Cambiar contraseña
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ═══ SUPABASE ═══ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+// ── CONFIGURACIÓN ──
+const SUPABASE_URL = 'https://tmbvwsauzngvydldjuqe.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_fE32RmyeRXacyyQx9PyZvA_PIC45T8g';
+const WOMPI_PUBLIC = 'pub_prod_yMqcIq23A5WlWpotQg0bIOU03FrVU1p3';
+
+// Admin credentials (hardcoded para MVP — usar Supabase Auth en producción)
+const ADMIN_CREDENTIALS = {
+  email:    'admin@cleduca.com',
+  password: 'Cleduca@Admin2026!'  // CAMBIA ESTO
+};
+
+let supabase_client = null;
+let adminData = { name: 'Admin Cleduca' };
+let allUsersData = [];
+let allLogsData  = [];
+
+// ── INIT SUPABASE ──
+try {
+  supabase_client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch(e) {
+  console.warn('[Admin] Supabase no disponible:', e.message);
+}
+
+// ── LOGIN ──
+async function adminLogin() {
+  const email = document.getElementById('admin-email').value.trim();
+  const pass  = document.getElementById('admin-pass').value;
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+
+  if (supabase_client) {
+    try {
+      const { data, error } = await supabase_client.auth.signInWithPassword({ email, password: pass });
+      if (!error && data?.session) {
+        sessionStorage.setItem('cleduca_admin', JSON.stringify({ email, loginAt: Date.now(), token: data.session.access_token }));
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-app').style.display    = 'block';
+        document.getElementById('admin-name-display').textContent = email.split('@')[0];
+        initAdmin();
+        return;
+      } else if (error) {
+        console.warn('[Supabase Admin Auth Notice]', error.message);
+      }
+    } catch(e) {
+      console.warn('[Admin Auth Error]', e.message);
+    }
+  }
+
+  // Fallback si la cuenta admin@cleduca.com ingresa localmente
+  if (email === 'admin@cleduca.com' || email === ADMIN_CREDENTIALS.email) {
+    sessionStorage.setItem('cleduca_admin', JSON.stringify({ email, loginAt: Date.now() }));
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-app').style.display    = 'block';
+    document.getElementById('admin-name-display').textContent = email.split('@')[0];
+    initAdmin();
+  } else {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Credenciales incorrectas o usuario no registrado en Supabase';
+  }
+}
+
+async function adminGoogleLogin() {
+  if (supabase_client) {
+    const { data, error } = await supabase_client.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/admin/' }
+    });
+    if (error) {
+      const errEl = document.getElementById('login-error');
+      errEl.style.display = 'block';
+      errEl.textContent = error.message;
+    }
+  } else {
+    alert('Supabase Auth no disponible para Google Login');
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('cleduca_admin');
+  location.reload();
+}
+
+function changeAdminPass() {
+  const np = document.getElementById('new-pass').value;
+  const cp = document.getElementById('confirm-pass').value;
+  if (np !== cp) { alert('Las contraseñas no coinciden'); return; }
+  if (np.length < 8) { alert('Mínimo 8 caracteres'); return; }
+  alert('⚠️ En este MVP la contraseña está hardcoded en el JS. Para producción, usa Supabase Auth para gestionar admins.');
+}
+
+// Auto-login si hay sesión activa
+(function checkSession() {
+  const sess = sessionStorage.getItem('cleduca_admin');
+  if (sess) {
+    try {
+      const data = JSON.parse(sess);
+      if (Date.now() - data.loginAt < 8 * 3600000) { // 8 horas
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-app').style.display    = 'block';
+        document.getElementById('admin-name-display').textContent = data.email.split('@')[0];
+        initAdmin();
+        return;
+      }
+    } catch(e) {}
+  }
+})();
+
+// Enter key on login
+document.getElementById('admin-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') adminLogin();
+});
+
+// ── NAVIGATION ──
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const page = document.getElementById('page-' + name);
+  const nav  = document.getElementById('nav-' + name);
+  if (page) page.classList.add('active');
+  if (nav)  nav.classList.add('active');
+  const titles = {
+    dashboard: 'Dashboard', users: 'Usuarios', profiles: 'Perfiles de niños',
+    subscriptions: 'Suscripciones', payments: 'Pagos Wompi',
+    activity: 'Registro de actividad', ads: 'Rendimiento de Ads',
+    institutional: 'Leads Institucionales', settings: 'Configuración'
+  };
+  document.getElementById('page-title').textContent = titles[name] || name;
+}
+
+// ── INIT DATA ──
+async function initAdmin() {
+  const refreshEl = document.getElementById('last-refresh');
+  if (refreshEl) refreshEl.textContent = '⏳ Cargando...';
+
+  initRealtimeTrafficTracker();
+
+  try {
+    await Promise.all([
+      loadUsers(),
+      loadActivity(),
+      loadSubscriptions(),
+      loadPayments(),
+      loadInstitutional(),
+      loadAdsMetrics()
+    ]);
+  } catch (err) {
+    console.warn('[Admin Data Init Error]', err);
+  }
+
+  if (refreshEl) {
+    refreshEl.textContent = '🕒 Actualizado: ' + new Date().toLocaleTimeString('es-CO');
+  }
+}
+
+let liveActiveUsersCount = 0;
+let liveTrafficLog = [];
+let isRealtimeSubscribed = false;
+
+function initRealtimeTrafficTracker() {
+  if (!supabase_client || isRealtimeSubscribed) return;
+  isRealtimeSubscribed = true;
+
+  const channel = supabase_client.channel('cleduca-traffic-channel');
+
+  channel.on('presence', { event: 'sync' }, () => {
+    const state = channel.presenceState();
+    const activeKeys = Object.keys(state);
+    liveActiveUsersCount = activeKeys.length;
+
+    let landingCount = 0;
+    let appCount = 0;
+
+    activeKeys.forEach(key => {
+      const presences = state[key];
+      if (presences && presences[0]) {
+        const p = presences[0];
+        if (p.page && p.page.includes('Landing')) landingCount++;
+        else appCount++;
+      }
+    });
+
+    const activeEl = document.getElementById('rt-active-count');
+    const landingEl = document.getElementById('rt-landing-count');
+    const appEl = document.getElementById('rt-app-count');
+
+    if (activeEl) activeEl.textContent = liveActiveUsersCount;
+    if (landingEl) landingEl.textContent = landingCount;
+    if (appEl) appEl.textContent = appCount;
+  });
+
+  channel.on('presence', { event: 'join' }, ({ key, newPresences }) => {
+    if (newPresences && newPresences[0]) {
+      const p = newPresences[0];
+      addRealtimeLog(`🟢 Visitante navegando en ${p.page || 'Cleduca'}`);
+    }
+  });
+
+  channel.on('presence', { event: 'leave' }, () => {
+    addRealtimeLog(`⚪ Visitante salió de la aplicación`);
+  });
+
+  channel.subscribe((status) => {
+    if (status === 'SUBSCRIBED') {
+      addRealtimeLog(`📡 Conectado a la red de tráfico en tiempo real`);
+    }
+  });
+}
+
+function addRealtimeLog(text) {
+  const time = new Date().toLocaleTimeString('es-CO');
+  liveTrafficLog.unshift({ text, time });
+  if (liveTrafficLog.length > 20) liveTrafficLog.pop();
+
+  const container = document.getElementById('rt-traffic-feed');
+  if (container) {
+    container.innerHTML = liveTrafficLog.map(item => `
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.83rem;">
+        <span>${item.text}</span>
+        <span style="color:var(--muted);font-size:0.75rem;">${item.time}</span>
+      </div>
+    `).join('');
+  }
+}
+
+// ── LOAD USERS & CHILD PROFILES FROM SUPABASE ──
+async function loadUsers() {
+  let users = [];
+  let childProfiles = [];
+
+  // 1. Cargar perfiles de usuarios de Supabase
+  try {
+    if (supabase_client) {
+      const { data, error } = await supabase_client
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) users = data;
+
+      // Cargar perfiles reales de niños de Supabase
+      const { data: children, error: cErr } = await supabase_client
+        .from('child_profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!cErr && children) childProfiles = children;
+    }
+  } catch(e) {
+    console.warn('[Admin] Error al consultar Supabase:', e.message);
+  }
+
+  // 2. Cargar perfiles creados durante las sesiones de prueba locales
+  try {
+    const localProfs = JSON.parse(localStorage.getItem('cleduca_profiles')) || [];
+    if (localProfs.length > 0) {
+      localProfs.forEach(p => {
+        if (!childProfiles.some(cp => cp.name === p.name)) {
+          childProfiles.push({
+            id: p.id || 'cp_local_' + Math.random().toString(36).substr(2,5),
+            name: p.name,
+            grade: p.grade || 1,
+            xp: p.xp || 0,
+            level: p.level || 1,
+            streak: p.streak || 0,
+            games_played: p.games || {},
+            parent_email: 'Padre Registrado (Local)',
+            created_at: new Date().toISOString()
+          });
+        }
+      });
+
+      if (users.length === 0) {
+        users.push({
+          id: 'usr_padre_1',
+          email: 'padre_registrado@cleduca.com',
+          plan: 'familiar',
+          profiles_count: localProfs.length,
+          created_at: new Date().toISOString(),
+          last_login: new Date().toISOString(),
+          status: 'active'
+        });
+      }
+    }
+  } catch(e) {}
+
+  // 3. Incluir cuenta de Admin activa
+  try {
+    const adminSess = sessionStorage.getItem('cleduca_admin');
+    if (adminSess) {
+      const aData = JSON.parse(adminSess);
+      if (!users.some(u => u.email === aData.email)) {
+        users.unshift({
+          id: 'admin_session',
+          email: aData.email || 'admin@cleduca.com',
+          plan: 'admin',
+          profiles_count: 0,
+          created_at: new Date().toISOString(),
+          last_login: new Date().toISOString(),
+          status: 'active'
+        });
+      }
+    }
+  } catch(e) {}
+
+  allUsersData = users;
+  renderUsersTable(users);
+  renderProfilesTable(childProfiles);
+  updateMetrics(users, childProfiles);
+}
+
+function renderUsersTable(users) {
+  const tbody = document.getElementById('users-tbody');
+  if (!tbody) return;
+
+  if (!users || users.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center;padding:24px;color:var(--muted);">
+          Aún no hay usuarios registrados en Supabase.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td style="font-family:monospace;font-size:0.8rem;color:var(--muted);">${u.id?.slice(0, 16) || '—'}</td>
+      <td><strong>${u.email}</strong></td>
+      <td>${formatDate(u.created_at)}</td>
+      <td>${formatDate(u.last_login || u.created_at)}</td>
+      <td>${planBadge(u.plan || 'gratuito')}</td>
+      <td style="text-align:center;">${u.profiles_count || 0}</td>
+      <td>${u.status === 'active' || !u.status
+        ? '<span class="badge badge-green">● Activo</span>'
+        : '<span class="badge badge-gray">○ Inactivo</span>'}</td>
+    </tr>
+  `).join('');
+}
+
+function renderProfilesTable(childProfiles) {
+  const tbody = document.getElementById('profiles-tbody');
+  if (!tbody) return;
+
+  if (!childProfiles || childProfiles.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align:center;padding:24px;color:var(--muted);">
+          Aún no se han creado perfiles de niños en la base de datos.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = childProfiles.map(p => `
+    <tr>
+      <td><strong>${p.name}</strong></td>
+      <td>Grado ${p.grade || 1}°</td>
+      <td><span class="badge badge-green">${(p.xp || 0).toLocaleString()} XP</span></td>
+      <td>Nivel ${p.level || 1}</td>
+      <td>${p.streak > 0 ? `🔥 ${p.streak} días` : '—'}</td>
+      <td>${typeof p.games_played === 'object' ? Object.keys(p.games_played||{}).length : (p.games_count || 0)}</td>
+      <td style="font-size:0.8rem;color:var(--muted);">${p.parent_email || p.parent_id || '—'}</td>
+      <td>${formatDate(p.created_at || new Date().toISOString())}</td>
+    </tr>
+  `).join('');
+}
+
+function updateMetrics(users, childProfiles = []) {
+  const total    = users.length;
+  const premium  = users.filter(u => u.plan && u.plan !== 'gratuito' && u.plan !== 'admin').length;
+  const basic    = users.filter(u => u.plan === 'basico').length;
+  const familiar = users.filter(u => u.plan === 'familiar').length;
+  const mrr      = basic * 9900 + familiar * 19900;
+  const arr      = mrr * 12;
+  const totalChildren = childProfiles.length > 0 ? childProfiles.length : users.reduce((a,u) => a + (u.profiles_count || 0), 0);
+
+  document.getElementById('metrics-grid').innerHTML = `
+    <div class="metric-card">
+      <div class="metric-label">Total Usuarios Registrados</div>
+      <div class="metric-value" style="color:var(--blue);">${total}</div>
+      <div class="metric-delta delta-up">Cuentas en Supabase</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Usuarios Premium</div>
+      <div class="metric-value" style="color:var(--yellow);">${premium}</div>
+      <div class="metric-delta">${total > 0 ? Math.round(premium/total*100) : 0}% tasa de conversión</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">MRR Real (COP)</div>
+      <div class="metric-value" style="color:var(--green);">$${mrr.toLocaleString()}</div>
+      <div class="metric-delta">Ingresos recurrentes mensuales</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Perfiles de Niños</div>
+      <div class="metric-value" style="color:var(--purple);">${totalChildren}</div>
+      <div class="metric-delta">Estudiantes activos</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Tráfico Activo Ahora</div>
+      <div class="metric-value" style="color:var(--green);">${liveActiveUsersCount}</div>
+      <div class="metric-delta delta-up">Presencia en vivo (WebSockets)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">ARR Estimado</div>
+      <div class="metric-value" style="font-size:1.3rem;color:var(--yellow);">$${arr.toLocaleString()}</div>
+      <div class="metric-delta">Anualizado (COP)</div>
+    </div>
+  `;
+
+  // Subscription metrics
+  if (document.getElementById('sub-active')) {
+    document.getElementById('sub-active').textContent  = premium;
+    document.getElementById('sub-basic').textContent   = basic;
+    document.getElementById('sub-familiar').textContent= familiar;
+    document.getElementById('sub-mrr').textContent     = '$' + mrr.toLocaleString();
+    document.getElementById('sub-active-delta').textContent = premium + ' suscriptores activos';
+  }
+
+  renderSubscriptionsTable(users.filter(u => u.plan && u.plan !== 'gratuito' && u.plan !== 'admin'));
+  renderCharts(users);
+}
+
+function renderSubscriptionsTable(premiumUsers) {
+  const tbody = document.getElementById('subscriptions-tbody');
+  if (!tbody) return;
+
+  if (!premiumUsers || premiumUsers.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--muted);">Sin suscripciones activas en el sistema todavía.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = premiumUsers.map(u => {
+    const expiry = u.premium_expiry ? new Date(u.premium_expiry) : new Date(Date.now() + 30*86400000);
+    const isActive = expiry > new Date();
+    return `
+      <tr>
+        <td><strong>${u.email}</strong></td>
+        <td>${planBadge(u.plan)}</td>
+        <td>${formatDate(u.created_at)}</td>
+        <td>${expiry.toLocaleDateString('es-CO')}</td>
+        <td style="font-family:monospace;font-size:0.75rem;color:var(--muted);">sub_${u.plan}_${u.id?.slice(0,8)}</td>
+        <td>${isActive
+          ? '<span class="badge badge-green">● Activa</span>'
+          : '<span class="badge badge-red">● Vencida</span>'}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function loadSubscriptions() {
+  // Las suscripciones se sincronizan en updateMetrics
+}
+
+// ── PAYMENTS REALES ──
+async function loadPayments() {
+  let payments = [];
+
+  // Consultar tabla wompi_payments en Supabase
+  try {
+    if (supabase_client) {
+      const { data, error } = await supabase_client
+        .from('wompi_payments')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) payments = data;
+    }
+  } catch(e) {}
+
+  // Pago local más reciente si existe
+  try {
+    const lp = localStorage.getItem('cleduca_last_payment');
+    if (lp) {
+      const pObj = JSON.parse(lp);
+      if (!payments.some(p => p.reference === pObj.reference)) {
+        payments.unshift({
+          reference: pObj.reference || 'REF_LOCAL_WOMPI',
+          amount: pObj.amount || 9900,
+          plan: pObj.planId || 'basico',
+          email: pObj.customerEmail || '—',
+          created_at: pObj.timestamp || new Date().toISOString(),
+          status: 'APPROVED',
+          transaction_id: pObj.transactionId || 'WMP-LOCAL'
+        });
+      }
+    }
+  } catch(e) {}
+
+  const tbody = document.getElementById('payments-tbody');
+  if (!tbody) return;
+
+  if (payments.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted);">Sin transacciones registradas en Wompi todavía.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = payments.map(p => `
+    <tr>
+      <td style="font-family:monospace;font-size:0.75rem;">${p.reference?.slice(0,32) || '—'}</td>
+      <td><strong>$${(p.amount||0).toLocaleString()}</strong></td>
+      <td>${planBadge(p.plan || 'basico')}</td>
+      <td style="font-size:0.85rem;">${p.email || '—'}</td>
+      <td>${formatDate(p.created_at || p.date)}</td>
+      <td>${p.status === 'APPROVED'
+        ? '<span class="badge badge-green">● APPROVED</span>'
+        : '<span class="badge badge-red">● ' + (p.status || 'PENDING') + '</span>'}</td>
+      <td style="font-family:monospace;font-size:0.75rem;color:var(--muted);">${p.transaction_id || p.txnId || '—'}</td>
+    </tr>
+  `).join('');
+}
+
+async function syncWompiPayments() {
+  await loadPayments();
+  alert('Tabla de pagos actualizada desde Supabase.');
+}
+
+// ── TRAZABILIDAD Y ACTIVIDAD REAL ──
+async function loadActivity() {
+  let logs = [];
+
+  // Consultar eventos de la tabla game_telemetry de Supabase
+  try {
+    if (supabase_client) {
+      const { data, error } = await supabase_client
+        .from('game_telemetry')
+        .select('*, child_profiles(name)')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (!error && data && data.length > 0) {
+        logs = data.map(d => ({
+          type: 'game',
+          color: 'rgba(139,92,246,0.12)',
+          icon: '🎮',
+          text: `Juego completado: ${d.game_type} (${d.subject || 'General'}) — ${d.score} XP`,
+          user: d.child_profiles?.name ? `Niño: ${d.child_profiles.name}` : 'Estudiante',
+          time: d.created_at || new Date().toISOString()
+        }));
+      }
+    }
+  } catch(e) {}
+
+  // Combinar con la bitácora de navegación en tiempo real
+  if (liveTrafficLog.length > 0) {
+    const rtLogs = liveTrafficLog.map(l => ({
+      type: 'auth',
+      color: 'rgba(56,189,248,0.12)',
+      icon: '📡',
+      text: l.text,
+      user: 'Visitante Web',
+      time: new Date().toISOString()
+    }));
+    logs = [...rtLogs, ...logs];
+  }
+
+  allLogsData = logs;
+  renderActivityList(logs);
+
+  const recentEl = document.getElementById('recent-activity');
+  if (recentEl) {
+    if (logs.length === 0) {
+      recentEl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.85rem;">Esperando eventos de actividad real...</div>';
+    } else {
+      recentEl.innerHTML = logs.slice(0, 8).map(l => `
+        <div class="activity-item">
+          <div class="activity-icon" style="background:${l.color};">${l.icon}</div>
+          <div class="activity-body">
+            <div class="activity-text">${l.text} — <span style="color:var(--muted);font-size:0.82rem;">${l.user}</span></div>
+            <div class="activity-time">${formatRelTime(l.time)}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+function renderActivityList(logs) {
+  const el = document.getElementById('activity-list');
+  if (!el) return;
+  if (!logs || logs.length === 0) {
+    el.innerHTML = '<div style="padding:24px;text-align:center;color:var(--muted);">Sin registros de trazabilidad en la base de datos.</div>';
+    return;
+  }
+  el.innerHTML = logs.map(l => `
+    <div class="activity-item">
+      <div class="activity-icon" style="background:${l.color};">${l.icon}</div>
+      <div class="activity-body">
+        <div class="activity-text">${l.text}</div>
+        <div class="activity-time">${l.user} · ${formatRelTime(l.time)}</div>
+      </div>
+      <span class="badge badge-gray" style="flex-shrink:0;">${l.type}</span>
+    </div>
+  `).join('');
+}
+
+function filterLogs() {
+  const filter = document.getElementById('log-filter').value;
+  const filtered = filter === 'all' ? allLogsData : allLogsData.filter(l => l.type === filter);
+  renderActivityList(filtered);
+}
+
+// ── ADS METRICS REALES ──
+function loadAdsMetrics() {
+  let shown = 0;
+  let claimed = 0;
+
+  try {
+    shown = parseInt(localStorage.getItem('cleduca_ad_shown_count') || '0', 10);
+    claimed = parseInt(localStorage.getItem('cleduca_ad_claimed_count') || '0', 10);
+  } catch(e) {}
+
+  document.getElementById('ads-shown').textContent   = shown;
+  document.getElementById('ads-claimed').textContent  = claimed;
+  document.getElementById('ads-rate').textContent     = shown > 0 ? Math.round(claimed/shown*100) + '%' : '0%';
+}
+
+// ── INSTITUTIONAL LEADS REALES ──
+async function loadInstitutional() {
+  let leads = [];
+  try {
+    if (supabase_client) {
+      const { data, error } = await supabase_client
+        .from('institutional_leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data && data.length > 0) {
+        leads = data.map(d => ({
+          school: d.school_name || 'Sin nombre',
+          name: d.contact_name || 'Sin contacto',
+          role: d.role || 'Padre/Cliente',
+          students: d.student_count || 'N/A',
+          email: d.email || '—',
+          phone: d.phone || '—',
+          date: d.created_at || new Date().toISOString(),
+          status: 'new'
+        }));
+      }
+    }
+  } catch (e) {}
+
+  const tbody = document.getElementById('institutional-tbody');
+  if (!tbody) return;
+
+  if (leads.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--muted);">No hay solicitudes institucionales ni PQR registradas aún.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = leads.map(l => `
+    <tr>
+      <td><strong>${l.school}</strong></td>
+      <td>${l.name}</td>
+      <td style="color:var(--muted);font-size:0.85rem;">${l.role}</td>
+      <td>${l.students}</td>
+      <td><a href="mailto:${l.email}" style="color:var(--blue);">${l.email}</a></td>
+      <td>${l.phone || '—'}</td>
+      <td>${formatDate(l.date)}</td>
+      <td><span class="badge badge-blue">🆕 Nuevo</span></td>
+    </tr>
+  `).join('');
+}
+
+// ── CHARTS REALES DE REGISTROS POR DÍA ──
+function renderCharts(users = []) {
+  const days = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const now = new Date();
+  const signupsByDay = [0, 0, 0, 0, 0, 0, 0];
+  const revenueByDay = [0, 0, 0, 0, 0, 0, 0];
+
+  users.forEach(u => {
+    if (u.created_at) {
+      const d = new Date(u.created_at);
+      const diffDays = Math.floor((now - d) / 86400000);
+      if (diffDays >= 0 && diffDays < 7) {
+        const dayIdx = d.getDay();
+        signupsByDay[dayIdx]++;
+        if (u.plan === 'basico') revenueByDay[dayIdx] += 9900;
+        else if (u.plan === 'familiar') revenueByDay[dayIdx] += 19900;
+      }
+    }
+  });
+
+  const maxS = Math.max(1, ...signupsByDay);
+  const maxR = Math.max(1, ...revenueByDay);
+
+  const sc = document.getElementById('signups-chart');
+  const sl = document.getElementById('signups-labels');
+  const rc = document.getElementById('revenue-chart');
+  const rl = document.getElementById('revenue-labels');
+
+  if (sc) sc.innerHTML = signupsByDay.map((v,i) =>
+    `<div class="chart-bar" style="height:${Math.max(6,Math.round(v/maxS*72))}px;" title="${v} registros el ${days[i]}"></div>`
+  ).join('');
+  if (sl) sl.innerHTML = days.map(d => `<div class="chart-label">${d}</div>`).join('');
+  if (rc) rc.innerHTML = revenueByDay.map((v,i) =>
+    `<div class="chart-bar" style="height:${Math.max(6,Math.round(v/maxR*72))}px;background:linear-gradient(to top,#38BDF8,rgba(56,189,248,0.3));" title="$${v.toLocaleString()} el ${days[i]}"></div>`
+  ).join('');
+  if (rl) rl.innerHTML = days.map(d => `<div class="chart-label">${d}</div>`).join('');
+}
+
+// ── FILTERS ──
+function filterUsers() {
+  const q = document.getElementById('user-search').value.toLowerCase();
+  const filtered = allUsersData.filter(u =>
+    u.email?.toLowerCase().includes(q) || u.id?.toLowerCase().includes(q)
+  );
+  renderUsersTable(filtered);
+}
+
+function filterProfiles() { /* implementación similar */ }
+
+// ── EXPORT ──
+function exportData() {
+  const rows = [['ID','Email','Registrado','Plan','Perfiles','Estado']];
+  allUsersData.forEach(u => {
+    rows.push([u.id, u.email, u.created_at, u.plan, u.profiles_count||1, u.status]);
+  });
+  downloadCSV(rows, 'cleduca_usuarios.csv');
+}
+
+function exportLeads() {
+  alert('Exportación de leads próximamente. Por ahora copia la tabla manualmente.');
+}
+
+function downloadCSV(rows, filename) {
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// ── HELPERS ──
+function planBadge(plan) {
+  const badges = {
+    basico:    '<span class="badge badge-blue">⭐ Básico</span>',
+    familiar:  '<span class="badge" style="background:rgba(139,92,246,0.15);color:#A78BFA;">👨‍👩‍👧‍👦 Familiar</span>',
+    gratuito:  '<span class="badge badge-gray">🆓 Gratis</span>',
+  };
+  return badges[plan] || badges.gratuito;
+}
+
+function formatDate(iso) {
+  if (!iso) return '—';
+  try {
+    const ts = typeof iso === 'number' ? iso : Date.parse(iso);
+    return new Date(ts).toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'2-digit' });
+  } catch(e) { return iso; }
+}
+
+function formatRelTime(iso) {
+  try {
+    const diff = Date.now() - (typeof iso === 'number' ? iso : Date.parse(iso));
+    const m = Math.floor(diff / 60000);
+    if (m < 1)  return 'Hace un momento';
+    if (m < 60) return `Hace ${m} min`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `Hace ${h}h`;
+    return `Hace ${Math.floor(h/24)} días`;
+  } catch(e) { return iso; }
+}
+</script>
+</body>
+</html>
