@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Cleduca — La plataforma educativa gamificada para niños colombianos. Aprende matemáticas, lenguaje, ciencias y más jugando con Cleo, tu mascota husky. Planes desde $9.900/mes.">
-  <meta name="keywords" content="educación infantil, app educativa Colombia, aprendizaje gamificado, niños, matemáticas, lenguaje, ciencias, primaria">
+  <meta name="description" content="Cleduca — La plataforma educativa gamificada para niños colombianos de primaria. Aprende Matemáticas, Lenguaje, Ciencias e Inglés con Cleo, tu mascota interactiva. ¡Descarga la APK para Android o juega gratis!">
+  <meta name="keywords" content="educación infantil, app educativa Colombia, aprendizaje gamificado, descarga APK Android, matemáticas niños, lenguaje, primaria, Cleo">
   <meta name="author" content="Cleduca">
   <link rel="canonical" href="https://cleduca.web.app/">
 
@@ -12,18 +12,21 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://cleduca.web.app/">
   <meta property="og:title" content="Cleduca — Aprende Jugando con Cleo 🐶">
-  <meta property="og:description" content="La plataforma educativa gamificada para niños colombianos. Aprende matemáticas, lenguaje y ciencias con Cleo, tu mascota husky.">
-  <meta property="og:image" content="https://cleduca.web.app/img/Logo_cleduca_transparente.png">
+  <meta property="og:description" content="La plataforma educativa gamificada para niños de primaria. ¡Descarga la APK para Android o aprende jugando en la web!">
+  <meta property="og:image" content="https://cleduca.web.app/img/cleduca_flyer_promo.png">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Cleduca — Aprende Jugando con Cleo 🐶">
-  <meta name="twitter:description" content="La plataforma educativa gamificada para niños colombianos. Aprende matemáticas, lenguaje y ciencias con Cleo.">
-  <meta name="twitter:image" content="https://cleduca.web.app/img/Logo_cleduca_transparente.png">
+  <meta name="twitter:description" content="La plataforma educativa gamificada para niños colombianos. Matemáticas, lenguaje y ciencias con Cleo.">
+  <meta name="twitter:image" content="https://cleduca.web.app/img/cleduca_flyer_promo.png">
 
-  <meta name="theme-color" content="#4ADE80">
+  <meta name="theme-color" content="#22C55E">
   <link rel="icon" href="img/Logo_cleduca_transparente.png">
-  <title>Cleduca — Aprende Jugando con Cleo 🐶</title>
+  <title>Cleduca — Aprende Jugando con Cleo 🐶 | App Educativa Primaria</title>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <!-- Schema.org JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -31,34 +34,32 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "Cleduca",
-    "operatingSystem": "Web, Android, iOS",
+    "operatingSystem": "Android, Web, iOS",
     "applicationCategory": "EducationalApplication",
+    "downloadUrl": "https://cleduca.web.app/cleduca.apk",
     "offers": {
       "@type": "Offer",
-      "price": "9900",
+      "price": "0",
       "priceCurrency": "COP"
     },
-    "description": "Plataforma educativa gamificada para niños de primaria en Colombia con más de 20 mini-juegos de Matemáticas, Lenguaje, Ciencias e Inglés."
+    "description": "Plataforma educativa gamificada para niños de primaria en Colombia (1° a 5°) con más de 25 minijuegos interactivos."
   }
   </script>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4702701194736185" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --green:      #4ADE80;
       --green-d:    #22C55E;
-      --green-dd:   #16A34A;
-      --purple:     #8B5CF6;
-      --purple-d:   #7C3AED;
+      --green-dd:   #15803D;
+      --purple:     #A855F7;
+      --purple-d:   #7E22CE;
       --blue:       #38BDF8;
-      --blue-d:     #0EA5E9;
+      --blue-d:     #0284C7;
       --orange:     #FB923C;
       --yellow:     #FBBF24;
       --dark:       #0F172A;
@@ -66,14 +67,12 @@
       --dark3:      #334155;
       --muted:      #94A3B8;
       --light:      #F8FAFC;
-      --card:       rgba(255,255,255,0.06);
-      --card-b:     rgba(255,255,255,0.12);
+      --card-bg:    rgba(30, 41, 59, 0.7);
+      --card-border:rgba(255, 255, 255, 0.12);
       --radius:     24px;
-      --radius-sm:  14px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -84,31 +83,18 @@
       line-height: 1.6;
     }
 
-    section.snap-section {
-      min-height: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      box-sizing: border-box;
-      padding: 90px 24px 40px;
-    }
-
     /* ── NAVBAR ── */
     .navbar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      padding: 16px 24px;
+      padding: 16px 28px;
       display: flex; align-items: center; justify-content: space-between;
       backdrop-filter: blur(20px);
       background: rgba(15, 23, 42, 0.85);
       border-bottom: 1px solid rgba(255,255,255,0.08);
       transition: all 0.3s;
     }
-    .navbar.scrolled {
-      padding: 12px 24px;
-      background: rgba(15, 23, 42, 0.97);
-    }
     .nav-brand {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center; gap: 12px;
       text-decoration: none;
     }
     .nav-logo {
@@ -117,1312 +103,476 @@
       filter: drop-shadow(0 2px 8px rgba(74,222,128,0.4));
     }
     .nav-brand-text {
-      font-weight: 900; font-size: 1.5rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900; font-size: 1.6rem;
       background: linear-gradient(135deg, #4ADE80, #38BDF8);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
     .nav-links {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 12px;
     }
     .nav-link {
-      color: rgba(255,255,255,0.75); text-decoration: none;
-      font-size: 0.9rem; font-weight: 500; padding: 8px 12px;
-      border-radius: 10px; transition: all 0.2s;
+      color: rgba(255,255,255,0.8); text-decoration: none;
+      font-size: 0.95rem; font-weight: 600; padding: 8px 14px;
+      border-radius: 12px; transition: all 0.2s;
     }
     .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
 
-    .btn-nav {
-      padding: 10px 20px; border-radius: 12px;
-      font-weight: 700; font-size: 0.9rem;
-      cursor: pointer; border: none; transition: all 0.2s;
-      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    .btn-nav-apk {
+      background: linear-gradient(135deg, #38BDF8, #0284C7);
+      color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 14px;
+      font-weight: 800; font-size: 0.88rem; display: flex; align-items: center; gap: 6px;
+      box-shadow: 0 4px 14px rgba(56,189,248,0.3); transition: transform 0.2s;
     }
-    .btn-primary-nav {
-      background: linear-gradient(135deg, var(--green-d), var(--green-dd));
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(34,197,94,0.4);
-    }
-    .btn-primary-nav:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(34,197,94,0.5);
-    }
-    .btn-ghost-nav {
-      background: transparent; color: rgba(255,255,255,0.8);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    .btn-ghost-nav:hover { background: rgba(255,255,255,0.08); }
+    .btn-nav-apk:hover { transform: translateY(-2px); }
 
-    /* ── HERO ── */
+    .btn-nav-app {
+      background: linear-gradient(135deg, var(--green-d), var(--green-dd));
+      color: #fff; text-decoration: none; padding: 10px 22px; border-radius: 14px;
+      font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 6px;
+      box-shadow: 0 4px 16px rgba(34,197,94,0.4); transition: transform 0.2s;
+    }
+    .btn-nav-app:hover { transform: translateY(-2px); }
+
+    /* ── HERO SECTION ── */
     .hero {
-      min-height: 100vh;
+      position: relative; min-height: 100vh;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 100px 24px 60px;
-      position: relative; overflow: hidden;
-      text-align: center;
+      padding: 120px 24px 60px; text-align: center; overflow: hidden;
     }
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(74,222,128,0.25) 0%, transparent 60%),
-                  radial-gradient(ellipse 60% 40% at 90% 80%, rgba(56,189,248,0.15) 0%, transparent 50%),
-                  radial-gradient(ellipse 40% 30% at 10% 70%, rgba(139,92,246,0.15) 0%, transparent 50%);
-    }
-    .hero-orbs {
-      position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    }
-    .orb {
-      position: absolute; border-radius: 50%;
-      filter: blur(60px); opacity: 0.15;
-      animation: orbFloat 8s ease-in-out infinite;
-    }
-    .orb-1 { width: 400px; height: 400px; background: var(--green); top: -100px; left: -100px; }
-    .orb-2 { width: 300px; height: 300px; background: var(--blue); bottom: -50px; right: -50px; animation-delay: -3s; }
-    .orb-3 { width: 200px; height: 200px; background: var(--purple); top: 40%; left: 60%; animation-delay: -5s; }
-
-    @keyframes orbFloat {
-      0%,100% { transform: translate(0,0) scale(1); }
-      50%     { transform: translate(20px,-20px) scale(1.05); }
+      background: radial-gradient(circle at 50% 10%, rgba(34,197,94,0.22) 0%, transparent 60%),
+                  radial-gradient(circle at 85% 70%, rgba(56,189,248,0.18) 0%, transparent 50%),
+                  radial-gradient(circle at 15% 60%, rgba(168,85,247,0.15) 0%, transparent 50%);
     }
 
-    .hero-content { position: relative; z-index: 1; max-width: 800px; }
+    .speaking-cleo-box {
+      position: relative; display: inline-block; margin-bottom: 16px; cursor: pointer;
+    }
+    .speaking-cleo-avatar {
+      width: 150px; height: 150px; object-fit: contain;
+      filter: drop-shadow(0 12px 32px rgba(74,222,128,0.4));
+      animation: floatCleo 3.5s ease-in-out infinite;
+      transition: transform 0.2s;
+    }
+    .speaking-cleo-avatar:hover { transform: scale(1.08) rotate(3deg); }
+
+    .cleo-speech-bubble {
+      position: absolute; top: -35px; right: -70px;
+      background: linear-gradient(135deg, #FBBF24, #F59E0B);
+      color: #0F172A; font-weight: 800; font-size: 0.82rem;
+      padding: 8px 14px; border-radius: 18px; border-bottom-left-radius: 4px;
+      box-shadow: 0 6px 20px rgba(245,158,11,0.4);
+      animation: pulseBubble 2s infinite; white-space: nowrap; pointer-events: none;
+    }
+
+    @keyframes floatCleo {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-14px) rotate(2deg); }
+    }
+    @keyframes pulseBubble {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
 
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 18px; border-radius: 100px;
-      background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3);
-      font-size: 0.85rem; font-weight: 600; color: var(--green);
-      margin-bottom: 16px;
-      animation: fadeInDown 0.6s ease-out;
-    }
-    .badge-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--green);
-      animation: pulse-green 2s infinite;
-    }
-    @keyframes pulse-green {
-      0%,100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.6); }
-      50% { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
-    }
-
-    .hero-cleo {
-      width: 160px; height: 160px;
-      margin: 0 auto 20px;
-      filter: drop-shadow(0 16px 48px rgba(74,222,128,0.4));
-      animation: heroCleo 4s ease-in-out infinite, fadeInUp 0.8s ease-out;
-      object-fit: contain;
-      display: block;
-    }
-    @keyframes heroCleo {
-      0%,100% { transform: translateY(0) rotate(-2deg); }
-      50%      { transform: translateY(-16px) rotate(2deg); }
+      padding: 8px 20px; border-radius: 100px;
+      background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3);
+      font-size: 0.88rem; font-weight: 700; color: var(--green); margin-bottom: 20px;
     }
 
     .hero h1 {
-      font-size: clamp(2.8rem, 8vw, 5rem);
-      font-weight: 900; line-height: 1.05;
-      margin-bottom: 20px;
-      animation: fadeInUp 0.8s ease-out 0.2s both;
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      font-weight: 900; line-height: 1.1; margin-bottom: 20px; max-width: 900px;
     }
-    .hero h1 .highlight {
-      background: linear-gradient(135deg, var(--green), var(--blue));
+    .hero h1 span.gradient-text {
+      background: linear-gradient(135deg, #4ADE80, #38BDF8, #A855F7);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
     .hero-subtitle {
-      font-size: clamp(1rem, 3vw, 1.25rem);
-      color: rgba(255,255,255,0.7); max-width: 560px; margin: 0 auto 40px;
-      font-weight: 500;
-      animation: fadeInUp 0.8s ease-out 0.4s both;
+      font-size: clamp(1.05rem, 2.5vw, 1.25rem);
+      color: var(--muted); max-width: 650px; margin: 0 auto 36px; font-weight: 500;
     }
 
-    .hero-ctas {
-      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
-      animation: fadeInUp 0.8s ease-out 0.6s both;
+    .hero-actions {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-bottom: 48px;
     }
+
     .btn-hero-primary {
-      padding: 16px 36px; border-radius: 16px;
+      padding: 16px 36px; border-radius: 18px;
       background: linear-gradient(135deg, var(--green-d), var(--green-dd));
-      color: #fff; font-size: 1.1rem; font-weight: 800;
-      cursor: pointer; border: none;
-      box-shadow: 0 8px 32px rgba(34,197,94,0.4);
-      transition: all 0.25s; text-decoration: none;
+      color: #fff; font-size: 1.1rem; font-weight: 800; text-decoration: none;
+      box-shadow: 0 8px 30px rgba(34,197,94,0.4); transition: all 0.25s;
       display: inline-flex; align-items: center; gap: 10px;
     }
     .btn-hero-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 48px rgba(34,197,94,0.5);
-    }
-    .btn-hero-secondary {
-      padding: 16px 36px; border-radius: 16px;
-      background: rgba(255,255,255,0.08); color: #fff;
-      border: 1.5px solid rgba(255,255,255,0.2);
-      font-size: 1.1rem; font-weight: 700;
-      cursor: pointer; transition: all 0.25s; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 10px;
-    }
-    .btn-hero-secondary:hover {
-      background: rgba(255,255,255,0.14);
-      border-color: rgba(255,255,255,0.4);
-      transform: translateY(-2px);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 40px rgba(34,197,94,0.5);
     }
 
-    .hero-stats {
-      display: flex; flex-wrap: wrap; gap: 32px; justify-content: center;
-      margin-top: 56px;
-      animation: fadeInUp 0.8s ease-out 0.8s both;
+    .btn-hero-apk {
+      padding: 16px 32px; border-radius: 18px;
+      background: linear-gradient(135deg, #0284C7, #0369A1);
+      color: #fff; font-size: 1.05rem; font-weight: 800; text-decoration: none;
+      box-shadow: 0 8px 30px rgba(2,132,199,0.35); transition: all 0.25s;
+      display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.2);
     }
-    .stat-item { text-align: center; }
-    .stat-num {
-      font-size: 2rem; font-weight: 900;
-      background: linear-gradient(135deg, var(--green), var(--blue));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .stat-lbl { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
-
-    /* ── SECTIONS ── */
-    section { padding: 96px 24px; }
-    .section-inner { max-width: 1100px; margin: 0 auto; }
-
-    .section-tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 14px; border-radius: 100px;
-      font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-      margin-bottom: 16px;
-    }
-    .tag-green { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
-    .tag-blue  { background: rgba(56,189,248,0.1); color: var(--blue);  border: 1px solid rgba(56,189,248,0.3); }
-    .tag-purple{ background: rgba(139,92,246,0.1); color: var(--purple);border: 1px solid rgba(139,92,246,0.3); }
-    .tag-orange{ background: rgba(251,146,60,0.1); color: var(--orange);border: 1px solid rgba(251,146,60,0.3); }
-
-    .section-title {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 900; line-height: 1.1; margin-bottom: 16px;
-    }
-    .section-sub {
-      font-size: 1.05rem; color: rgba(255,255,255,0.6);
-      max-width: 560px; font-weight: 500; margin-bottom: 48px;
+    .btn-hero-apk:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 40px rgba(2,132,199,0.5);
     }
 
-    /* ── WHAT IS CLEDUCA ── */
-    .what-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    /* ── LIVE QUIZ DEMO WIDGET ── */
+    .live-quiz-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 24px; max-width: 480px; width: 100%;
+      margin: 0 auto; backdrop-filter: blur(12px); box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+      text-align: left;
     }
-    .what-img-wrap {
+    .quiz-question-title {
+      font-weight: 800; font-size: 1.1rem; margin-bottom: 14px; color: #fff;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .quiz-options-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .quiz-opt-btn {
+      background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 14px; padding: 12px; color: #fff; font-weight: 700;
+      font-size: 0.95rem; cursor: pointer; transition: all 0.2s; text-align: center;
+    }
+    .quiz-opt-btn:hover {
+      background: rgba(34,197,94,0.2); border-color: var(--green);
+    }
+
+    /* ── APK DOWNLOAD SECTION ── */
+    .apk-section {
+      padding: 80px 24px; background: linear-gradient(180deg, var(--dark), #0B1120);
       position: relative;
-      display: flex; align-items: center; justify-content: center;
     }
-    .what-cleo {
-      width: 260px; height: 260px; object-fit: contain;
-      filter: drop-shadow(0 16px 48px rgba(74,222,128,0.3));
-      animation: heroCleo 4s ease-in-out infinite;
+    .apk-banner-container {
+      max-width: 1000px; margin: 0 auto;
+      background: linear-gradient(135deg, rgba(2,132,199,0.2), rgba(168,85,247,0.15));
+      border: 2px solid rgba(56,189,248,0.3); border-radius: 32px; padding: 40px;
+      display: grid; grid-template-columns: 1fr 1.2fr; gap: 32px; align-items: center;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
     }
-    .what-glow {
-      position: absolute; width: 300px; height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(74,222,128,0.2), transparent);
+    .apk-badge {
+      display: inline-block; background: #0284C7; color: #fff; font-weight: 800;
+      font-size: 0.75rem; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px;
     }
-
-    .feature-list {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px;
+    .apk-steps-list {
+      list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 16px;
     }
-    .feature-item {
-      display: flex; flex-direction: column; gap: 10px; padding: 18px;
-      border-radius: var(--radius-sm); background: var(--card); border: 1px solid var(--card-b);
-      transition: all 0.25s;
+    .apk-step-item {
+      display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: rgba(255,255,255,0.9);
     }
-    .feature-item:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.2); }
-    .feature-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; flex-shrink: 0;
-    }
-    .feature-text h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 4px; }
-    .feature-text p { font-size: 0.85rem; color: var(--muted); line-height: 1.4; }
-    @media (max-width: 640px) {
-      .feature-list { grid-template-columns: 1fr; }
+    .apk-step-num {
+      width: 28px; height: 28px; border-radius: 50%; background: #38BDF8; color: #0F172A;
+      font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
 
-    /* ── FOR WHOM ── */
-    .for-whom-bg { background: var(--dark2); }
-    .personas-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;
+    /* ── TREASURE HUNT DEMO SECTION ── */
+    .game-demo-section {
+      padding: 90px 24px; background: var(--dark); text-align: center;
     }
-    .persona-card {
-      padding: 32px; border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,0.1);
+    .section-title {
+      font-family: 'Outfit', sans-serif; font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900; margin-bottom: 14px;
+    }
+    .section-subtitle {
+      color: var(--muted); max-width: 600px; margin: 0 auto 40px; font-size: 1.05rem;
+    }
+
+    .treasure-interactive-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+      max-width: 900px; margin: 0 auto;
+    }
+    .treasure-card-demo {
+      background: var(--card-bg); border: 2px solid rgba(245,158,11,0.3);
+      border-radius: var(--radius); padding: 24px; text-align: center; cursor: pointer;
       transition: all 0.3s; position: relative; overflow: hidden;
-      background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
     }
-    .persona-card::before {
-      content: ''; position: absolute; inset: 0;
-      opacity: 0; transition: opacity 0.3s;
-      border-radius: var(--radius);
-    }
-    .persona-card.kids::before   { background: linear-gradient(135deg, rgba(74,222,128,0.08), transparent); }
-    .persona-card.parents::before{ background: linear-gradient(135deg, rgba(56,189,248,0.08), transparent); }
-    .persona-card.schools::before{ background: linear-gradient(135deg, rgba(139,92,246,0.08), transparent); }
-    .persona-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.2); }
-    .persona-card:hover::before { opacity: 1; }
-
-    .persona-emoji { font-size: 3rem; margin-bottom: 16px; }
-    .persona-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
-    .persona-desc { color: rgba(255,255,255,0.65); font-size: 0.95rem; margin-bottom: 20px; }
-    .persona-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .persona-features li {
-      display: flex; align-items: center; gap: 10px; font-size: 0.9rem;
-    }
-    .persona-features li::before {
-      content: '✓'; width: 22px; height: 22px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
-    }
-    .kids .persona-features li::before   { background: rgba(74,222,128,0.2); color: var(--green); }
-    .parents .persona-features li::before{ background: rgba(56,189,248,0.2); color: var(--blue); }
-    .schools .persona-features li::before{ background: rgba(139,92,246,0.2); color: var(--purple); }
-
-    /* ── HOW IT WORKS ── */
-    .steps-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px;
-    }
-    .step-card {
-      text-align: center; padding: 40px 24px;
-      border-radius: var(--radius);
-      background: var(--card); border: 1px solid var(--card-b);
-      position: relative; transition: all 0.3s;
-    }
-    .step-card:hover { transform: translateY(-6px); }
-    .step-num {
-      position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
-      width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--green-d), var(--blue-d));
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 900; font-size: 0.9rem; color: #fff;
-      box-shadow: 0 4px 16px rgba(34,197,94,0.4);
-    }
-    .step-icon { font-size: 3rem; margin-bottom: 16px; }
-    .step-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
-    .step-desc { font-size: 0.9rem; color: var(--muted); }
-
-    /* ── SAFETY ── */
-    .safety-bg { background: var(--dark2); }
-    .safety-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
-    }
-    .safety-badges { display: flex; flex-direction: column; gap: 16px; }
-    .safety-badge {
-      display: flex; align-items: center; gap: 16px;
-      padding: 20px; border-radius: 16px;
-      background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.2);
-      transition: all 0.3s;
-    }
-    .safety-badge:hover { background: rgba(56,189,248,0.1); transform: translateX(4px); }
-    .safety-badge-icon {
-      width: 48px; height: 48px; border-radius: 12px;
-      background: rgba(56,189,248,0.15);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; flex-shrink: 0;
-    }
-    .safety-badge-text h4 { font-weight: 700; margin-bottom: 2px; }
-    .safety-badge-text p { font-size: 0.85rem; color: var(--muted); }
-
-    .privacy-highlight {
-      padding: 32px; border-radius: var(--radius);
-      background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(139,92,246,0.1));
-      border: 1px solid rgba(56,189,248,0.3);
-      text-align: center;
-    }
-    .privacy-highlight h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 12px; }
-    .privacy-highlight p { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
-
-    /* ── PRICING ── */
-    .pricing-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;
-      align-items: start;
-    }
-    .pricing-card {
-      padding: 32px; border-radius: var(--radius);
-      border: 1.5px solid rgba(255,255,255,0.1);
-      transition: all 0.3s; position: relative;
-      background: rgba(255,255,255,0.03);
-    }
-    .pricing-card.popular {
-      border-color: var(--purple);
-      background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(139,92,246,0.05));
-      transform: scale(1.03);
-    }
-    .pricing-card:hover:not(.popular) { transform: translateY(-4px); }
-    .pricing-card.popular:hover { transform: scale(1.05) translateY(-4px); }
-
-    .popular-badge {
-      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-      background: linear-gradient(135deg, var(--purple), var(--blue-d));
-      color: #fff; padding: 6px 20px; border-radius: 100px;
-      font-size: 0.75rem; font-weight: 800; white-space: nowrap;
-    }
-    .plan-header { margin-bottom: 24px; }
-    .plan-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
-    .plan-price {
-      font-size: 2.8rem; font-weight: 900; line-height: 1;
-    }
-    .plan-period { font-size: 1rem; font-weight: 500; color: var(--muted); }
-    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
-    .plan-features li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
-    .plan-features .check { color: var(--green); font-size: 1rem; }
-    .plan-features .x     { color: rgba(255,255,255,0.3); font-size: 1rem; }
-    .plan-features .muted { color: var(--muted); }
-
-    .btn-plan {
-      width: 100%; padding: 14px; border-radius: 14px;
-      font-weight: 700; font-size: 1rem; cursor: pointer;
-      border: none; transition: all 0.25s;
-    }
-    .btn-plan-free { background: rgba(255,255,255,0.1); color: #fff; }
-    .btn-plan-free:hover { background: rgba(255,255,255,0.18); }
-    .btn-plan-basic {
-      background: linear-gradient(135deg, #6366F1, #4F46E5);
-      color: #fff; box-shadow: 0 4px 16px rgba(99,102,241,0.4);
-    }
-    .btn-plan-basic:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.5); }
-    .btn-plan-popular {
-      background: linear-gradient(135deg, var(--purple), var(--blue-d));
-      color: #fff; box-shadow: 0 4px 16px rgba(139,92,246,0.4);
-    }
-    .btn-plan-popular:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(139,92,246,0.5); }
-
-    /* ── INSTITUTIONAL ── */
-    .institutional-bg {
-      background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(56,189,248,0.08));
-    }
-    .institutional-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
-    }
-    .institution-features { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
-    .institution-feat {
-      display: flex; align-items: center; gap: 12px;
-      font-weight: 600;
-    }
-    .institution-feat-icon {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: rgba(139,92,246,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; flex-shrink: 0;
+    .treasure-card-demo:hover {
+      transform: translateY(-6px); border-color: #F59E0B;
+      box-shadow: 0 12px 30px rgba(245,158,11,0.3);
     }
 
-    .contact-form {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: var(--radius);
-      padding: 36px;
+    /* ── FLYER SHOWCASE SECTION ── */
+    .flyer-section {
+      padding: 90px 24px; background: linear-gradient(180deg, #0B1120, var(--dark)); text-align: center;
     }
-    .contact-form h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 24px; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label {
-      display: block; font-size: 0.85rem; font-weight: 600;
-      color: rgba(255,255,255,0.7); margin-bottom: 6px;
+    .flyer-wrapper {
+      max-width: 800px; margin: 0 auto; position: relative; border-radius: 32px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.15);
     }
-    .form-input {
-      width: 100%; padding: 12px 16px; border-radius: 12px;
-      background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.12);
-      color: #fff; font-family: inherit; font-size: 0.95rem;
-      transition: all 0.2s; outline: none;
+    .flyer-img {
+      width: 100%; height: auto; display: block; object-fit: cover; transition: transform 0.4s;
     }
-    .form-input::placeholder { color: rgba(255,255,255,0.3); }
-    .form-input:focus { border-color: var(--purple); background: rgba(255,255,255,0.12); }
-    select.form-input option { background: var(--dark2); color: #fff; }
+    .flyer-wrapper:hover .flyer-img { transform: scale(1.02); }
 
-    .btn-submit {
-      width: 100%; padding: 14px; border-radius: 14px;
-      background: linear-gradient(135deg, var(--purple), var(--blue-d));
-      color: #fff; font-size: 1rem; font-weight: 800;
-      cursor: pointer; border: none;
-      box-shadow: 0 4px 16px rgba(139,92,246,0.4);
-      transition: all 0.25s; margin-top: 8px;
+    /* ── FEATURES GRID ── */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;
+      max-width: 1100px; margin: 0 auto; padding: 60px 24px;
     }
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(139,92,246,0.5); }
-    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-    /* ── PQR ── */
-    .pqr-form { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; }
-
-    /* ── TESTIMONIALS ── */
-    .testimonials-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;
+    .feature-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 28px; text-align: left;
+      transition: transform 0.25s;
     }
-    .testimonial {
-      padding: 24px; border-radius: var(--radius-sm);
-      background: var(--card); border: 1px solid var(--card-b);
+    .feature-card:hover { transform: translateY(-4px); }
+    .feature-icon {
+      font-size: 2.5rem; margin-bottom: 14px; display: inline-block;
     }
-    .testimonial-text { font-style: italic; color: rgba(255,255,255,0.8); margin-bottom: 16px; font-size: 0.95rem; }
-    .testimonial-author { display: flex; align-items: center; gap: 12px; }
-    .testimonial-avatar {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--green), var(--blue));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
-    }
-    .testimonial-name { font-weight: 700; font-size: 0.9rem; }
-    .testimonial-role { font-size: 0.8rem; color: var(--muted); }
-
-    /* ── CTA FINAL ── */
-    .final-cta {
-      text-align: center; padding: 96px 24px;
-      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(74,222,128,0.12), transparent);
-    }
-    .final-cta h2 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 20px; }
-    .final-cta p { color: rgba(255,255,255,0.65); font-size: 1.1rem; margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .feature-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; color: #fff; }
+    .feature-desc { color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
 
     /* ── FOOTER ── */
     footer {
-      background: var(--dark2); border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 48px 24px 24px;
+      padding: 40px 24px; text-align: center; border-top: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted); font-size: 0.9rem;
     }
-    .footer-inner { max-width: 1100px; margin: 0 auto; }
-    .footer-grid {
-      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px;
-    }
-    .footer-brand p { color: var(--muted); font-size: 0.9rem; margin-top: 12px; max-width: 280px; }
-    .footer-col h4 { font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
-    .footer-col a { display: block; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.9rem; margin-bottom: 8px; transition: color 0.2s; }
-    .footer-col a:hover { color: #fff; }
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px;
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: gap;
-      font-size: 0.8rem; color: var(--muted);
-    }
+    footer a { color: var(--green); text-decoration: none; }
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeInDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes fadeInUp   { from { opacity:0; transform:translateY(24px);  } to { opacity:1; transform:translateY(0); } }
-    @keyframes pulse-green {
-      0%,100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.6); }
-      50%      { box-shadow: 0 0 0 6px rgba(74,222,128,0); }
-    }
-
-    .reveal {
-      opacity: 1; transform: translateY(0); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* ── SCROLL SNAP REMOVED FOR SMOOTH NATURAL SCROLL ── */
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: var(--dark);
-      color: #fff;
-      overflow-x: hidden;
-      line-height: 1.6;
-    }
-
-    .nav-link.active {
-      color: var(--green) !important;
-      background: rgba(74,222,128,0.12) !important;
-      font-weight: 700;
-    }
-
-    /* ── MOBILE ── */
     @media (max-width: 768px) {
       .navbar { padding: 12px 16px; }
       .nav-links .nav-link { display: none; }
-      .hero { padding: 80px 16px 48px; }
-      .what-grid, .safety-grid, .institutional-grid { grid-template-columns: 1fr; gap: 32px; }
-      .what-img-wrap { order: -1; }
-      .what-cleo { width: 180px; height: 180px; }
-      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-      .hero-stats { gap: 24px; }
-      .pricing-card.popular { transform: scale(1); }
-    }
-    @media (max-width: 480px) {
-      .footer-grid { grid-template-columns: 1fr; }
-      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
-    }
-
-    /* ── HAMBURGER (mobile) ── */
-    .hamburger {
-      display: none; flex-direction: column; gap: 5px; cursor: pointer;
-      padding: 4px; border: none; background: none;
-    }
-    .hamburger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s; }
-    @media (max-width: 640px) { .hamburger { display: flex; } }
-
-    /* ── Scroll progress ── */
-    .scroll-progress {
-      position: fixed; top: 0; left: 0; height: 3px; z-index: 2000;
-      background: linear-gradient(90deg, var(--green), var(--blue));
-      transition: width 0.1s linear;
+      .apk-banner-container { grid-template-columns: 1fr; padding: 24px; text-align: center; }
+      .apk-step-item { justify-content: center; }
     }
   </style>
 </head>
 <body>
 
-<!-- Scroll progress -->
-<div class="scroll-progress" id="scroll-progress"></div>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <img src="img/Logo_cleduca_transparente.png" alt="Cleduca Logo" class="nav-logo" onerror="this.src='../img/Logo_cleduca_transparente.png'">
+      <span class="nav-brand-text">Cleduca</span>
+    </a>
+    <div class="nav-links">
+      <a href="#apk" class="nav-link">Descargar APK</a>
+      <a href="#tesoro" class="nav-link">Búsqueda del Tesoro</a>
+      <a href="#flyer" class="nav-link">Flyer Oficial</a>
+      <a href="cleduca.apk" download class="btn-nav-apk">
+        <span>📱</span> APK Android
+      </a>
+      <a href="/app/" class="btn-nav-app">
+        <span>🚀</span> Abrir App Web
+      </a>
+    </div>
+  </nav>
 
-<!-- ═══ NAVBAR ═══ -->
-<nav class="navbar" id="navbar">
-  <a href="/" class="nav-brand">
-    <img src="img/Logo_cleduca_transparente.png" alt="Cleduca Logo" class="nav-logo">
-    <span class="nav-brand-text">Cleduca</span>
-  </a>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-bg"></div>
 
-  <div class="nav-links">
-    <a href="#que-es" class="nav-link">¿Qué es?</a>
-    <a href="#como-funciona" class="nav-link">Cómo funciona</a>
-    <a href="#precios" class="nav-link">Planes</a>
-    <a href="#instituciones" class="nav-link">Instituciones</a>
-    <a href="/app/" class="btn-nav btn-ghost-nav">Iniciar sesión</a>
-    <a href="/app/" class="btn-nav btn-primary-nav">🚀 Jugar gratis</a>
-  </div>
+    <!-- SPEAKING CLEO MASCOT WIDGET -->
+    <div class="speaking-cleo-box" onclick="speakCleoWelcome()">
+      <div class="cleo-speech-bubble" id="cleoBubbleText">🗣️ ¡Haz clic para escucharme!</div>
+      <img src="img/Logo_cleduca_transparente.png" alt="Mascota Cleo" class="speaking-cleo-avatar" onerror="this.src='../img/Logo_cleduca_transparente.png'">
+    </div>
 
-  <button class="hamburger" id="hamburger" aria-label="Menú">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<!-- ═══ HERO ═══ -->
-<section class="hero" id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-orbs">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-  </div>
-
-  <div class="hero-content">
     <div class="hero-badge">
-      <div class="badge-dot"></div>
-      🇨🇴 Diseñado para niños colombianos
+      <span style="font-size:1.1rem;">🇨🇴</span> Alineado con el Currículo del Ministerio de Educación de Colombia
     </div>
 
-    <h1>
-      Aprender nunca fue<br>
-      <span class="highlight">tan divertido</span> 🎮
-    </h1>
+    <h1>Aprender nunca fue tan <br><span class="gradient-text">Divertido y Mágico</span></h1>
+
     <p class="hero-subtitle">
-      Cleduca es la plataforma educativa gamificada donde los niños aprenden matemáticas, lenguaje, ciencias y más jugando con <strong>Cleo</strong>, su mascota husky compañera de aventuras.
+      Más de 25 minijuegos interactivos de Matemáticas, Lenguaje, Ciencias y Lógica para estudiantes de 1° a 5° de Primaria.
     </p>
 
-    <div class="hero-ctas">
-      <a href="/app/" id="hero-cta-primary" class="btn-hero-primary">
-        🚀 Empezar gratis ahora
+    <div class="hero-actions">
+      <a href="/app/" class="btn-hero-primary">
+        <span>🎮</span> ¡Jugar Ahora Gratis!
       </a>
-      <a href="#que-es" class="btn-hero-secondary">
-        ▶ Ver cómo funciona
+      <a href="cleduca.apk" download class="btn-hero-apk">
+        <span>📥</span> Descargar APK Android
       </a>
     </div>
 
-    <div class="hero-stats">
-      <div class="stat-item">
-        <div class="stat-num">5+</div>
-        <div class="stat-lbl">Materias</div>
+    <!-- LIVE INTERACTIVE QUIZ DEMO WIDGET -->
+    <div class="live-quiz-card">
+      <div class="quiz-question-title">
+        <span>⚡ Reto Rápido de Cleo:</span>
+        <span style="color:var(--yellow);margin-left:auto;">+50 XP 🪙</span>
       </div>
-      <div class="stat-item">
-        <div class="stat-num">100+</div>
-        <div class="stat-lbl">Actividades</div>
+      <p style="font-size:1.05rem;font-weight:700;margin-bottom:16px;color:rgba(255,255,255,0.9);">
+        Si Cleo encuentra 8 rubíes en la Cueva y 7 zafiros en la Playa, ¿cuántas gemas tiene en total?
+      </p>
+      <div class="quiz-options-grid">
+        <button class="quiz-opt-btn" onclick="answerDemoQuiz(false, this)">A) 13 gemas</button>
+        <button class="quiz-opt-btn" onclick="answerDemoQuiz(true, this)">B) 15 gemas ✨</button>
+        <button class="quiz-opt-btn" onclick="answerDemoQuiz(false, this)">C) 14 gemas</button>
+        <button class="quiz-opt-btn" onclick="answerDemoQuiz(false, this)">D) 16 gemas</button>
       </div>
-      <div class="stat-item">
-        <div class="stat-num">1°–5°</div>
-        <div class="stat-lbl">Grados cubiertos</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">100%</div>
-        <div class="stat-lbl">Supervisión parental</div>
-      </div>
+      <div id="demoQuizResult" style="margin-top:12px;font-weight:800;font-size:0.92rem;text-align:center;display:none;"></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ═══ ¿QUÉ ES? ═══ -->
-<section id="que-es" style="padding:80px 24px;">
-  <div class="section-inner">
-    <div class="what-grid">
-      <div class="what-img-wrap reveal">
-        <div class="what-glow"></div>
-        <div style="background:linear-gradient(135deg,rgba(74,222,128,0.12),rgba(56,189,248,0.12));border:1px solid rgba(255,255,255,0.15);border-radius:28px;padding:32px 24px;text-align:center;">
-          <!-- Cleo Logo Animado aquí -->
-          <img src="img/Logo_cleduca_transparente.png" alt="Cleo" style="width:170px;height:170px;object-fit:contain;margin:0 auto 16px;display:block;filter:drop-shadow(0 12px 32px rgba(74,222,128,0.4));animation:heroCleo 4s ease-in-out infinite;">
-          <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:6px;color:var(--green);">Aprender es el Juego</h3>
-          <p style="font-size:0.88rem;color:var(--muted);">Estudia Matemáticas, Lenguaje, Ciencias y Programación mientras ganas XP y subes de nivel.</p>
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="section-tag tag-green">🐶 ¿Qué es Cleduca?</div>
-        <h2 class="section-title">Una app donde aprender <em>es el juego</em></h2>
-        <p class="section-sub">Combinamos el currículo escolar colombiano con mecánicas de videojuego para que los niños quieran aprender sin que nadie se los pida.</p>
-        
-        <div class="feature-list" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
-          <div class="feature-item" style="padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--card-b);">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-              <div style="background:rgba(74,222,128,0.15);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">🎮</div>
-              <h3 style="font-size:0.95rem;font-weight:800;margin:0;">Gamificación real</h3>
-            </div>
-            <p style="font-size:0.8rem;color:var(--muted);margin:0;line-height:1.4;">XP, niveles, rachas y premios.</p>
-          </div>
-
-          <div class="feature-item" style="padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--card-b);">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-              <div style="background:rgba(56,189,248,0.15);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📚</div>
-              <h3 style="font-size:0.95rem;font-weight:800;margin:0;">Currículo nacional</h3>
-            </div>
-            <p style="font-size:0.8rem;color:var(--muted);margin:0;line-height:1.4;">Estándares del Ministerio MEN.</p>
-          </div>
-
-          <div class="feature-item" style="padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--card-b);">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-              <div style="background:rgba(251,146,60,0.15);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">🐶</div>
-              <h3 style="font-size:0.95rem;font-weight:800;margin:0;">Mascota Cleo</h3>
-            </div>
-            <p style="font-size:0.8rem;color:var(--muted);margin:0;line-height:1.4;">Te alienta y celebra contigo.</p>
-          </div>
-
-          <div class="feature-item" style="padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--card-b);">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-              <div style="background:rgba(139,92,246,0.15);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📱</div>
-              <h3 style="font-size:0.95rem;font-weight:800;margin:0;">Sin descargas</h3>
-            </div>
-            <p style="font-size:0.8rem;color:var(--muted);margin:0;line-height:1.4;">Accede directo desde la web.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SEGURIDAD ═══ -->
-<section id="seguridad" class="safety-bg" style="padding:80px 24px;">
-  <div class="section-inner" style="max-width:900px;margin:0 auto;text-align:center;">
-    <div class="reveal" style="margin-bottom:32px;">
-      <div class="section-tag tag-blue" style="margin:0 auto 12px;">🛡️ Entorno 100% Seguro</div>
-      <h2 class="section-title">Diseñado con privacidad para la tranquilidad de los padres</h2>
-      <p class="section-sub" style="margin:0 auto;">Protegemos los datos de tus hijos en todo momento conforme a la Ley 1581 de Colombia.</p>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:20px;text-align:center;">
-      <div class="safety-badge" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);">
-        <div style="margin-bottom:12px;font-size:2.2rem;">🚫</div>
-        <div class="safety-badge-text">
-          <h4 style="margin:0 0 6px;font-size:1.05rem;color:#fff;">Sin anuncios inapropiados</h4>
-          <p style="margin:0;font-size:0.85rem;color:var(--muted);">Los niños disfrutan un ambiente enfocado únicamente en aprender.</p>
-        </div>
-      </div>
-      <div class="safety-badge" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);">
-        <div style="margin-bottom:12px;font-size:2.2rem;">🔒</div>
-        <div class="safety-badge-text">
-          <h4 style="margin:0 0 6px;font-size:1.05rem;color:#fff;">Supervisión de Padres</h4>
-          <p style="margin:0;font-size:0.85rem;color:var(--muted);">Control de perfiles, contraseñas y reporte de avances semanal.</p>
-        </div>
-      </div>
-      <div class="safety-badge" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);">
-        <div style="margin-bottom:12px;font-size:2.2rem;">🇨🇴</div>
-        <div class="safety-badge-text">
-          <h4 style="margin:0 0 6px;font-size:1.05rem;color:#fff;">Cifrado de Datos Ley 1581</h4>
-          <p style="margin:0;font-size:0.85rem;color:var(--muted);">Base de datos Supabase cifrada con los mejores estándares.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ PRECIOS ═══ -->
-<section id="precios" style="padding:80px 24px;">
-  <div class="section-inner">
-    <div style="text-align:center;margin-bottom:48px;" class="reveal">
-      <div class="section-tag tag-green">💳 Planes y precios</div>
-      <h2 class="section-title">Elige el plan ideal para tu familia</h2>
-      <p class="section-sub" style="margin:0 auto;">Empieza gratis y actualiza cuando quieras. Cancela en cualquier momento sin compromisos.</p>
-    </div>
-
-    <div class="pricing-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:24px;align-items:stretch;max-width:1080px;margin:0 auto;">
-      <!-- Plan Gratuito -->
-      <div class="pricing-card reveal" style="padding:32px 24px;border-radius:24px;background:var(--card);border:1px solid var(--card-b);display:flex;flex-direction:column;justify-content:space-between;">
-        <div>
-          <div class="plan-header" style="text-align:center;margin-bottom:20px;">
-            <div style="font-size:1.5rem;margin-bottom:6px;">🆓</div>
-            <div class="plan-name" style="font-size:1.3rem;font-weight:800;">Gratuito</div>
-            <div style="margin-top:8px;">
-              <span class="plan-price" style="font-size:2.2rem;font-weight:900;">$0</span>
-              <span class="plan-period" style="color:var(--muted);">/siempre</span>
-            </div>
-          </div>
-          <ul class="plan-features" style="list-style:none;padding:0;margin:0 0 24px;font-size:0.9rem;line-height:2.2;">
-            <li><span style="color:var(--green);font-weight:900;">✓</span> 1 perfil de estudiante</li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> Todos los mini-juegos básicos</li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> Registro de XP y racha</li>
-            <li><span style="color:var(--muted);">✗</span> <span style="color:var(--muted);">Sin reportes avanzados</span></li>
-          </ul>
-        </div>
-        <a href="/app/" class="btn-plan btn-plan-free" style="display:block;text-align:center;text-decoration:none;padding:14px;border-radius:14px;background:rgba(255,255,255,0.1);color:#fff;font-weight:800;">Probar Gratis</a>
-      </div>
-
-      <!-- Plan Básico -->
-      <div class="pricing-card popular reveal" style="padding:32px 24px;border-radius:24px;background:linear-gradient(135deg,rgba(56,189,248,0.15),rgba(74,222,128,0.15));border:2px solid #38BDF8;box-shadow:0 16px 40px rgba(0,0,0,0.3);position:relative;display:flex;flex-direction:column;justify-content:space-between;">
-        <div class="popular-badge" style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#38BDF8;color:#0F172A;font-weight:900;font-size:0.75rem;padding:4px 14px;border-radius:20px;letter-spacing:0.5px;">MÁS POPULAR ⭐</div>
-        <div>
-          <div class="plan-header" style="text-align:center;margin-bottom:20px;">
-            <div style="font-size:1.5rem;margin-bottom:6px;">⭐</div>
-            <div class="plan-name" style="font-size:1.3rem;font-weight:800;color:#38BDF8;">Premium Básico</div>
-            <div style="margin-top:8px;">
-              <span class="plan-price" style="font-size:2.2rem;font-weight:900;color:#38BDF8;">$9.900</span>
-              <span class="plan-period" style="color:var(--muted);">/mes</span>
-            </div>
-            <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">1 hijo · Mensual</div>
-          </div>
-          <ul class="plan-features" style="list-style:none;padding:0;margin:0 0 24px;font-size:0.9rem;line-height:2.2;">
-            <li><span style="color:var(--green);font-weight:900;">✓</span> 1 perfil con acceso ilimitado</li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> <strong>Vidas ilimitadas</strong></li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> <strong>Sin anuncios ni pausas</strong></li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> Reportes semanales al correo</li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> Todos los accesorios de Cleo</li>
-          </ul>
-        </div>
-        <button class="btn-plan btn-plan-popular" id="btn-plan-basico" onclick="initWompiCheckout('basico')" style="width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#38BDF8,#0284C7);color:#fff;font-weight:800;cursor:pointer;">
-          💳 Suscribirme — $9.900/mes
-        </button>
-      </div>
-
-      <!-- Plan Familiar -->
-      <div class="pricing-card reveal" style="padding:32px 24px;border-radius:24px;background:var(--card);border:1px solid var(--card-b);display:flex;flex-direction:column;justify-content:space-between;">
-        <div>
-          <div class="plan-header" style="text-align:center;margin-bottom:20px;">
-            <div style="font-size:1.5rem;margin-bottom:6px;">👨‍👩‍👧‍👦</div>
-            <div class="plan-name" style="font-size:1.3rem;font-weight:800;color:var(--purple);">Premium Familiar</div>
-            <div style="margin-top:8px;">
-              <span class="plan-price" style="font-size:2.2rem;font-weight:900;color:var(--purple);">$19.900</span>
-              <span class="plan-period" style="color:var(--muted);">/mes</span>
-            </div>
-            <div style="font-size:0.78rem;color:var(--muted);margin-top:4px;">Hasta 5 hijos · Toda la familia</div>
-          </div>
-          <ul class="plan-features" style="list-style:none;padding:0;margin:0 0 24px;font-size:0.9rem;line-height:2.2;">
-            <li><span style="color:var(--green);font-weight:900;">✓</span> Hasta 5 perfiles independientes</li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> Vidas ilimitadas para todos</li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> Sin anuncios para la familia</li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> Reportes detallados por hijo</li>
-            <li><span style="color:var(--green);font-weight:900;">✓</span> Soporte prioritario WhatsApp</li>
-          </ul>
-        </div>
-        <button class="btn-plan btn-plan-basic" id="btn-plan-familiar" onclick="initWompiCheckout('familiar')" style="width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--purple),#7C3AED);color:#fff;font-weight:800;cursor:pointer;">
-          👨‍👩‍👧‍👦 Plan Familiar — $19.900/mes
-        </button>
-      </div>
-    </div>
-
-    <p style="text-align:center;margin-top:24px;color:var(--muted);font-size:0.85rem;">
-      🔒 Pago seguro con Wompi · Sin permanencia mínima · Facturas disponibles
-    </p>
-  </div>
-</section>
-
-<!-- ═══ INSTITUCIONES ═══ -->
-<section id="instituciones" class="institutional-bg" style="padding:80px 24px;">
-  <div class="section-inner">
-    <div class="institutional-grid">
-      <div class="reveal">
-        <div class="section-tag tag-purple">🏫 Canal Institucional</div>
-        <h2 class="section-title">¿Eres docente o diriges un colegio?</h2>
-        <p class="section-sub">Cleduca tiene un canal B2B especial para instituciones educativas con herramientas pensadas para el aula y el hogar.</p>
-
-        <div class="institution-features">
-          <div class="institution-feat">
-            <div class="institution-feat-icon">📊</div>
-            Panel docente con progreso de cada alumno en tiempo real
-          </div>
-          <div class="institution-feat">
-            <div class="institution-feat-icon">🎯</div>
-            Asignación de actividades alineadas al plan de estudios
-          </div>
-          <div class="institution-feat">
-            <div class="institution-feat-icon">🚫</div>
-            Sin publicidad para todos los estudiantes de la licencia
-          </div>
-          <div class="institution-feat">
-            <div class="institution-feat-icon">📈</div>
-            Reportes exportables de avance semanal y mensual
-          </div>
-          <div class="institution-feat">
-            <div class="institution-feat-icon">💼</div>
-            Factura electrónica y compra por convenio institucional
-          </div>
-          <div class="institution-feat">
-            <div class="institution-feat-icon">🎓</div>
-            Soporte prioritario y capacitación a docentes
-          </div>
-        </div>
-
-        <div style="margin-top:8px;padding:20px;border-radius:14px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);">
-          <div style="font-size:1.1rem;font-weight:700;margin-bottom:4px;">💬 ¿Cuánto cuesta?</div>
-          <p style="color:rgba(255,255,255,0.7);font-size:0.9rem;">
-            El precio depende del número de estudiantes y el plazo. Completando el formulario te enviamos una propuesta personalizada en menos de 24 horas.
-          </p>
-        </div>
-      </div>
-
-      <!-- Formulario de contacto institucional -->
-      <div class="reveal">
-        <form class="contact-form" id="institutional-form" onsubmit="submitInstitutionalForm(event)">
-          <h3>📩 Solicitar propuesta institucional</h3>
-
-          <div class="form-group">
-            <label for="inst-name">Nombre completo *</label>
-            <input type="text" id="inst-name" class="form-input" placeholder="Tu nombre" required>
-          </div>
-          <div class="form-group">
-            <label for="inst-role">Cargo *</label>
-            <select id="inst-role" class="form-input" required>
-              <option value="">Selecciona tu rol...</option>
-              <option value="docente">Docente</option>
-              <option value="rector">Rector/Director</option>
-              <option value="coordinador">Coordinador académico</option>
-              <option value="padre">Padre de familia (grupo)</option>
-              <option value="otro">Otro</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="inst-school">Nombre de la institución *</label>
-            <input type="text" id="inst-school" class="form-input" placeholder="Nombre del colegio..." required>
-          </div>
-          <div class="form-group">
-            <label for="inst-students">Número de estudiantes aproximado *</label>
-            <select id="inst-students" class="form-input" required>
-              <option value="">Selecciona rango...</option>
-              <option value="1-30">1 – 30</option>
-              <option value="31-100">31 – 100</option>
-              <option value="101-300">101 – 300</option>
-              <option value="300+">Más de 300</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="inst-email">Correo institucional *</label>
-            <input type="email" id="inst-email" class="form-input" placeholder="correo@institucion.edu.co" required>
-          </div>
-          <div class="form-group">
-            <label for="inst-phone">WhatsApp (opcional)</label>
-            <input type="tel" id="inst-phone" class="form-input" placeholder="+57 300 000 0000">
-          </div>
-
-          <button type="submit" class="btn-submit" id="inst-submit">
-            🏫 Enviar solicitud institucional
-          </button>
-          <p style="text-align:center;font-size:0.78rem;color:var(--muted);margin-top:12px;">
-            Te respondemos en menos de 24 horas hábiles
-          </p>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ PQR / ATENCIÓN AL CLIENTE ═══ -->
-<section id="pqr" style="background:var(--dark2);padding:80px 24px;">
-  <div class="section-inner" style="max-width:800px;margin:0 auto;">
-    <div style="text-align:center;margin-bottom:32px;" class="reveal">
-      <div class="section-tag tag-purple">📩 PQR & Atención al Cliente</div>
-      <h2 class="section-title">Peticiones, Quejas, Reclamos y Sugerencias</h2>
-      <p class="section-sub">Tu tranquilidad y la de tu familia son nuestra prioridad. Responderemos a tu solicitud en menos de 24 horas.</p>
-    </div>
-
-    <div class="contact-form reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:32px;">
-      <form id="pqr-form" onsubmit="submitPQR(event)">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="form-group">
-            <label for="pqr-name">Nombre Completo *</label>
-            <input type="text" id="pqr-name" class="form-input" placeholder="Tu nombre" required>
-          </div>
-          <div class="form-group">
-            <label for="pqr-email">Correo Electrónico *</label>
-            <input type="email" id="pqr-email" class="form-input" placeholder="tu@correo.com" required>
-          </div>
-        </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
-          <div class="form-group">
-            <label for="pqr-type">Tipo de Solicitud *</label>
-            <select id="pqr-type" class="form-input" required style="background:var(--dark2);color:#fff;">
-              <option value="peticion">Petición</option>
-              <option value="queja">Queja</option>
-              <option value="reclamo">Reclamo</option>
-              <option value="sugerencia">Sugerencia</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="pqr-phone">Teléfono / WhatsApp (opcional)</label>
-            <input type="tel" id="pqr-phone" class="form-input" placeholder="+57 300 000 0000">
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-top:12px;">
-          <label for="pqr-message">Detalle de tu mensaje *</label>
-          <textarea id="pqr-message" class="form-input" rows="4" placeholder="Describe aquí tu solicitud..." required style="resize:vertical;"></textarea>
-        </div>
-
-        <button type="submit" class="btn-submit" id="pqr-btn" style="margin-top:16px;">
-          📤 Enviar Solicitud PQR
-        </button>
-        <div id="pqr-response" style="margin-top:12px;display:none;text-align:center;font-weight:700;color:var(--green);"></div>
-      </form>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ TESTIMONIOS ═══ -->
-<section id="testimonios" style="padding:80px 24px;">
-  <div class="section-inner">
-    <div style="text-align:center;margin-bottom:48px;" class="reveal">
-      <div class="section-tag tag-green">💬 Lo que dicen</div>
-      <h2 class="section-title">Familias que ya aprenden con Cleo</h2>
-    </div>
-
-    <div class="testimonials-grid">
-      <div class="testimonial reveal">
-        <p class="testimonial-text">"Mi hijo de 8 años ahora pide usar Cleduca antes de ver televisión. Nunca pensé que diría algo así sobre una app de matemáticas."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">👩</div>
-          <div>
-            <div class="testimonial-name">Carolina M.</div>
-            <div class="testimonial-role">Mamá · Bogotá</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial reveal">
-        <p class="testimonial-text">"Lo usamos en mi salón de 3° primaria y el engagement es increíble. Los niños llegan preguntando si van a jugar Cleduca."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">👨‍🏫</div>
-          <div>
-            <div class="testimonial-name">Profesor Andrés V.</div>
-            <div class="testimonial-role">Docente · Medellín</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial reveal">
-        <p class="testimonial-text">"Tenemos 3 hijos y el plan familiar nos sale mucho más económico que las clases particulares. El avance de los tres ha sido visible."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">👨</div>
-          <div>
-            <div class="testimonial-name">Ricardo P.</div>
-            <div class="testimonial-role">Papá · Cali</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ CTA FINAL ═══ -->
-<section class="final-cta">
-  <div class="section-inner">
-    <img src="img/Logo_cleduca_transparente.png" alt="Cleo" style="width:120px;height:120px;object-fit:contain;margin:0 auto 24px;display:block;filter:drop-shadow(0 8px 24px rgba(74,222,128,0.4));animation:heroCleo 3s ease-in-out infinite;" class="reveal">
-    <h2 class="reveal">¿Listo para empezar la aventura? 🚀</h2>
-    <p class="reveal">Crea tu cuenta gratis hoy y descubre por qué Cleo es el mejor compañero de aprendizaje para tus hijos.</p>
-    <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;" class="reveal">
-      <a href="/app/" class="btn-hero-primary">🐶 Jugar gratis con Cleo</a>
-      <a href="#precios" class="btn-hero-secondary">Ver planes Premium</a>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ FOOTER ═══ -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="/" class="nav-brand">
-          <img src="img/Logo_cleduca_transparente.png" alt="Cleduca" style="width:36px;height:36px;object-fit:contain;">
-          <span class="nav-brand-text">Cleduca</span>
+  <!-- APK DOWNLOAD SECTION -->
+  <section class="apk-section" id="apk">
+    <div class="apk-banner-container">
+      <div>
+        <span class="apk-badge">🤖 Android App Oficial</span>
+        <h2 style="font-family:'Outfit',sans-serif;font-size:2.2rem;font-weight:900;margin-bottom:12px;line-height:1.2;">
+          Descarga la APK Directamente en tu Celular
+        </h2>
+        <p style="color:var(--muted);font-size:0.98rem;margin-bottom:24px;">
+          Instala Cleduca en dispositivos Android sin depender de tiendas de aplicaciones. ¡Ligera, rápida y lista para jugar offline!
+        </p>
+        <a href="cleduca.apk" download class="btn-hero-apk" style="width:100%;justify-content:center;">
+          <span>📲</span> Descargar cleduca.apk (v2.7)
         </a>
-        <p>La plataforma educativa gamificada diseñada para niños colombianos. Aprende, juega y crece con Cleo. 🇨🇴</p>
       </div>
-      <div class="footer-col">
-        <h4>Producto</h4>
-        <a href="#que-es">¿Qué es Cleduca?</a>
-        <a href="#como-funciona">Cómo funciona</a>
-        <a href="#precios">Planes y precios</a>
-        <a href="/app/">Acceder a la app</a>
-      </div>
-      <div class="footer-col">
-        <h4>Instituciones</h4>
-        <a href="#instituciones">Para docentes</a>
-        <a href="#instituciones">Para colegios</a>
-        <a href="#instituciones">Solicitar propuesta</a>
-      </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <a href="/privacidad.html">Política de privacidad</a>
-        <a href="/terminos.html">Términos de uso</a>
-        <a href="mailto:hola@cleduca.com">Contacto</a>
-        <a href="/admin/" style="opacity:0.4;font-size:0.8rem;">Admin ↗</a>
+
+      <div style="background:rgba(15,23,42,0.6);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);">
+        <h4 style="font-size:1.05rem;font-weight:800;margin-bottom:14px;color:var(--green);">📋 Pasos sencillos para instalar:</h4>
+        <ul class="apk-steps-list">
+          <li class="apk-step-item">
+            <span class="apk-step-num">1</span>
+            <span>Haz clic en el botón de arriba para descargar el archivo <strong>cleduca.apk</strong>.</span>
+          </li>
+          <li class="apk-step-item">
+            <span class="apk-step-num">2</span>
+            <span>Abre la notificación de descarga o tu navegador.</span>
+          </li>
+          <li class="apk-step-item">
+            <span class="apk-step-num">3</span>
+            <span>Si Android lo requiere, activa la opción <em>"Permitir instalar aplicaciones de orígenes desconocidos"</em>.</span>
+          </li>
+          <li class="apk-step-item">
+            <span class="apk-step-num">4</span>
+            <span>¡Toca en Instalar y empieza a aprender con Cleo! 🎉</span>
+          </li>
+        </ul>
       </div>
     </div>
+  </section>
 
-    <div class="footer-bottom">
-      <div>© 2026 Cleduca. Todos los derechos reservados.</div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span>🇨🇴 Hecho con ❤️ en Colombia</span>
-        <span>·</span>
-        <span>Pagos con</span>
-        <img src="https://wompi.co/assets/images/logo.svg" alt="Wompi" style="height:16px;filter:brightness(0.7);" onerror="this.style.display='none'">
+  <!-- TREASURE HUNT DEMO SECTION -->
+  <section class="game-demo-section" id="tesoro">
+    <h2 class="section-title">🗺️ Minijuego Destacado: Búsqueda del Tesoro</h2>
+    <p class="section-subtitle">
+      Explora islas misteriosas, resuelve acertijos del currículo escolar y desentierra cofres piratas llenos de recompensas XP.
+    </p>
+
+    <div class="treasure-interactive-grid">
+      <div class="treasure-card-demo" onclick="openDemoTreasure(this, '🏴‍☠️ Isla de Rubíes', 30)">
+        <div style="font-size:3.5rem;margin-bottom:10px;">🏝️</div>
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:6px;">Isla de Rubíes</h3>
+        <p style="color:var(--muted);font-size:0.85rem;">Toca para cavar y abrir el cofre pirata</p>
       </div>
+
+      <div class="treasure-card-demo" onclick="openDemoTreasure(this, '💎 Cueva de Zafiros', 40)">
+        <div style="font-size:3.5rem;margin-bottom:10px;">⚓</div>
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:6px;">Bahía del Coral</h3>
+        <p style="color:var(--muted);font-size:0.85rem;">Encuentra las gemas escondidas en el mar</p>
+      </div>
+
+      <div class="treasure-card-demo" onclick="openDemoTreasure(this, '🗝️ Cofre Legendario', 50)">
+        <div style="font-size:3.5rem;margin-bottom:10px;">🗝️</div>
+        <h3 style="font-size:1.15rem;font-weight:800;margin-bottom:6px;">Cofre del Saber</h3>
+        <p style="color:var(--muted);font-size:0.85rem;">Demuestra tus conocimientos y gana XP</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLYER SHOWCASE SECTION -->
+  <section class="flyer-section" id="flyer">
+    <h2 class="section-title">🖼️ Material Promocional Oficial Cleduca</h2>
+    <p class="section-subtitle">
+      Diseñado para instituciones educativas, docentes y padres de familia interesados en impulsar la educación lúdica.
+    </p>
+    <div class="flyer-wrapper">
+      <img src="img/cleduca_flyer_promo.png" alt="Flyer Promocional Cleduca" class="flyer-img" onerror="this.src='img/cleduca_flyer.png'">
+    </div>
+  </section>
+
+  <!-- FEATURES GRID -->
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">🧠</span>
+      <h3 class="feature-title">Motor de 25+ Juegos</h3>
+      <p class="feature-desc">Sopa de letras, puzzles lógicos, carreras de números, laboratorio químico, teatro y más.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🐶</span>
+      <h3 class="feature-title">Mascota Virtual Cleo</h3>
+      <p class="feature-desc">Alimenta a Cleo la husky siberiana, viste su ropa con accesorios y capas SVG y escucha sus consejos con voz.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">📊</span>
+      <h3 class="feature-title">Panel de Control de Padres</h3>
+      <p class="feature-desc">Revisa el tiempo de estudio, asigna metas y protege la configuración mediante un PIN seguro.</p>
     </div>
   </div>
-</footer>
 
-<!-- ═══ SCRIPTS ═══ -->
-<script>
-// ── NAVBAR SCROLL & ACTIVE LINK HIGHLIGHT ──
-const navbar = document.getElementById('navbar');
-const scrollProgress = document.getElementById('scroll-progress');
-const navLinks = document.querySelectorAll('.nav-link');
-const pageSections = document.querySelectorAll('section[id]');
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Cleduca Inc. Todos los derechos reservados. Educando jugando con la mejor tecnología.</p>
+    <p style="margin-top:8px;">
+      <a href="/privacidad">Política de Privacidad</a> | 
+      <a href="/terminos">Términos del Servicio</a> | 
+      <a href="/app/">Ingresar a la Plataforma</a>
+    </p>
+  </footer>
 
-window.addEventListener('scroll', () => {
-  navbar.classList.toggle('scrolled', window.scrollY > 40);
-  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-  scrollProgress.style.width = pct + '%';
-
-  let currentId = '';
-  pageSections.forEach(sec => {
-    const secTop = sec.offsetTop - 140;
-    if (window.scrollY >= secTop) {
-      currentId = sec.getAttribute('id');
-    }
-  });
-
-  navLinks.forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('href') === '#' + currentId) {
-      link.classList.add('active');
-    }
-  });
-});
-
-// ── REVEAL ON SCROLL ──
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-// ── WOMPI CHECKOUT ──
-async function initWompiCheckout(planId) {
-  const btn = document.getElementById(`btn-plan-${planId}`);
-  if (btn) { btn.disabled = true; btn.textContent = 'Procesando...'; }
-
-  const PLANS = {
-    basico:   { price: 9900,  name: 'Premium Básico'    },
-    familiar: { price: 19900, name: 'Premium Familiar'  }
-  };
-
-  const plan      = PLANS[planId];
-  const reference = `cleduca_${planId}_landing_${Date.now()}`;
-  const amount    = plan.price * 100;
-  const currency  = 'COP';
-
-  // Calcular firma SHA-256 en cliente (fallback; ideal usar Edge Function)
-  const integrityKey  = 'prod_integrity_iDAS7Y6hCRFhCLgZfV58PusBfVG9NDg0';
-  const sigStr        = `${reference}${amount}${currency}${integrityKey}`;
-  const encoder       = new TextEncoder();
-  const hashBuffer    = await crypto.subtle.digest('SHA-256', encoder.encode(sigStr));
-  const signature     = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-
-  const redirectUrl = `${window.location.origin}/app/?payment_status=approved&ref=${reference}&plan=${planId}`;
-
-  const params = new URLSearchParams({
-    'public-key':           'pub_prod_yMqcIq23A5WlWpotQg0bIOU03FrVU1p3',
-    'currency':             currency,
-    'amount-in-cents':      amount.toString(),
-    'reference':            reference,
-    'signature:integrity':  signature,
-    'redirect-url':         redirectUrl,
-  });
-
-  // Guardar en localStorage para verificar al volver
-  localStorage.setItem('cleduca_pending_payment', JSON.stringify({ reference, planId, timestamp: Date.now() }));
-
-  window.open(`https://checkout.wompi.co/p/?${params.toString()}`, '_blank', 'noopener');
-
-  if (btn) {
-    setTimeout(() => {
-      btn.disabled = false;
-      btn.textContent = `💳 Suscribirme — ${plan.price === 9900 ? '$9.900' : '$19.900'}/mes`;
-    }, 3000);
-  }
-}
-
-// ── FORMULARIO INSTITUCIONAL ──
-async function submitInstitutionalForm(e) {
-  e.preventDefault();
-  const btn = document.getElementById('inst-submit');
-  btn.disabled = true;
-  btn.textContent = '⏳ Enviando...';
-
-  const data = {
-    name:     document.getElementById('inst-name').value,
-    role:     document.getElementById('inst-role').value,
-    school:   document.getElementById('inst-school').value,
-    students: document.getElementById('inst-students').value,
-    email:    document.getElementById('inst-email').value,
-    phone:    document.getElementById('inst-phone').value,
-    source:   'landing_institucional',
-    timestamp: new Date().toISOString()
-  };
-
-  try {
-    // Intentar enviar a Formspree (reemplaza con tu ID real)
-    const res = await fetch('https://formspree.io/f/xblgrwpq', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(data)
-    });
-
-    if (res.ok) {
-      document.getElementById('institutional-form').innerHTML = `
-        <div style="text-align:center;padding:40px 0;">
-          <div style="font-size:4rem;margin-bottom:16px;">🎉</div>
-          <h3 style="font-size:1.4rem;margin-bottom:12px;">¡Solicitud enviada!</h3>
-          <p style="color:rgba(255,255,255,0.65);">Nos pondremos en contacto contigo en menos de 24 horas hábiles al correo <strong>${data.email}</strong>.</p>
-        </div>
-      `;
-    } else {
-      throw new Error('Error en el envío');
-    }
-// ── FORMULARIO INSTITUCIONAL Y PQR ──
-async function submitInstitutionalForm(e) {
-  e.preventDefault();
-  const btn = document.getElementById('inst-submit');
-  btn.disabled = true;
-  btn.textContent = '⏳ Enviando...';
-
-  const name = document.getElementById('inst-name').value;
-  const school = document.getElementById('inst-school').value;
-  const email = document.getElementById('inst-email').value;
-  const phone = document.getElementById('inst-phone').value;
-  const students = document.getElementById('inst-students').value;
-
-  const data = { name, school, email, phone, students, targetEmail: 'juanmanuelton7@gmail.com' };
-
-  try {
-    if (window.supabase_client) {
-      await window.supabase_client.from('institutional_leads').insert([{
-        school_name: school, contact_name: name, email, phone, student_count: students
-      }]);
-    }
-  } catch (err) {}
-
-  const waText = encodeURIComponent(`🏫 *Nueva Solicitud Institucional Cleduca*\n\n👤 *Contacto:* ${name}\n🏫 *Colegio:* ${school}\n📧 *Email:* ${email}\n📱 *Teléfono:* ${phone || 'N/A'}\n👥 *Alumnos:* ${students}`);
-  window.open(`https://wa.me/573178623970?text=${waText}`, '_blank');
-
-  document.getElementById('institutional-form').innerHTML = `
-    <div style="text-align:center;padding:32px 0;">
-      <div style="font-size:3.5rem;margin-bottom:12px;">🎉</div>
-      <h3 style="font-size:1.3rem;margin-bottom:8px;">¡Solicitud enviada exitosamente!</h3>
-      <p style="color:rgba(255,255,255,0.7);font-size:0.9rem;">Se ha enviado la información a <strong>juanmanuelton7@gmail.com</strong> y a tu WhatsApp. Te contactaremos pronto.</p>
-    </div>
-  `;
-}
-
-function submitPQR(e) {
-  e.preventDefault();
-  const name = document.getElementById('pqr-name').value;
-  const email = document.getElementById('pqr-email').value;
-  const type = document.getElementById('pqr-type').value;
-  const msg = document.getElementById('pqr-message').value;
-  const resp = document.getElementById('pqr-response');
-  const btn = document.getElementById('pqr-btn');
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Enviando...';
-
-  try {
-    if (window.supabase_client) {
-      window.supabase_client.from('institutional_leads').insert([{
-        school_name: 'PQR: ' + type.toUpperCase(), contact_name: name, email, role: 'Padre/Cliente', student_count: msg.slice(0, 200)
-      }]).then(() => {}).catch(() => {});
-    }
-  } catch(e) {}
-
-  const waText = encodeURIComponent(`📩 *Nueva Solicitud PQR Cleduca*\n\n👤 *Nombre:* ${name}\n📧 *Email:* ${email}\n📌 *Tipo:* ${type.toUpperCase()}\n💬 *Mensaje:* ${msg}`);
-  window.open(`https://wa.me/573178623970?text=${waText}`, '_blank');
-
-  setTimeout(() => {
-    btn.disabled = false;
-    btn.textContent = '📤 Enviar Solicitud PQR';
-    resp.style.display = 'block';
-    resp.textContent = `✅ ¡Gracias ${name}! Tu solicitud de ${type} fue radicada y notificada a juanmanuelton7@gmail.com y WhatsApp.`;
-    document.getElementById('pqr-form').reset();
-  }, 600);
-}
-
-// ── HAMBURGER MOBILE MENU ──
-const hamburger = document.getElementById('hamburger');
-const navLinksWrap = document.querySelector('.nav-links');
-if (hamburger && navLinksWrap) {
-  hamburger.addEventListener('click', () => {
-    navLinksWrap.classList.toggle('open');
-  });
-}
-
-// ── SMOOTH SCROLL PARA LINKS ──
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const target = document.querySelector(link.getAttribute('href'));
-    if (target) {
-      if (navLinksWrap) navLinksWrap.classList.remove('open');
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
-
-// ── HERO CTA STYLE ANIMATION ──
-document.querySelector('.hero-cleo')?.addEventListener('click', () => {
-  document.querySelector('.hero-cleo').style.animation = 'none';
-  setTimeout(() => {
-    document.querySelector('.hero-cleo').style.animation = 'heroCleo 0.5s ease-out, heroCleo 4s ease-in-out 0.5s infinite';
-  }, 100);
-});
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-(function initLandingTrafficTracker() {
-  try {
-    const SUPABASE_URL = 'https://tmbvwsauzngvydldjuqe.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_fE32RmyeRXacyyQx9PyZvA_PIC45T8g';
-    const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-    if (!sb) return;
-
-    window.supabase_client = sb;
-    const pageName = 'Landing Page Cleduca';
-    let sessionId = localStorage.getItem('cleduca_sid');
-    if (!sessionId) {
-      sessionId = 'sid_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('cleduca_sid', sessionId);
-    }
-
-    const channel = sb.channel('cleduca-traffic-channel', {
-      config: { presence: { key: sessionId } }
-    });
-
-    channel.subscribe(async (status) => {
-      if (status === 'SUBSCRIBED') {
-        await channel.track({
-          page: pageName,
-          url: window.location.href,
-          timestamp: new Date().toISOString()
-        });
+  <script>
+    // Web Speech API - Cleo Voice
+    function speakCleoWelcome() {
+      const bubble = document.getElementById('cleoBubbleText');
+      const text = "¡Hola explorador! Soy Cleo. ¡Aprende matemáticas y ciencias jugando conmigo!";
+      if (bubble) bubble.textContent = "🔊 " + text;
+      
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance("¡Hola explorador! Soy Cleo. ¡Aprende matemáticas y ciencias jugando conmigo!");
+        utter.lang = 'es-ES';
+        utter.pitch = 1.3;
+        utter.rate = 1.0;
+        window.speechSynthesis.speak(utter);
       }
-    });
-  } catch(e) {}
-})();
-</script>
+    }
 
-<style>
-  @keyframes heroCleo {
-    0%,100% { transform: translateY(0) rotate(-2deg); }
-    50%      { transform: translateY(-16px) rotate(2deg); }
-  }
-</style>
+    // Live Quiz Demo
+    function answerDemoQuiz(isCorrect, btn) {
+      const res = document.getElementById('demoQuizResult');
+      document.querySelectorAll('.quiz-opt-btn').forEach(b => b.style.opacity = '0.5');
+      btn.style.opacity = '1';
+
+      if (isCorrect) {
+        btn.style.background = '#22C55E'; btn.style.borderColor = '#16A34A';
+        res.style.display = 'block'; res.style.color = '#4ADE80';
+        res.innerHTML = "🎉 ¡EXCELENTE! 8 + 7 = 15 gemas. ¡Ganaste +50 XP! 🪙";
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+        }
+      } else {
+        btn.style.background = '#EF4444'; btn.style.borderColor = '#991B1B';
+        res.style.display = 'block'; res.style.color = '#F87171';
+        res.innerHTML = "❌ Casi... ¡Inténtalo de nuevo! La respuesta correcta es 15.";
+      }
+    }
+
+    // Treasure Demo
+    function openDemoTreasure(el, name, xp) {
+      el.style.background = 'rgba(34,197,94,0.25)';
+      el.style.borderColor = '#22C55E';
+      el.querySelector('div').textContent = '🎁';
+      el.querySelector('p').textContent = `¡Cofre Abierto! +${xp} XP Ganados 🪙`;
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 100, spread: 80, origin: { y: 0.7 } });
+      }
+    }
+  </script>
 </body>
 </html>

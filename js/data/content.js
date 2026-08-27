@@ -581,12 +581,12 @@ window.CLEDUCA_DATA = {
     { id:"perfect_quiz",  name:"Perfecto",            emoji:"💯", desc:"100% en un quiz",                    xp:75,  type:"score" },
     { id:"speed_demon",   name:"Rayo",                emoji:"⚡", desc:"Responde en menos de 5 segundos",    xp:50,  type:"speed" },
     { id:"all_subjects",  name:"Explorador",          emoji:"🗺️", desc:"Prueba las 5 materias",             xp:150, type:"explore" },
-    { id:"cleo_custom",   name:"Amigo de Cleo",       emoji:"🐉", desc:"Personaliza a Cleo",                 xp:30,  type:"custom" },
+    { id:"cleo_custom",   name:"Amigo de Cleo",       emoji:"🐶", desc:"Personaliza a Cleo la husky",        xp:30,  type:"custom" },
     { id:"xp_100",        name:"Aprendiz",            emoji:"📚", desc:"Gana 100 XP",                        xp:20,  type:"xp" },
     { id:"xp_500",        name:"Estudiante",          emoji:"🎒", desc:"Gana 500 XP",                        xp:50,  type:"xp" },
     { id:"xp_1000",       name:"Brillante",           emoji:"✨", desc:"Gana 1.000 XP",                      xp:100, type:"xp" },
     { id:"xp_5000",       name:"Genio",               emoji:"🧠", desc:"Gana 5.000 XP",                      xp:500, type:"xp" },
-    { id:"first_chest",   name:"Tesoro Encontrado",   emoji:"📦", desc:"Abre tu primer cofre",               xp:40,  type:"chest" },
+    { id:"first_chest",   name:"Tesoro Encontrado",   emoji:"🏴‍☠️", desc:"Abre tu primer cofre pirata",        xp:40,  type:"chest" },
     { id:"math_master",   name:"Matemático",          emoji:"🔢", desc:"Completa 10 juegos de Matemáticas",  xp:200, type:"subject" },
     { id:"reading_master",name:"Lector Voraz",        emoji:"📖", desc:"Completa 10 juegos de Lenguaje",     xp:200, type:"subject" },
     { id:"science_master",name:"Científico",          emoji:"🔬", desc:"Completa 10 juegos de Ciencias",     xp:200, type:"subject" },
@@ -643,7 +643,7 @@ window.CLEDUCA_DATA = {
   ],
 
   cleoMessages: {
-    welcome:    ["¡Hola! Soy Cleo, ¡tu compañera de aventuras! 🐉","¡Bienvenid@ de vuelta! ¡Hoy aprenderemos cosas increíbles! ✨","¡Estaba esperándote! ¿Listo para ser más sabio? 🧠"],
+    welcome:    ["¡Hola! Soy Cleo, ¡tu husky inteligente! 🐶","¡Bienvenid@ de vuelta! ¡Hoy aprenderemos cosas increíbles! ✨","¡Estaba esperándote! ¿Listo para ser más sabio? 🧠"],
     correct:    ["¡INCREÍBLE! ¡Lo sabías! 🎉","¡Eso estuvo GENIAL! ⭐","¡Correcto! ¡Eres muy inteligente! 🏆","¡PERFECTO! ¡Sigue así! 💪","¡Wow, qué rápido! 🚀"],
     wrong:      ["¡No te preocupes, a seguir intentando! 💪","¡Casi! La respuesta correcta te sorprenderá 🤔","¡Error es parte del aprendizaje! Sigamos 🌟","¡Tranquilo/a! ¡La próxima sí! 😊"],
     levelUp:    ["¡SUBISTE DE NIVEL! ¡Eres una estrella! 🌟⬆️","¡INCREÍBLE! ¡Nuevo nivel desbloqueado! 🏆","¡Lo lograste! ¡Eres más sabio/a que antes! 🧠✨"],
@@ -651,6 +651,6 @@ window.CLEDUCA_DATA = {
     noLives:    ["¡Ups! Se acabaron las vidas. ¡Descansa un poco o mira un video! ❤️","¡No te rindas! ¡Recarga tus vidas y vuelve más fuerte! 💪"],
     morning:    ["¡Buenos días! ¡Empecemos el día aprendiendo! ☀️"],
     evening:    ["¡Buenas noches! ¿Una última lección antes de dormir? 🌙"],
-    chest:      ["¡Has ganado un cofre! ¡Ábrelo para ver tu sorpresa! 📦✨"]
+    chest:      ["¡Has ganado un cofre del tesoro! ¡Ábrelo para ver tu sorpresa! 🏴‍☠️✨"]
   }
 };

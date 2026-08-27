@@ -911,7 +911,7 @@ window.GameRompecabezas = (function() {
     { title: '🐾 Animales Salvajes', icon: '🦁', emoji: '🐘 🦁 🦒 🦓', bg: 'linear-gradient(135deg, #059669, #10B981)', img: 'img/Logo_cleduca_transparente.png' },
     { title: '🏞️ Paisaje Natural', icon: '🌲', emoji: '🏔️ 🌲 🦅 🌊', bg: 'linear-gradient(135deg, #0284C7, #38BDF8)', img: 'img/Logo_cleduca_transparente.png' },
     { title: '🚀 Misión Espacial', icon: '🪐', emoji: '🚀 🪐 🌌 👩‍🚀', bg: 'linear-gradient(135deg, #7C3AED, #A855F7)', img: 'img/Logo_cleduca_transparente.png' },
-    { title: '🏰 Castillo Fantástico', icon: '🏰', emoji: '👑 🏰 🐉 ⚔️', bg: 'linear-gradient(135deg, #D97706, #F59E0B)', img: 'img/Logo_cleduca_transparente.png' },
+    { title: '🏰 Castillo Fantástico', icon: '🏰', emoji: '👑 🏰 🐕 ⚔️', bg: 'linear-gradient(135deg, #D97706, #F59E0B)', img: 'img/Logo_cleduca_transparente.png' },
     { title: '🐶 Cleo y sus Amigos', icon: '🐶', emoji: '🐶 🎩 🕶️ ⭐', bg: 'linear-gradient(135deg, #BE185D, #EC4899)', img: 'img/Logo_cleduca_transparente.png' }
   ];
 

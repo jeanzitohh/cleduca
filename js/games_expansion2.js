@@ -861,3 +861,105 @@ window.GameTeatro = (function() {
 
     return { start, act };
 })();
+
+// ── 13. BÚSQUEDA DEL TESORO (GameTesoro) ──
+window.GameTesoro = (function() {
+    let state = {};
+
+    const TILES = [
+        { name: 'Isla de Rubíes', emoji: '🏴‍☠️', color: '#DC2626' },
+        { name: 'Cueva de Zafiros', emoji: '💎', color: '#2563EB' },
+        { name: 'Bahía del Coral', emoji: '🏝️', color: '#059669' },
+        { name: 'Barco Fantasma', emoji: '⛵', color: '#7C3AED' },
+        { name: 'Templo del Sol', emoji: '🔱', color: '#D97706' },
+        { name: 'Cofre Legendario', emoji: '🗝️', color: '#EC4899' }
+    ];
+
+    function start(subject, grade) {
+        CleoSpeech.say("¡Ahoy explorador! Vamos a buscar los tesoros escondidos resolviendo acertijos.");
+        const questions = window.getProceduralQuestions(subject, grade, 6);
+        state = {
+            subject, grade, questions, currentQ: 0, score: 0,
+            unlocked: Array(6).fill(false)
+        };
+        render();
+    }
+
+    function render() {
+        if (state.currentQ >= state.questions.length) return endGame();
+        const q = state.questions[state.currentQ];
+
+        CleoUI.renderGameView({
+            title: '🗺️ Búsqueda del Tesoro de Cleo',
+            progress: (state.currentQ / state.questions.length) * 100,
+            lives: CleoGame.getLives(),
+            tip: "Elige la respuesta correcta para cavar en el mapa y desenterrar el tesoro.",
+            content: `
+                <div style="display:flex;flex-direction:column;height:100%;min-height:100%;flex:1;width:100%;background:linear-gradient(185deg,#0F172A,#1E293B);padding:16px;box-sizing:border-box;align-items:center;justify-content:space-between;color:#fff;">
+                    <div style="text-align:center;width:100%;max-width:440px;">
+                        <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px;">
+                            <span style="font-size:2.8rem;animation:bounceSoft 2s infinite;">🗺️</span>
+                            <span style="font-size:2.8rem;">💎</span>
+                            <span style="font-size:2.8rem;animation:float 3s infinite;">🪙</span>
+                        </div>
+                        <div style="background:rgba(30,41,59,0.9);padding:14px;border-radius:18px;border:2px solid #F59E0B;box-shadow:0 8px 24px rgba(245,158,11,0.2);">
+                            <span style="color:#F59E0B;font-weight:800;font-size:0.75rem;display:block;text-transform:uppercase;letter-spacing:1px;">Pista del Mapa #${state.currentQ + 1}</span>
+                            <h3 style="margin:4px 0 0;font-size:1.05rem;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.4;color:#fff;">${q.q}</h3>
+                        </div>
+                    </div>
+
+                    <!-- Map grid of chests -->
+                    <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;width:100%;max-width:440px;margin:12px 0;">
+                        ${TILES.map((t, i) => `
+                            <div style="background:${state.unlocked[i] ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.06)'};border:2px solid ${state.unlocked[i] ? '#22C55E' : t.color};border-radius:16px;padding:10px 4px;text-align:center;transition:all 0.3s;">
+                                <div style="font-size:2rem;margin-bottom:2px;">${state.unlocked[i] ? '🎁' : t.emoji}</div>
+                                <div style="font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.85);">${t.name}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Options -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:440px;">
+                        ${q.opts.map((opt, idx) => `
+                            <button class="btn btn-secondary" onclick="GameTesoro.dig(${idx})" style="padding:14px;font-size:0.95rem;font-weight:800;background:rgba(255,255,255,0.08);border:2px solid rgba(245,158,11,0.5);color:#fff;border-radius:16px;text-align:center;">
+                                🗝️ ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `,
+            onBack: () => CleoRouter.navigate('juegos')
+        });
+    }
+
+    function dig(idx) {
+        const q = state.questions[state.currentQ];
+        if (idx === q.ans) {
+            state.unlocked[state.currentQ] = true;
+            CleoGame.addXP(25); state.score += 25; CleoAnimations.confetti();
+            CleoSpeech.say("¡Cofre desenterrado! Ganaste un tesoro brillante.");
+            CleoUI.toast("¡Cofre abriendo! +25 XP 🪙", "💎", "success");
+            state.currentQ++; setTimeout(render, 1000);
+        } else {
+            CleoUI.toast("¡Ese camino del mapa era una trampa! -1 ❤️", "🏴‍☠️", "error");
+            window.handleWrongAnswerBase(
+                () => { setTimeout(() => CleoMonetization.watchAdForLives(() => { state.currentQ++; render(); }), 500); },
+                () => { state.currentQ++; setTimeout(render, 1000); }
+            );
+        }
+    }
+
+    function endGame() {
+        CleoAnimations.confetti();
+        CleoUI.showGameEnd({
+            score: state.score, total: state.questions.length,
+            correct: state.score / 25, wrong: state.questions.length - (state.score / 25),
+            perfect: (state.score / 25 === state.questions.length),
+            onReplay: () => start(state.subject, state.grade),
+            onHome: () => CleoRouter.navigate('home')
+        });
+    }
+
+    return { start, dig };
+})();
+

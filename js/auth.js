@@ -70,12 +70,44 @@ window.CleoAuth = (function() {
 
   async function loginWithGoogle() {
     if (!supabase) return { error: 'Supabase no inicializado' };
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin }
-    });
-    if (error) return { error: error.message };
-    return { success: true };
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/app/' }
+      });
+      if (error) {
+        if (error.message?.includes('not enabled') || error.message?.includes('validation_failed') || error.status === 400) {
+          if (window.CleoUI) CleoUI.toast('Activa Google Auth en Supabase para ingresar con Google', '🔒', 'warning');
+          return { error: 'OAuth no habilitado en Supabase' };
+        }
+        return { error: error.message };
+      }
+      return { success: true };
+    } catch (err) {
+      if (window.CleoUI) CleoUI.toast('Para usar Google Auth debes habilitarlo en Supabase.', '💡', 'info');
+      return { error: err.message || 'Error de autenticación' };
+    }
+  }
+
+  async function loginWithFacebook() {
+    if (!supabase) return { error: 'Supabase no inicializado' };
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'facebook',
+        options: { redirectTo: window.location.origin + '/app/' }
+      });
+      if (error) {
+        if (error.message?.includes('not enabled') || error.message?.includes('validation_failed') || error.status === 400) {
+          if (window.CleoUI) CleoUI.toast('Activa Facebook Auth en Supabase para ingresar con Facebook', '🔒', 'warning');
+          return { error: 'OAuth no habilitado en Supabase' };
+        }
+        return { error: error.message };
+      }
+      return { success: true };
+    } catch (err) {
+      if (window.CleoUI) CleoUI.toast('Para usar Facebook Auth debes habilitarlo en Supabase.', '💡', 'info');
+      return { error: err.message || 'Error de autenticación' };
+    }
   }
 
   function isUserLoggedIn() {
@@ -109,7 +141,7 @@ window.CleoAuth = (function() {
     const profile = {
       id:          'p_' + Date.now(),
       name:        name || 'Explorador',
-      avatar:      avatar || '🐉',
+      avatar:      avatar || '🐶',
       pin:         pin || null,
       grade:       grade || 3,
       isGoogle:    !!isGoogle,
@@ -172,6 +204,7 @@ window.CleoAuth = (function() {
     registerAccount,
     loginAccount,
     loginWithGoogle,
+    loginWithFacebook,
     logoutAccount,
     validatePin, canAddProfile, profileCount, MAX_FREE };
 })();
@@ -316,7 +349,7 @@ window.CleoGame = (function() {
     const p = getProfile();
     if (!p) return null;
     const rewards = generateChestRewards();
-    updateProfile(p.id, { chests: { lastFree: Date.now(), available: 0 } });
+    saveProfile({ chests: { lastFree: Date.now(), available: 0 } });
     return rewards;
   }
   function generateChestRewards() {

@@ -91,20 +91,68 @@ window.CleoAnimations = (function() {
   return { confetti, ripple };
 })();
 
-// ── MASCOTA CLEO SVG ──
+// ── MASCOTA CLEO SVG & ACCESORIOS ──
 window.CleoChr = (function() {
   function getSVG(skin='verde', expression='happy', accessory='none') {
-    const accEmojis = {
-      hat: '🎩', crown: '👑', pirate: '🏴‍☠️', beanie: '🧶', ninja: '🥷',
-      glasses: '🕶️', smart_glasses: '👓', hero_mask: '🎭', monocle: '🧐', star_glasses: '🤩',
-      bowtie: '🎀', cape: '🦸', explorer: '🦺', armor: '🛡️', tutu: '🩰'
+    // 1. Capa SVG Dibujada detrás del contorno del personaje
+    let capeSVG = '';
+    if (accessory === 'cape') {
+      capeSVG = `
+        <svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible;">
+          <defs>
+            <linearGradient id="cleoCapeGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#EF4444"/>
+              <stop offset="60%" stop-color="#DC2626"/>
+              <stop offset="100%" stop-color="#991B1B"/>
+            </linearGradient>
+            <filter id="capeShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="4" stdDeviation="3" flood-opacity="0.35"/>
+            </filter>
+          </defs>
+          <!-- Tela de la capa fluyendo tras los hombros -->
+          <path d="M 24 46 Q 8 72 14 96 Q 50 105 86 96 Q 92 72 76 46 Q 50 50 24 46 Z" fill="url(#cleoCapeGrad)" stroke="#7F1D1D" stroke-width="1.5" filter="url(#capeShadow)"/>
+          <!-- Pliegues de la capa -->
+          <path d="M 35 50 Q 30 75 36 98 M 65 50 Q 70 75 64 98" stroke="#B91C1C" stroke-width="1.2" fill="none" opacity="0.6"/>
+          <!-- Broches dorados en el cuello -->
+          <circle cx="30" cy="46" r="3.5" fill="#FBBF24" stroke="#D97706" stroke-width="1"/>
+          <circle cx="70" cy="46" r="3.5" fill="#FBBF24" stroke="#D97706" stroke-width="1"/>
+          <path d="M 30 46 Q 50 49 70 46" stroke="#F59E0B" stroke-width="1.5" fill="none"/>
+        </svg>
+      `;
+    }
+
+    // 2. Posicionamiento preciso de accesorios en la cabeza y cuello
+    const accessoryStyles = {
+      crown:        { emoji:'👑', style:'top:-12%;left:50%;transform:translateX(-50%);font-size:1.8rem;z-index:5;' },
+      hat:          { emoji:'🎩', style:'top:-16%;left:50%;transform:translateX(-50%);font-size:2rem;z-index:5;' },
+      pirate:       { emoji:'🏴‍☠️', style:'top:-14%;left:50%;transform:translateX(-50%);font-size:1.8rem;z-index:5;' },
+      beanie:       { emoji:'🧶', style:'top:-12%;left:50%;transform:translateX(-50%);font-size:1.7rem;z-index:5;' },
+      ninja:        { emoji:'🥷', style:'top:5%;left:50%;transform:translateX(-50%);font-size:1.6rem;z-index:5;' },
+      glasses:      { emoji:'🕶️', style:'top:25%;left:50%;transform:translateX(-50%);font-size:1.4rem;z-index:5;' },
+      smart_glasses:{ emoji:'👓', style:'top:25%;left:50%;transform:translateX(-50%);font-size:1.4rem;z-index:5;' },
+      star_glasses: { emoji:'🤩', style:'top:24%;left:50%;transform:translateX(-50%);font-size:1.5rem;z-index:5;' },
+      hero_mask:    { emoji:'🎭', style:'top:22%;left:50%;transform:translateX(-50%);font-size:1.4rem;z-index:5;' },
+      monocle:      { emoji:'🧐', style:'top:25%;left:60%;transform:translateX(-50%);font-size:1.3rem;z-index:5;' },
+      bowtie:       { emoji:'🎀', style:'bottom:12%;left:50%;transform:translateX(-50%);font-size:1.3rem;z-index:5;' },
+      explorer:     { emoji:'🦺', style:'bottom:5%;left:50%;transform:translateX(-50%);font-size:1.5rem;z-index:3;' },
+      armor:        { emoji:'🛡️', style:'bottom:8%;right:-5%;font-size:1.4rem;z-index:5;' },
+      tutu:         { emoji:'🩰', style:'bottom:2%;left:50%;transform:translateX(-50%);font-size:1.5rem;z-index:2;' }
     };
-    const accEmoji = accEmojis[accessory] || '';
+
+    const accConfig = accessoryStyles[accessory];
+    const accHTML = accConfig ? `
+      <div style="position:absolute;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.3));${accConfig.style}">
+        ${accConfig.emoji}
+      </div>
+    ` : '';
 
     return `
-      <div class="cleo-svg" style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:visible;">
-        <img src="/img/Logo_cleduca_transparente.png" alt="Cleo" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.15));" onerror="this.src='/img/Logo_cleduca_transparente.svg'">
-        ${accEmoji ? `<div style="position:absolute;top:2px;right:2px;font-size:1.6rem;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));z-index:5;pointer-events:none;">${accEmoji}</div>` : ''}
+      <div class="cleo-svg-container" style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:visible;">
+        ${capeSVG}
+        <img src="img/Logo_cleduca_transparente.png" alt="Cleo"
+             style="position:relative;z-index:3;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.15));"
+             onerror="this.onerror=null; this.src='../img/Logo_cleduca_transparente.png';">
+        ${accHTML}
       </div>
     `;
   }
@@ -639,16 +687,23 @@ function renderHome() {
 
       <!-- Chest (if available) -->
       ${chestAvailable ? `
-        <div style="margin:0 16px 16px;" onclick="openFreeChest()">
-          <div style="background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:20px;padding:14px 16px;
-               display:flex;align-items:center;gap:14px;cursor:pointer;
-               box-shadow:0 4px 16px rgba(245,158,11,0.3);animation:pulse 2s ease-in-out infinite;">
-            <span style="font-size:2.2rem;">📦</span>
-            <div style="flex:1;">
-              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:#fff;font-size:1rem;">¡Cofre Gratis Disponible!</div>
-              <div style="color:rgba(255,255,255,0.85);font-size:0.8rem;">Ábrelo para ganar XP y recompensas</div>
+        <div id="home-free-chest-card" style="margin:0 16px 16px;" onclick="openFreeChest()">
+          <div style="background:linear-gradient(135deg,#D97706,#B45309);border-radius:20px;padding:14px 16px;
+               display:flex;align-items:center;gap:14px;cursor:pointer;border:2px solid #FBBF24;
+               box-shadow:0 6px 20px rgba(245,158,11,0.4);animation:pulse 2s ease-in-out infinite;">
+            <div style="width:48px;height:48px;flex-shrink:0;background:#78350F;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:1px solid #F59E0B;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 10V18C3 19.1046 3.89543 20 5 20H19C20.1046 20 21 19.1046 21 18V10H3Z" fill="#B45309" stroke="#FBBF24" stroke-width="1.5"/>
+                <path d="M3 10L4.5 5.5C4.8 4.6 5.6 4 6.5 4H17.5C18.4 4 19.2 4.6 19.5 5.5L21 10H3Z" fill="#D97706" stroke="#FBBF24" stroke-width="1.5"/>
+                <rect x="10" y="9" width="4" height="5" rx="1" fill="#FBBF24"/>
+                <circle cx="12" cy="11.5" r="1" fill="#78350F"/>
+              </svg>
             </div>
-            <span style="font-size:1.5rem;color:#fff;">→</span>
+            <div style="flex:1;">
+              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:#fff;font-size:1rem;">¡Cofre del Tesoro Disponible! 🏴‍☠️</div>
+              <div style="color:rgba(255,255,255,0.9);font-size:0.8rem;font-weight:600;">Ábrelo para ganar XP y recompensas mágicas</div>
+            </div>
+            <span style="font-size:1.5rem;color:#FBBF24;font-weight:900;">→</span>
           </div>
         </div>
       ` : ''}
@@ -817,6 +872,7 @@ function renderSubject(data) {
   const SUBJECT_GAMES = {
     matematicas: [
       { type:'carrera', label:'Carrera de Números', icon:'🏎️', desc:'Sumas y cálculos a toda velocidad' },
+      { type:'tesoro', label:'Búsqueda del Tesoro', icon:'🗺️', desc:'Desentierra cofres resolviendo pistas' },
       { type:'snake', label:'La Serpiente de Cleo', icon:'🐍', desc:'Atrapa las operaciones correctas' },
       { type:'quiz', label:'Quiz de Matemáticas', icon:'⚡', desc:'Desafíos matemáticos por tiempo' },
       { type:'sopa', label:'Sopa de Números', icon:'🔤', desc:'Encuentra términos matemáticos' }
@@ -1094,21 +1150,21 @@ function renderLogros() {
     </div>
     <div style="overflow-y:auto;flex:1;padding:16px;display:flex;flex-direction:column;gap:16px;">
       ${CleoGame.checkFreeChest() ? `
-        <div onclick="openFreeChest()" style="background:linear-gradient(135deg,#F59E0B,#D97706);
+        <div id="logros-free-chest-card" onclick="openFreeChest()" style="background:linear-gradient(135deg,#D97706,#B45309);
              border-radius:20px;padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;
-             box-shadow:0 4px 16px rgba(245,158,11,0.3);">
-          <span style="font-size:2.5rem;animation:bounceIn 1s ease infinite;">📦</span>
+             box-shadow:0 4px 16px rgba(245,158,11,0.3);border:2px solid #FBBF24;">
+          <span style="font-size:2.5rem;animation:bounceIn 1s ease infinite;">🏴‍☠️</span>
           <div style="flex:1;">
-            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:#fff;">¡Cofre Gratis!</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:#fff;">¡Cofre del Tesoro Gratis!</div>
             <div style="color:rgba(255,255,255,0.85);font-size:0.8rem;">Toca para abrirlo ahora</div>
           </div>
         </div>
       ` : `
         <div style="background:var(--c-surface);border-radius:20px;padding:16px;
              display:flex;align-items:center;gap:14px;opacity:0.7;">
-          <span style="font-size:2rem;">📦</span>
+          <span style="font-size:2rem;">🏴‍☠️</span>
           <div>
-            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;">Próximo cofre gratis</div>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;">Próximo cofre del tesoro</div>
             <div style="font-size:0.8rem;color:var(--c-text-muted);">Vuelve mañana para reclamarlo</div>
           </div>
         </div>
@@ -1244,7 +1300,7 @@ function renderPerfil() {
           <div style="display:flex;flex-direction:column;gap:10px;">
             <div style="display:flex;align-items:center;justify-content:space-between;background:var(--c-bg-card);padding:12px 14px;border-radius:16px;border:1px solid var(--c-border);">
               <div style="display:flex;align-items:center;gap:10px;">
-                <span style="font-size:1.8rem;">📦</span>
+                <span style="font-size:1.8rem;">🏴‍☠️</span>
                 <div>
                   <div style="font-weight:800;font-size:0.9rem;">Cofre Bronce</div>
                   <div style="font-size:0.75rem;color:var(--c-text-muted);">Restaura +3 Vidas</div>
@@ -1465,7 +1521,7 @@ function saveNickname() {
   if (!val) return;
   const p = CleoAuth.getActive();
   CleoAuth.updateProfile(p.id, { nickname: val });
-  CleoUI.toast(`¡Apodo guardado: ${val}!`, '🐉', 'success');
+  CleoUI.toast(`¡Apodo guardado: ${val}!`, '🐶', 'success');
   renderPerfil();
 }
 function selectSkin(id) {
@@ -1541,14 +1597,16 @@ function changeGrade(gradeId) {
 }
 function openFreeChest() {
   if (!CleoGame.checkFreeChest()) return;
+  document.getElementById('home-free-chest-card')?.remove();
+  document.getElementById('logros-free-chest-card')?.remove();
   const rewards = CleoGame.claimFreeChest();
   CleoAnimations.confetti();
   CleoSpeech.say(CLEDUCA_DATA.cleoMessages.chest[0]);
-  CleoUI.toast(`¡Cofre abierto! ${rewards.message}`, '📦', 'success');
+  CleoUI.toast(`¡Cofre del tesoro abierto! ${rewards.message}`, '🏴‍☠️', 'success');
   setTimeout(() => {
     renderHome();
     if (typeof renderLogros === 'function') renderLogros();
-  }, 500);
+  }, 300);
 }
 function showSettings() {
   CleoUI.toast('Configuración disponible próximamente', '⚙️', 'info');
@@ -1583,7 +1641,8 @@ const GAME_INFO = {
   programacion:{ icon:'👨‍💻', name:'Código y Algoritmos', desc:'Programa la secuencia de comandos para guiar a Cleo a la meta.', howTo:'Selecciona bloques (Avanzar, Girar, Saltar) y ejecuta tu código.' },
   arte_recrear:{ icon:'🎨', name:'Recrear Dibujo (Gartic)', desc:'Recrea la figura o dibujo de píxeles pintando las casillas según el patrón.', howTo:'Mira la muestra de la izquierda y pinta los cuadros correspondientes en tu lienzo.' },
   pesca_capibara:{ icon:'🐟', name:'Pesca Capibara Educativa', desc:'Pesca los peces con la respuesta correcta para alimentar a la Capibara.', howTo:'Mueve la caña y atrapa el pez que contenga el resultado correcto.' },
-  teatro:      { icon:'🎭', name:'Taller de Teatro', desc:'Representa emociones y dales vida a los cuentos interactivos.', howTo:'Elige las expresiones y decisiones dramáticas para continuar la historia.' }
+  teatro:      { icon:'🎭', name:'Taller de Teatro', desc:'Representa emociones y dales vida a los cuentos interactivos.', howTo:'Elige las expresiones y decisiones dramáticas para continuar la historia.' },
+  tesoro:      { icon:'🗺️', name:'Búsqueda del Tesoro', desc:'Desentierra cofres piratas y gemas respondiendo pistas en el mapa.', howTo:'Toca la opción correcta para excavar en la cuadrícula del mapa.' }
 };
 
 function showGameIntro(type, subject, grade) {
@@ -1678,6 +1737,7 @@ function launchGame(type, subject, grade) {
       case 'arte_recrear': GameArteRecrear.start(); break;
       case 'pesca_capibara': GameCapibaraPesca.start(subject, grade); break;
       case 'teatro':       GameTeatro.start(subject, grade); break;
+      case 'tesoro':       GameTesoro.start(subject, grade); break;
       default:             GameQuiz.start(subject, grade); break;
     }
   }, 300);
@@ -1715,7 +1775,7 @@ function showAuthScreen() {
           </div>
         </div>
 
-        <button class="btn btn-full" onclick="handleGoogleLogin()" style="background:#fff;color:#333;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+        <button class="btn btn-full" onclick="handleGoogleLogin()" style="background:#fff;color:#333;border:1px solid #ccc;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
           <svg style="width:20px;height:20px;" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -1723,6 +1783,13 @@ function showAuthScreen() {
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
           </svg>
           Continuar con Google
+        </button>
+
+        <button class="btn btn-full" onclick="handleFacebookLogin()" style="background:#1877F2;color:#fff;border:none;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;font-weight:700;box-shadow:0 2px 8px rgba(24,119,242,0.25);">
+          <svg style="width:20px;height:20px;" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          Continuar con Facebook
         </button>
 
         <button class="btn btn-ghost btn-full" onclick="showProfiles()" style="color:var(--c-text-muted);">
@@ -1749,6 +1816,14 @@ function togglePasswordVisibility(inputId, btnEl) {
 async function handleGoogleLogin() {
   CleoUI.toast('Redirigiendo a Google...', '🌐', 'info');
   const res = await CleoAuth.loginWithGoogle();
+  if (res && res.error) {
+    CleoUI.toast(res.error, '❌', 'error');
+  }
+}
+
+async function handleFacebookLogin() {
+  CleoUI.toast('Redirigiendo a Facebook...', '📘', 'info');
+  const res = await CleoAuth.loginWithFacebook();
   if (res && res.error) {
     CleoUI.toast(res.error, '❌', 'error');
   }
@@ -1967,7 +2042,7 @@ function applyProfileSettings(p) {
 
 function showCreateProfile(isGuest=false) {
   if (isGuest) {
-    const result = CleoAuth.createProfile({ name:'Explorador', avatar:'🐉', pin:null, grade:3 });
+    const result = CleoAuth.createProfile({ name:'Explorador', avatar:'🐶', pin:null, grade:3 });
     if (result.success) {
       applyProfileSettings(result.profile);
       CleoRouter.navigate('grade');
