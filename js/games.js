@@ -8,15 +8,29 @@ window.GameQuiz = (function() {
 
   function start(subject, grade, onEnd) {
     let data;
-    if (subject.startsWith('ingles_') || subject.startsWith('portugues_')) {
+    if (subject && (subject.startsWith('ingles_') || subject.startsWith('portugues_'))) {
       const parts = subject.split('_');
-      const langData = CLEDUCA_DATA.idiomas[parts[0]];
-      const levelData = langData.levels.find(l => l.id == parts[1]);
-      data = { quiz: levelData.quiz };
-    } else {
-      data = CLEDUCA_DATA.content[grade]?.[subject];
+      const langData = CLEDUCA_DATA.idiomas ? CLEDUCA_DATA.idiomas[parts[0]] : null;
+      const levelData = langData ? langData.levels.find(l => l.id == parts[1]) : null;
+      if (levelData) data = { quiz: levelData.quiz };
+    } else if (CLEDUCA_DATA.content && CLEDUCA_DATA.content[grade]) {
+      data = CLEDUCA_DATA.content[grade][subject];
     }
-    if (!data?.quiz) return;
+    
+    let rawQuestions = data?.quiz;
+    if (!rawQuestions || rawQuestions.length === 0) {
+      if (typeof window.getProceduralQuestions === 'function') {
+        rawQuestions = window.getProceduralQuestions(subject, grade, 10);
+      }
+    }
+    
+    if (!rawQuestions || rawQuestions.length === 0) {
+      rawQuestions = [
+        { q: '¿Cuánto es 5 + 5?', opts: ['8', '10', '12', '15'], ans: 1, xp: 10, tip: 'Suma 5 más 5.' },
+        { q: '¿Cuál es la capital de Colombia?', opts: ['Cali', 'Medellín', 'Bogotá', 'Barranquilla'], ans: 2, xp: 10, tip: 'Bogotá D.C. es la capital.' },
+        { q: '¿Cuál es el color de las plantas gracias a la clorofila?', opts: ['Rojo', 'Azul', 'Verde', 'Amarillo'], ans: 2, xp: 10, tip: 'La clorofila da el color verde.' }
+      ];
+    }
     
     // Check for answered questions in profile
     const profile = CleoAuth.getActive();
@@ -26,11 +40,11 @@ window.GameQuiz = (function() {
     }
     
     // Filter out answered questions
-    let newQs = data.quiz.filter(q => !answered.includes(q.q));
+    let newQs = rawQuestions.filter(q => !answered.includes(q.q));
     
     // If not enough new questions, mix with old ones
-    if (newQs.length < 10) {
-      const oldQs = data.quiz.filter(q => answered.includes(q.q));
+    if (newQs.length < 5) {
+      const oldQs = rawQuestions.filter(q => answered.includes(q.q));
       newQs = [...newQs, ...shuffle(oldQs)];
     }
     
@@ -178,8 +192,13 @@ window.GameSopa = (function() {
   let state = {};
 
   function start(subject, grade) {
-    const data = CLEDUCA_DATA.content[grade]?.[subject]?.sopa;
-    if (!data) return;
+    let data = CLEDUCA_DATA.content[grade]?.[subject]?.sopa;
+    if (!data || !data.words || data.words.length === 0) {
+      data = {
+        words: ["CLEO", "COLOMBIA", "ESTUDIO", "SABER", "LIBRO", "CIENCIA", "APRENDER"],
+        size: 8
+      };
+    }
     const size = data.size || 8;
     const words = shuffle([...data.words]).slice(0, 6);
     const grid  = buildGrid(words, size);

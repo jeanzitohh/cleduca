@@ -1693,54 +1693,71 @@ function startGame(type, subject, grade) {
 function launchGame(type, subject, grade) {
   window._gameStartTime = Date.now();
   window._currentGameType = type;
-  window._currentGameSubject = subject;
-  window._currentGameGrade = grade;
-  // Actually start the game engine
-  document.getElementById('view-game').innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;gap:16px;">
-      <div style="width:90px;height:90px;border-radius:50%;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.15);background:#fff;animation:floatBig 2s ease-in-out infinite;padding:4px;">
-        <img src="/img/Logo_cleduca_transparente.png" alt="Cleo" style="width:100%;height:100%;object-fit:contain;" onerror="this.src='/img/Logo_cleduca_transparente.svg'">
+  window._currentGameSubject = subject || 'matematicas';
+  window._currentGameGrade = grade || 3;
+  
+  const view = document.getElementById('view-game');
+  if (view) {
+    view.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;gap:16px;">
+        <div style="width:90px;height:90px;border-radius:50%;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.15);background:#fff;animation:floatBig 2s ease-in-out infinite;padding:4px;">
+          <img src="/img/Logo_cleduca_transparente.png" alt="Cleo" style="width:100%;height:100%;object-fit:contain;" onerror="this.src='/img/Logo_cleduca_transparente.svg'">
+        </div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--c-primary);">Cargando lección con Cleo...</div>
       </div>
-      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--c-primary);">Cargando lección con Cleo...</div>
-    </div>
-  `;
+    `;
+  }
+  if (typeof CleoRouter !== 'undefined') {
+    CleoRouter.showView('game');
+  }
+
   setTimeout(() => {
-    switch(type) {
-      case 'quiz':         GameQuiz.start(subject, grade); break;
-      case 'quiz_idioma': {
-        const parts = String(subject).split('_');
-        GameDuolingo.start(parts[0] || 'ingles', parts[1] || 1);
-        break;
+    try {
+      switch(type) {
+        case 'quiz':         GameQuiz.start(subject, grade); break;
+        case 'quiz_idioma': {
+          const parts = String(subject).split('_');
+          GameDuolingo.start(parts[0] || 'ingles', parts[1] || 1);
+          break;
+        }
+        case 'sopa':         GameSopa.start(subject, grade); break;
+        case 'memoria':      GameMemoria.start(6); break;
+        case 'carrera':      GameCarrera.start(grade); break;
+        case 'snake':        GameSnake.start(subject, grade); break;
+        case 'capibara':     GameCapibara.start(subject, grade); break;
+        case 'diferencias':  GameDiferencias.start(); break;
+        case 'puzzle':       GamePuzzle.start(); break;
+        case 'anatomia':     GameAnatomia.start(); break;
+        case 'pintura':      GamePintura.start(); break;
+        case 'dressup':      GameDressUp.start(); break;
+        case 'musica':       GameMusica.start(); break;
+        case 'rompecabezas': GameRompecabezas.start(); break;
+        case 'misterio':     GameMisterio.start(); break;
+        case 'cinta':        GameCinta.start(subject, grade); break;
+        case 'burbujas':     GameBurbujas.start(subject, grade); break;
+        case 'runner_edu':   GameRunner.start(subject, grade); break;
+        case 'magnetico':    GameMagnetico.start(subject, grade); break;
+        case 'hacker':       GameHacker.start(subject, grade); break;
+        case 'torres':       GameTowerDefense.start(subject, grade); break;
+        case 'alquimia':     GameAlquimia.start(subject, grade); break;
+        case 'circuitos':    GameCircuitos.start(subject, grade); break;
+        case 'programacion': GameProgramacion.start(subject, grade); break;
+        case 'arte_recrear': GameArteRecrear.start(); break;
+        case 'pesca_capibara': GameCapibaraPesca.start(subject, grade); break;
+        case 'teatro':       GameTeatro.start(subject, grade); break;
+        case 'tesoro':       GameTesoro.start(subject, grade); break;
+        default:             GameQuiz.start(subject, grade); break;
       }
-      case 'sopa':         GameSopa.start(subject, grade); break;
-      case 'memoria':      GameMemoria.start(6); break;
-      case 'carrera':      GameCarrera.start(grade); break;
-      case 'snake':        GameSnake.start(subject, grade); break;
-      case 'capibara':     GameCapibara.start(subject, grade); break;
-      case 'diferencias':  GameDiferencias.start(); break;
-      case 'puzzle':       GamePuzzle.start(); break;
-      case 'anatomia':     GameAnatomia.start(); break;
-      case 'pintura':      GamePintura.start(); break;
-      case 'dressup':      GameDressUp.start(); break;
-      case 'musica':       GameMusica.start(); break;
-      case 'rompecabezas': GameRompecabezas.start(); break;
-      case 'misterio':     GameMisterio.start(); break;
-      case 'cinta':        GameCinta.start(subject, grade); break;
-      case 'burbujas':     GameBurbujas.start(subject, grade); break;
-      case 'runner_edu':   GameRunner.start(subject, grade); break;
-      case 'magnetico':    GameMagnetico.start(subject, grade); break;
-      case 'hacker':       GameHacker.start(subject, grade); break;
-      case 'torres':       GameTowerDefense.start(subject, grade); break;
-      case 'alquimia':     GameAlquimia.start(subject, grade); break;
-      case 'circuitos':    GameCircuitos.start(subject, grade); break;
-      case 'programacion': GameProgramacion.start(subject, grade); break;
-      case 'arte_recrear': GameArteRecrear.start(); break;
-      case 'pesca_capibara': GameCapibaraPesca.start(subject, grade); break;
-      case 'teatro':       GameTeatro.start(subject, grade); break;
-      case 'tesoro':       GameTesoro.start(subject, grade); break;
-      default:             GameQuiz.start(subject, grade); break;
+    } catch(err) {
+      console.error('[Cleduca] Error al iniciar el juego:', err);
+      try {
+        GameQuiz.start(subject || 'matematicas', grade || 3);
+      } catch(e) {
+        if (typeof CleoRouter !== 'undefined') CleoRouter.navigate('home');
+        if (typeof CleoUI !== 'undefined') CleoUI.toast('No se pudo iniciar la lección.', '⚠️', 'error');
+      }
     }
-  }, 300);
+  }, 200);
 }
 
 // ── PROFILE SCREENS ──
