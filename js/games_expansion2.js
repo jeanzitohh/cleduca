@@ -430,13 +430,18 @@ window.GameProgramacion = (function() {
     let state = {};
 
     function start(subject, grade) {
+        if (state.interval) clearInterval(state.interval);
         CleoSpeech.say("¡Toca las flechas para indicarle a Cleo cómo llegar a la estrella!");
-        state = { subject, grade, currentLevel: 1, score: 0, code: [], isRunning: false };
+        state = { subject, grade, currentLevel: 1, score: 0, code: [], isRunning: false, interval: null };
         CleoGame.updateStreak();
         renderLevel();
     }
 
     function renderLevel() {
+        if (state.interval) clearInterval(state.interval);
+        state.isRunning = false;
+        state.interval = null;
+
         const levels = [
             { start: { x: 0, y: 0 }, goal: { x: 3, y: 0 }, desc: "Lleva a Cleo 3 pasos a la Derecha ➡️" },
             { start: { x: 0, y: 0 }, goal: { x: 0, y: 3 }, desc: "Lleva a Cleo 3 pasos Abajo ⬇️" },
@@ -456,7 +461,7 @@ window.GameProgramacion = (function() {
             lives: CleoGame.getLives(),
             tip: "Toca las flechas para armar la secuencia de pasos y presiona ▶ EJECUTAR CÓDIGO.",
             content: `
-                <div style="display:flex;flex-direction:column;height:100%;min-height:100%;flex:1;width:100%;background:#0F172A;padding:16px;box-sizing:border-box;align-items:center;justify-content:space-between;color:#fff;">
+                <div style="display:flex;flex-direction:column;min-height:100%;flex:1;width:100%;background:#0F172A;padding:16px;box-sizing:border-box;align-items:center;justify-content:space-between;color:#fff;gap:12px;">
                     
                     <div style="background:#1E293B;padding:12px;border-radius:16px;width:100%;max-width:440px;text-align:center;border:2px solid #6366F1;box-shadow:0 4px 16px rgba(99,102,241,0.2);">
                         <span style="color:#6366F1;font-weight:800;font-size:0.8rem;text-transform:uppercase;">NIVEL ${state.currentLevel} DE 5</span>
@@ -464,14 +469,14 @@ window.GameProgramacion = (function() {
                     </div>
 
                     <!-- Tablero Cuadrícula 4x4 -->
-                    <div id="prog-grid" style="display:grid;grid-template-columns:repeat(4, 1fr);gap:8px;width:100%;max-width:290px;height:290px;background:#020617;padding:12px;border-radius:22px;border:3px solid #334155;box-shadow:0 12px 32px rgba(0,0,0,0.5);box-sizing:border-box;">
+                    <div id="prog-grid" style="display:grid;grid-template-columns:repeat(4, 1fr);gap:6px;width:100%;max-width:260px;height:260px;background:#020617;padding:10px;border-radius:20px;border:3px solid #334155;box-shadow:0 12px 32px rgba(0,0,0,0.5);box-sizing:border-box;">
                         ${Array.from({length: 16}).map((_, idx) => {
                             const x = idx % 4;
                             const y = Math.floor(idx / 4);
                             const isGoal = x === lvlData.goal.x && y === lvlData.goal.y;
                             const isStart = x === lvlData.start.x && y === lvlData.start.y;
                             return `
-                                <div id="cell-${x}-${y}" style="background:${isGoal ? 'rgba(234,179,8,0.15)' : '#1E293B'};border:1px solid ${isGoal ? '#EAB308' : 'rgba(255,255,255,0.08)'};border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;position:relative;transition:all 0.2s ease;">
+                                <div id="cell-${x}-${y}" style="background:${isGoal ? 'rgba(234,179,8,0.15)' : '#1E293B'};border:1px solid ${isGoal ? '#EAB308' : 'rgba(255,255,255,0.08)'};border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;position:relative;transition:all 0.2s ease;">
                                     ${isGoal ? '⭐' : ''}
                                     ${isStart ? '<span id="prog-cleo" style="filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4));">🐶</span>' : ''}
                                 </div>
@@ -485,29 +490,32 @@ window.GameProgramacion = (function() {
                             <span>SECUENCIA DE PASOS:</span>
                             <span style="color:#6366F1;" id="code-count">0 pasos</span>
                         </div>
-                        <div id="code-sequence" style="display:flex;gap:6px;min-height:52px;background:rgba(255,255,255,0.04);padding:8px;border-radius:14px;overflow-x:auto;align-items:center;border:1.5px dashed rgba(255,255,255,0.2);">
+                        <div id="code-sequence" style="display:flex;gap:6px;min-height:50px;background:rgba(255,255,255,0.04);padding:8px;border-radius:14px;overflow-x:auto;align-items:center;border:1.5px dashed rgba(255,255,255,0.2);">
                             <span style="font-size:0.8rem;color:#64748B;">Toca las flechas abajo para armar la ruta...</span>
                         </div>
                     </div>
 
                     <!-- Paleta de Botones Direccionales -->
                     <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:8px;width:100%;max-width:440px;">
-                        <button class="btn" onclick="GameProgramacion.addCommand('RIGHT')" style="background:#6366F1;color:#fff;font-weight:800;border-radius:12px;padding:12px 6px;font-size:0.85rem;">➡️ Der</button>
-                        <button class="btn" onclick="GameProgramacion.addCommand('DOWN')" style="background:#38BDF8;color:#0F172A;font-weight:800;border-radius:12px;padding:12px 6px;font-size:0.85rem;">⬇️ Abajo</button>
-                        <button class="btn" onclick="GameProgramacion.addCommand('LEFT')" style="background:#8B5CF6;color:#fff;font-weight:800;border-radius:12px;padding:12px 6px;font-size:0.85rem;">⬅️ Izq</button>
-                        <button class="btn" onclick="GameProgramacion.addCommand('UP')" style="background:#EC4899;color:#fff;font-weight:800;border-radius:12px;padding:12px 6px;font-size:0.85rem;">⬆️ Arriba</button>
+                        <button type="button" class="btn" onclick="GameProgramacion.addCommand('RIGHT')" style="background:#6366F1;color:#fff;font-weight:800;border-radius:12px;padding:12px 6px;font-size:0.85rem;cursor:pointer;">➡️ Der</button>
+                        <button type="button" class="btn" onclick="GameProgramacion.addCommand('DOWN')" style="background:#38BDF8;color:#0F172A;font-weight:800;border-radius:12px;padding:12px 6px;font-size:0.85rem;cursor:pointer;">⬇️ Abajo</button>
+                        <button type="button" class="btn" onclick="GameProgramacion.addCommand('LEFT')" style="background:#8B5CF6;color:#fff;font-weight:800;border-radius:12px;padding:12px 6px;font-size:0.85rem;cursor:pointer;">⬅️ Izq</button>
+                        <button type="button" class="btn" onclick="GameProgramacion.addCommand('UP')" style="background:#EC4899;color:#fff;font-weight:800;border-radius:12px;padding:12px 6px;font-size:0.85rem;cursor:pointer;">⬆️ Arriba</button>
                     </div>
 
                     <!-- Botones de Acción (Ejecutar y Borrar) -->
-                    <div style="display:flex;gap:10px;width:100%;max-width:440px;">
-                        <button class="btn" onclick="GameProgramacion.clearCode()" style="background:#EF4444;color:#fff;font-weight:800;border-radius:14px;padding:14px;flex:1;">🗑️ Borrar</button>
-                        <button class="btn" onclick="GameProgramacion.runCode()" style="background:linear-gradient(135deg,#22C55E,#16A34A);color:#fff;font-weight:900;border-radius:14px;padding:14px;flex:2;font-size:1.05rem;box-shadow:0 4px 16px rgba(34,197,94,0.3);">
+                    <div style="display:flex;gap:10px;width:100%;max-width:440px;margin-bottom:12px;">
+                        <button type="button" class="btn" onclick="GameProgramacion.clearCode()" style="background:#EF4444;color:#fff;font-weight:800;border-radius:14px;padding:14px;flex:1;cursor:pointer;">🗑️ Borrar</button>
+                        <button type="button" class="btn" onclick="GameProgramacion.runCode()" style="background:linear-gradient(135deg,#22C55E,#16A34A);color:#fff;font-weight:900;border-radius:14px;padding:14px;flex:2;font-size:1.05rem;box-shadow:0 4px 16px rgba(34,197,94,0.3);cursor:pointer;">
                             ▶ EJECUTAR CÓDIGO
                         </button>
                     </div>
                 </div>
             `,
-            onBack: () => CleoRouter.navigate('juegos')
+            onBack: () => {
+                if (state.interval) clearInterval(state.interval);
+                CleoRouter.navigate('juegos');
+            }
         });
     }
 
@@ -522,7 +530,9 @@ window.GameProgramacion = (function() {
     }
 
     function clearCode() {
-        if (state.isRunning) return;
+        if (state.interval) clearInterval(state.interval);
+        state.interval = null;
+        state.isRunning = false;
         state.code = [];
         updateCodeView();
         resetCleoPos();
@@ -570,16 +580,18 @@ window.GameProgramacion = (function() {
         let posY = state.startPos.y;
         resetCleoPos();
 
-        const interval = setInterval(() => {
+        if (state.interval) clearInterval(state.interval);
+        state.interval = setInterval(() => {
             if (step >= state.code.length) {
-                clearInterval(interval);
+                clearInterval(state.interval);
+                state.interval = null;
                 state.isRunning = false;
 
                 if (posX === state.goalPos.x && posY === state.goalPos.y) {
                     CleoGame.addXP(30);
                     state.score += 30;
-                    CleoAnimations.confetti();
-                    CleoSpeech.say("¡CÓDIGO PERFECTO! 🚀 ¡Cleo llegó a la estrella!");
+                    if (window.CleoAnimations) CleoAnimations.confetti();
+                    if (window.CleoSpeech) CleoSpeech.say("¡CÓDIGO PERFECTO! 🚀 ¡Cleo llegó a la estrella!");
                     CleoUI.toast("¡Camino correcto! +30 XP", "🎉", "success");
                     setTimeout(() => {
                         state.currentLevel++;
@@ -604,7 +616,7 @@ window.GameProgramacion = (function() {
             else if (cmd === 'DOWN' && posY < 3) posY++;
             else if (cmd === 'UP' && posY > 0) posY--;
 
-            CleoAudio.playPop();
+            if (window.CleoAudio) CleoAudio.playPop();
 
             // Mover a Cleo visualmente en el tablero
             document.querySelectorAll('[id^="cell-"]').forEach(c => {
@@ -622,7 +634,10 @@ window.GameProgramacion = (function() {
     }
 
     function endGame() {
-        CleoAnimations.confetti();
+        if (state.interval) clearInterval(state.interval);
+        state.interval = null;
+        state.isRunning = false;
+        if (window.CleoAnimations) CleoAnimations.confetti();
         CleoUI.showGameEnd({
             score: state.score, total: 5, correct: 5, wrong: 0, perfect: true,
             onReplay: () => start(state.subject, state.grade),

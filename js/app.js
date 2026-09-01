@@ -301,7 +301,7 @@ window.CleoUI = (function() {
       <div style="display:flex;align-items:center;justify-content:center;padding:10px 16px;background:var(--c-bg-nav);border-bottom:1px solid var(--c-border);flex-shrink:0;">
         <h3 style="font-size:1rem;font-family:'Plus Jakarta Sans',sans-serif;margin:0;text-align:center;">${title}</h3>
       </div>
-      <div style="flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;position:relative;width:100%;height:100%;">${content}</div>
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;width:100%;height:100%;">${content}</div>
     `;
     CleoRouter.showView('game');
   }
@@ -1600,13 +1600,13 @@ function openFreeChest() {
   document.getElementById('home-free-chest-card')?.remove();
   document.getElementById('logros-free-chest-card')?.remove();
   const rewards = CleoGame.claimFreeChest();
-  CleoAnimations.confetti();
-  CleoSpeech.say(CLEDUCA_DATA.cleoMessages.chest[0]);
-  CleoUI.toast(`¡Cofre del tesoro abierto! ${rewards.message}`, '🏴‍☠️', 'success');
-  setTimeout(() => {
-    renderHome();
-    if (typeof renderLogros === 'function') renderLogros();
-  }, 300);
+  if (window.CleoAnimations) CleoAnimations.confetti();
+  if (window.CleoSpeech) CleoSpeech.say(CLEDUCA_DATA.cleoMessages.chest[0]);
+  if (rewards && rewards.message) {
+    CleoUI.toast(`¡Cofre del tesoro abierto! ${rewards.message}`, '🏴‍☠️', 'success');
+  }
+  renderHome();
+  if (typeof renderLogros === 'function') renderLogros();
 }
 function showSettings() {
   CleoUI.toast('Configuración disponible próximamente', '⚙️', 'info');

@@ -30,8 +30,32 @@ window.CleoAuth = (function() {
     if (!currentUser || !currentUser.user_metadata) return;
     const cloudProfiles = currentUser.user_metadata.cleduca_profiles;
     if (cloudProfiles && Array.isArray(cloudProfiles)) {
-      // Solo actualizar datos en localStorage, NUNCA cambiar la vista activa
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudProfiles));
+      const localProfiles = getAll();
+      if (!localProfiles || localProfiles.length === 0) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudProfiles));
+        return;
+      }
+      const merged = cloudProfiles.map(cp => {
+        const lp = localProfiles.find(p => p.id === cp.id);
+        if (!lp) return cp;
+        return {
+          ...cp,
+          ...lp,
+          xp: Math.max(cp.xp || 0, lp.xp || 0),
+          level: Math.max(cp.level || 1, lp.level || 1),
+          streak: Math.max(cp.streak || 0, lp.streak || 0),
+          lives: lp.lives !== undefined ? lp.lives : cp.lives,
+          chests: {
+            ...(cp.chests || {}),
+            ...(lp.chests || {}),
+            lastFree: Math.max(cp.chests?.lastFree || 0, lp.chests?.lastFree || 0) || null
+          }
+        };
+      });
+      localProfiles.forEach(lp => {
+        if (!merged.find(m => m.id === lp.id)) merged.push(lp);
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
     }
   }
 
@@ -348,8 +372,10 @@ window.CleoGame = (function() {
   function claimFreeChest() {
     const p = getProfile();
     if (!p) return null;
+    const now = Date.now();
+    const currentChests = p.chests || {};
+    saveProfile({ chests: { ...currentChests, lastFree: now, available: 0 } });
     const rewards = generateChestRewards();
-    saveProfile({ chests: { lastFree: Date.now(), available: 0 } });
     return rewards;
   }
   function generateChestRewards() {
