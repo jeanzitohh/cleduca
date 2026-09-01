@@ -97,12 +97,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── App Shell ── */
 #app {
-  max-width: 430px;
+  width: 100%;
+  max-width: 100%;
   min-height: 100dvh;
   margin: 0 auto;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
   background: var(--c-bg);
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Views ── */
@@ -111,6 +114,10 @@ h1, h2, h3, h4, h5, h6 {
   min-height: 100dvh;
   flex-direction: column;
   padding-bottom: 90px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 #view-game {
   height: 100dvh !important;
@@ -118,6 +125,9 @@ h1, h2, h3, h4, h5, h6 {
   min-height: 100dvh !important;
   overflow: hidden !important;
   padding-bottom: 0 !important;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 .view.active {
   display: flex;
@@ -138,6 +148,10 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 .top-bar-logo {
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -1227,19 +1241,140 @@ h1, h2, h3, h4, h5, h6 {
 .xp-popup .xp-icon { font-size: 1.5rem; }
 .xp-popup .xp-amount { color: var(--c-xp); font-size: 1.3rem; }
 
-/* ── Responsive extras ── */
-@media (min-width: 431px) {
-  #app { box-shadow: 0 0 40px rgba(0,0,0,0.15); }
-  body { background: #111; }
+/* ── Full Responsive Media Queries (Mobile, Tablet, iPad, Desktop) ── */
+@media (min-width: 640px) {
+  body {
+    background-color: var(--c-bg, #FAF9F6);
+  }
+
+  .top-bar {
+    padding: 16px 32px;
+  }
+
+  .games-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .subjects-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .profiles-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .home-materias-scroll {
+    gap: 16px;
+  }
+
+  .home-materia-card {
+    flex: 0 0 160px;
+    min-width: 160px;
+  }
+
+  .bottom-nav {
+    min-width: 480px;
+    max-width: 560px;
+    height: 72px;
+    bottom: 28px;
+    padding: 0 24px;
+  }
+
+  .nav-item {
+    font-size: 0.72rem;
+    padding: 8px 12px;
+    min-width: 60px;
+  }
+
+  .nav-item .nav-icon {
+    font-size: 1.6rem;
+  }
+
+  .modal-sheet {
+    max-width: 560px;
+    margin: 0 auto;
+    border-radius: 28px 28px 0 0;
+  }
+
+  .modal-dialog {
+    max-width: 480px;
+  }
+
+  /* Game View Tablet & iPad Adapters */
+  #view-game {
+    max-width: 1000px !important;
+    margin: 0 auto;
+  }
+
+  #view-game div[style*="max-width:440px"],
+  #view-game div[style*="max-width: 440px"],
+  #view-game div[style*="max-width:400px"],
+  #view-game div[style*="max-width: 400px"],
+  #view-game div[style*="max-width:340px"],
+  #view-game div[style*="max-width: 340px"],
+  #view-game div[style*="max-width:320px"],
+  #view-game div[style*="max-width: 320px"] {
+    max-width: 680px !important;
+  }
+
+  #view-game #prog-grid {
+    max-width: 340px !important;
+    height: 340px !important;
+  }
+
+  #view-game canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
 }
-@media (max-height: 700px) {
-  .cleo-svg { width: 90px; height: 90px; }
-  .splash-logo { font-size: 2.4rem; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+
+@media (min-width: 1024px) {
+  .games-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .subjects-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .profiles-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .bottom-nav {
+    min-width: 560px;
+    max-width: 640px;
+    height: 76px;
+    bottom: 32px;
+  }
+
+  /* Game View Desktop Adapters */
+  #view-game {
+    max-width: 1100px !important;
+  }
+
+  #view-game div[style*="max-width:440px"],
+  #view-game div[style*="max-width: 440px"],
+  #view-game div[style*="max-width:400px"],
+  #view-game div[style*="max-width: 400px"],
+  #view-game div[style*="max-width:340px"],
+  #view-game div[style*="max-width: 340px"],
+  #view-game div[style*="max-width:320px"],
+  #view-game div[style*="max-width: 320px"],
+  #view-game div[style*="max-width:680px"],
+  #view-game div[style*="max-width: 680px"] {
+    max-width: 860px !important;
+  }
+
+  #view-game #prog-grid {
+    max-width: 380px !important;
+    height: 380px !important;
   }
 }
 
